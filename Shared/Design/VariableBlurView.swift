@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly
 // permitted under the terms of the Proprietary Software License.
 
 import SwiftUI
@@ -74,14 +74,14 @@ class UIVariableBlurView: UIView {
     }
 
     // MARK: - Initialization
-    
+
     /// Initializes a new blur view with the given frame
     /// - Parameter frame: The frame rectangle for the view
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupVariableBlurFilter()
     }
-    
+
     /// Initializes a view from a storyboard or nib file
     /// - Parameter coder: The decoder object
     required init?(coder: NSCoder) {
@@ -100,20 +100,20 @@ class UIVariableBlurView: UIView {
             print("[VariableBlurView] Could not initialize blur filter: missing components")
             return
         }
-        
+
         // Create the blur filter
         guard let result = filterClass.perform(selector, with: filterType),
               let filter = result.takeUnretainedValue() as AnyObject? else {
             print("[VariableBlurView] Could not create blur filter")
             return
         }
-        
+
         // Store the filter and configure it
         variableBlur = filter
         variableBlur?.setValue(blurRadius, forKey: "inputRadius")
         variableBlur?.setValue(true, forKey: "inputNormalizeEdges")
         variableBlur?.setValue(gradientMask?.cgImage, forKey: "inputMaskImage")
-        
+
         // Apply the filter to the layer
         if let filter = variableBlur as? NSObject {
             layer.filters = [filter]
@@ -124,29 +124,29 @@ class UIVariableBlurView: UIView {
 /// A SwiftUI-compatible variable blur view.
 struct VariableBlurView: UIViewRepresentable {
     // MARK: - Properties
-    
+
     /// Optional custom gradient mask to use
     var customGradientMask: UIImage?
-    
+
     /// Blur radius to apply
     var blurRadius: CGFloat = 20
-    
+
     // MARK: - UIViewRepresentable
-    
+
     /// Creates the underlying UIKit view
     /// - Parameter context: The context information
     /// - Returns: A configured UIVariableBlurView
     func makeUIView(context: Context) -> UIVariableBlurView {
         // Create the view with zero frame
         let view = UIVariableBlurView(frame: .zero)
-        
+
         // Apply custom properties
         view.blurRadius = blurRadius
         view.gradientMask = customGradientMask ?? VariableBlurViewConstants.defaultGradientMask
-        
+
         return view
     }
-    
+
     /// Updates the view with new configuration
     /// - Parameters:
     ///   - uiView: The view to update

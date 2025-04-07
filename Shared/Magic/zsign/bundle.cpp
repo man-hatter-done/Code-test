@@ -168,7 +168,7 @@ bool ZAppBundle::GenerateCodeResources(const string &strFolder, JValue &jvCodeRe
     jvCodeRes["files"] = JValue(JValue::E_OBJECT);
     jvCodeRes["files2"] = JValue(JValue::E_OBJECT);
 
-    for (set<string>::iterator it = setFiles.begin(); it != setFiles.end(); it++) {
+    for (set<string>::iterator it = setFiles.begin(); it != setFiles.end(); ++it) {
         string strKey = *it;
         string strFile = strFolder + "/" + strKey;
         string strFileSHA1Base64;
