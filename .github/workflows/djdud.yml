@@ -158,7 +158,7 @@ jobs:
 
       - name: Create new branch
         run: |
-          git checkout -b analysis-results-$(date +%s)  # Unique branch name with timestamp
+          git checkout -b results  # Changed to static branch name "results"
 
       - name: Move artifacts to root
         run: |
@@ -176,14 +176,14 @@ jobs:
           fi
 
       - name: Push changes
-        run: git push origin analysis-results-$(date +%s) || true
+        run: git push origin results || true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Add code analysis results"
-          branch: analysis-results-$(date +%s)
+          branch: results  # Updated to match the new branch name
           title: "Code Analysis Results - $(date '+%Y-%m-%d')"
           body: |
             This pull request contains the results of code analysis for C++, Swift, and Infer.
