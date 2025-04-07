@@ -1,14 +1,14 @@
 name: Code Analysis
 
 on:
-  workflow_dispatch:  # Manual trigger; you can add other triggers like push, pull_request if needed
+  workflow_dispatch:  # Manual trigger; add other triggers like push, pull_request if needed
 
 jobs:
   analyze_cpp:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v4  # Updated to latest version for security and features
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Full history for better analysis
 
@@ -28,7 +28,7 @@ jobs:
             cppcheck \
               --enable=all \
               --inconclusive \
-              --std=c++20 \  # Updated to C++20 for modern standards
+              --std=c++20 \
               --language=c++ \
               --force \
               --verbose \
@@ -55,7 +55,15 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@v1  # Use official Homebrew action for reliability
+        run: |
+          # Ensure Homebrew is installed or updated
+          if ! command -v brew &> /dev/null; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo "# Set PATH for Homebrew" >> $GITHUB_ENV
+            echo "PATH=/usr/local/bin:/opt/homebrew/bin:$PATH" >> $GITHUB_ENV
+          else
+            brew update
+          fi
 
       - name: Install SwiftLint and SwiftFormat
         run: |
@@ -71,7 +79,7 @@ jobs:
         run: |
           swiftlint lint \
             --strict \
-            --reporter json \  # JSON reporter for better parsing and integration
+            --reporter json \
             > swiftlint_errors.json 2>&1 || true
           cat swiftlint_errors.json || true
 
@@ -79,7 +87,7 @@ jobs:
         continue-on-error: true
         run: |
           swiftformat . \
-            --swiftversion 5.10 \  # Updated to Swift 5.10 for compatibility
+            --swiftversion 5.10 \
             --verbose \
             > swiftformat_errors.txt 2>&1 || true
           cat swiftformat_errors.txt || true
