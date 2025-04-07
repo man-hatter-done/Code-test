@@ -123,11 +123,11 @@ jobs:
 
       - name: Install Infer
         run: |
-          # Use Infer version 1.1.0 (known to exist)
+          # Use Infer version 1.2.0 with the correct file name (infer-linux-x86_64-v1.2.0.tar.xz)
           # Check https://github.com/facebook/infer/releases for the latest version and update the URL if needed
-          INFER_VERSION="1.1.0"
-          INFER_URL="https://github.com/facebook/infer/releases/download/v${INFER_VERSION}/infer-linux64-v${INFER_VERSION}.tar.xz"
-          INFER_FILE="infer-linux64-v${INFER_VERSION}.tar.xz"
+          INFER_VERSION="1.2.0"
+          INFER_URL="https://github.com/facebook/infer/releases/download/v${INFER_VERSION}/infer-linux-x86_64-v${INFER_VERSION}.tar.xz"
+          INFER_FILE="infer-linux-x86_64-v${INFER_VERSION}.tar.xz"
           echo "Downloading Infer v${INFER_VERSION} from ${INFER_URL}"
           wget -O "${INFER_FILE}" "${INFER_URL}"
           if [ $? -ne 0 ]; then
@@ -135,7 +135,7 @@ jobs:
             exit 1
           fi
           tar -xf "${INFER_FILE}"
-          sudo mv "infer-linux64-v${INFER_VERSION}" /opt/infer
+          sudo mv "infer-linux-x86_64-v${INFER_VERSION}" /opt/infer
           sudo ln -s /opt/infer/bin/infer /usr/local/bin/infer
           # Verify Infer installation
           infer --version || { echo "Error: Infer installation failed"; exit 1; }
