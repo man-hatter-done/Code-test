@@ -129,16 +129,17 @@ jobs:
           git checkout -b $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Move artifacts to root
+      - name: Create Errors to Fix directory and move artifacts
         run: |
-          mv artifacts/*/* . || true
+          mkdir -p "Errors to Fix"
+          mv artifacts/*/* "Errors to Fix/" || true
           rm -rf artifacts
 
       - name: Commit analysis results
         run: |
-          git add *.txt *.json
+          git add "Errors to Fix"/*.txt "Errors to Fix"/*.json
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Add code analysis results"
+            git commit -m "Add code analysis results to Errors to Fix folder"
           else
             echo "No changes to commit"
             exit 0
@@ -151,13 +152,13 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Add code analysis results"
+          commit-message: "Add code analysis results to Errors to Fix folder"
           branch: ${{ env.BRANCH_NAME }}
-          base: ${{ env.DEFAULT_BRANCH }}  # Dynamically set to the default branch
+          base: ${{ env.DEFAULT_BRANCH }}
           title: "Code Analysis Results - $(date '+%Y-%m-%d')"
           body: |
-            This pull request contains the results of code analysis for C++ and Swift.
-            - Cppcheck results: cppcheck_errors.txt
-            - SwiftLint results: swiftlint_errors.json
-            - SwiftFormat results: swiftformat_errors.txt
+            This pull request contains the results of code analysis for C++ and Swift, stored in the "Errors to Fix" folder:
+            - Cppcheck results: Errors to Fix/cppcheck_errors.txt
+            - SwiftLint results: Errors to Fix/swiftlint_errors.json
+            - SwiftFormat results: Errors to Fix/swiftformat_errors.txt
           labels: "code-quality, automated-pr"

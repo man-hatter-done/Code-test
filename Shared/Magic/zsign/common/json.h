@@ -71,15 +71,60 @@ public:
     };
 
 public:
-    JValue(TYPE type = E_NULL);
-    JValue(int val);
-    JValue(bool val);
-    JValue(double val);
-    JValue(int64_t val);
-    JValue(const char *val);
-    JValue(const string &val);
+    /**
+     * Constructor that creates a JValue of the specified type
+     * @param type The type of JValue to create (default is null)
+     */
+    explicit JValue(TYPE type = E_NULL);
+    
+    /**
+     * Constructor that creates a JValue from an integer
+     * @param val The integer value
+     */
+    explicit JValue(int val);
+    
+    /**
+     * Constructor that creates a JValue from a boolean
+     * @param val The boolean value
+     */
+    explicit JValue(bool val);
+    
+    /**
+     * Constructor that creates a JValue from a double
+     * @param val The double value
+     */
+    explicit JValue(double val);
+    
+    /**
+     * Constructor that creates a JValue from a 64-bit integer
+     * @param val The 64-bit integer value
+     */
+    explicit JValue(int64_t val);
+    
+    /**
+     * Constructor that creates a JValue from a C-string
+     * @param val The C-string value
+     */
+    explicit JValue(const char *val);
+    
+    /**
+     * Constructor that creates a JValue from a C++ string
+     * @param val The string value
+     */
+    explicit JValue(const string &val);
+    
+    /**
+     * Copy constructor
+     * @param other The JValue to copy
+     */
     JValue(const JValue &other);
-    JValue(const char *val, size_t len);
+    
+    /**
+     * Constructor that creates a JValue from a C-string of specified length
+     * @param val The C-string value
+     * @param len The length of the string
+     */
+    explicit JValue(const char *val, size_t len);
     ~JValue();
 
 public:
@@ -229,7 +274,31 @@ public:
 
 class JReader {
 public:
+    /**
+     * Default constructor that initializes member variables
+     */
+    JReader() 
+        : m_pBeg(nullptr)
+        , m_pEnd(nullptr)
+        , m_pCur(nullptr)
+        , m_pErr(nullptr)
+    {
+    }
+    
+    /**
+     * Parses a JSON document string into a JValue object
+     *
+     * @param pdoc The JSON document string to parse
+     * @param root The JValue to populate with the parsed data
+     * @return True if parsing succeeded, false otherwise
+     */
     bool parse(const char *pdoc, JValue &root);
+    
+    /**
+     * Gets the error message if parsing failed
+     *
+     * @param strmsg Reference to a string to receive the error message
+     */
     void error(string &strmsg) const;
 
 private:
@@ -284,7 +353,29 @@ private:
 
 class JWriter {
 public:
+    /**
+     * Default constructor that initializes member variables
+     */
+    JWriter() 
+        : m_strTab("")
+        , m_bAddChild(false)
+    {
+    }
+    
+    /**
+     * Static method to quickly write a JValue to a string
+     * 
+     * @param jval The JValue to convert to a string
+     * @param strDoc Reference to a string to receive the output
+     */
     static void FastWrite(const JValue &jval, string &strDoc);
+    
+    /**
+     * Static method to quickly write a JValue to a string
+     * 
+     * @param jval The JValue to convert to a string
+     * @param strDoc Reference to a string to receive the output
+     */
     static void FastWriteValue(const JValue &jval, string &strDoc);
 
 public:

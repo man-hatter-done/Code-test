@@ -2,116 +2,182 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly 
+// permitted under the terms of the Proprietary Software License.
 
 import SwiftUI
 import UIKit
 
+/// UIView subclass that implements a variable blur effect using private APIs
 class UIVariableBlurView: UIView {
     // MARK: - Private Properties
 
-    private var filterClass: NSObjectProtocol {
+    /// Gets the filter class for blur effects
+    private var filterClass: NSObjectProtocol? {
         let encodedString = "Q0FGaWx0ZXI="
-        let data = Data(base64Encoded: encodedString)!
-        let string = String(data: data, encoding: .utf8)!
-
-        return NSClassFromString(string) as AnyObject as! NSObjectProtocol
+        guard let data = Data(base64Encoded: encodedString),
+              let string = String(data: data, encoding: .utf8),
+              let classObject = NSClassFromString(string) as AnyObject as? NSObjectProtocol else {
+            return nil
+        }
+        return classObject
     }
 
-    private var filterType: String {
+    /// Gets the filter type for variable blur
+    private var filterType: String? {
         let encodedString = "dmFyaWFibGVCbHVy"
-        let data = Data(base64Encoded: encodedString)!
-
-        return String(data: data, encoding: .utf8)!
+        guard let data = Data(base64Encoded: encodedString),
+              let string = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return string
     }
 
-    private var filterWithTypeSelector: Selector {
+    /// Gets the selector for creating a filter with type
+    private var filterWithTypeSelector: Selector? {
         let encodedString = "ZmlsdGVyV2l0aFR5cGU6"
-        let data = Data(base64Encoded: encodedString)!
-        let string = String(data: data, encoding: .utf8)!
-
-        return Selector((string))
+        guard let data = Data(base64Encoded: encodedString),
+              let string = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return Selector(string)
     }
 
-    private var variableBlur: AnyObject!
+    /// The variable blur filter object
+    private var variableBlur: AnyObject?
 
     // MARK: - Public Properties
 
+    /// The radius of the blur effect
     var blurRadius: CGFloat = 20 {
         willSet {
-            variableBlur.setValue(newValue, forKey: "inputRadius")
+            variableBlur?.setValue(newValue, forKey: "inputRadius")
         }
     }
 
-    var gradientMask: UIImage? = nil {
+    /// Gradient image used as a mask for the blur effect
+    var gradientMask: UIImage? {
         willSet {
-            variableBlur.setValue(newValue?.cgImage, forKey: "inputMaskImage")
+            variableBlur?.setValue(newValue?.cgImage, forKey: "inputMaskImage")
         }
     }
 
+    /// Override to specify the layer class needed for blur effects
     override class var layerClass: AnyClass {
         let encodedString = "Q0FCYWNrZHJvcExheWVy"
-        let data = Data(base64Encoded: encodedString)!
-        let string = String(data: data, encoding: .utf8)!
-
-        return NSClassFromString(string)!
+        guard let data = Data(base64Encoded: encodedString),
+              let string = String(data: data, encoding: .utf8),
+              let layerClass = NSClassFromString(string) else {
+            return UIView.layerClass
+        }
+        return layerClass
     }
 
-    // MARK: - init(frame:)
-
+    // MARK: - Initialization
+    
+    /// Initializes a new blur view with the given frame
+    /// - Parameter frame: The frame rectangle for the view
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupVariableBlurFilter()
     }
-
-    // MARK: - init?(coder:)
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    
+    /// Initializes a view from a storyboard or nib file
+    /// - Parameter coder: The decoder object
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupVariableBlurFilter()
     }
 
     // MARK: - Private Methods
 
+    /// Sets up the variable blur filter with default values
     private func setupVariableBlurFilter() {
-        variableBlur = filterClass.perform(filterWithTypeSelector, with: filterType).takeUnretainedValue()
-        variableBlur.setValue(blurRadius, forKey: "inputRadius")
-        variableBlur.setValue(true, forKey: "inputNormalizeEdges")
-        variableBlur.setValue(gradientMask?.cgImage, forKey: "inputMaskImage")
-
-        layer.filters = [variableBlur as! NSObject]
+        // Make sure all required components are available
+        guard let filterClass = filterClass,
+              let filterType = filterType,
+              let selector = filterWithTypeSelector else {
+            print("[VariableBlurView] Could not initialize blur filter: missing components")
+            return
+        }
+        
+        // Create the blur filter
+        guard let result = filterClass.perform(selector, with: filterType),
+              let filter = result.takeUnretainedValue() as AnyObject? else {
+            print("[VariableBlurView] Could not create blur filter")
+            return
+        }
+        
+        // Store the filter and configure it
+        variableBlur = filter
+        variableBlur?.setValue(blurRadius, forKey: "inputRadius")
+        variableBlur?.setValue(true, forKey: "inputNormalizeEdges")
+        variableBlur?.setValue(gradientMask?.cgImage, forKey: "inputMaskImage")
+        
+        // Apply the filter to the layer
+        if let filter = variableBlur as? NSObject {
+            layer.filters = [filter]
+        }
     }
 }
 
-/// A variable blur view.
+/// A SwiftUI-compatible variable blur view.
 struct VariableBlurView: UIViewRepresentable {
-    func makeUIView(context _: Context) -> UIVariableBlurView {
-        var view = UIVariableBlurView()
-
-        let gradientMask = VariableBlurViewConstants.defaultGradientMask
-        view = UIVariableBlurView(frame: .zero)
-        view.gradientMask = gradientMask
+    // MARK: - Properties
+    
+    /// Optional custom gradient mask to use
+    var customGradientMask: UIImage?
+    
+    /// Blur radius to apply
+    var blurRadius: CGFloat = 20
+    
+    // MARK: - UIViewRepresentable
+    
+    /// Creates the underlying UIKit view
+    /// - Parameter context: The context information
+    /// - Returns: A configured UIVariableBlurView
+    func makeUIView(context: Context) -> UIVariableBlurView {
+        // Create the view with zero frame
+        let view = UIVariableBlurView(frame: .zero)
+        
+        // Apply custom properties
+        view.blurRadius = blurRadius
+        view.gradientMask = customGradientMask ?? VariableBlurViewConstants.defaultGradientMask
+        
         return view
     }
-
-    func updateUIView(_: UIVariableBlurView, context _: Context) {}
+    
+    /// Updates the view with new configuration
+    /// - Parameters:
+    ///   - uiView: The view to update
+    ///   - context: The context information
+    func updateUIView(_ uiView: UIVariableBlurView, context: Context) {
+        // Update properties if they change
+        uiView.blurRadius = blurRadius
+        if let customMask = customGradientMask {
+            uiView.gradientMask = customMask
+        }
+    }
 }
 
+/// Constants used by the VariableBlurView
 public enum VariableBlurViewConstants {
-    /// A gradient mask image (top is opaque, bottom is clear). The gradient includes easing.
-    public static var defaultGradientMask: UIImage = {
-        if
-            let data = Data(base64Encoded: defaultMaskImageString, options: .ignoreUnknownCharacters),
-            let image = UIImage(data: data)
-        {
+    /// A gradient mask image (top is opaque, bottom is clear)
+    /// The gradient includes easing for a smooth transition
+    public static var defaultGradientMask: UIImage {
+        // Try to decode the base64 image data
+        if let data = Data(base64Encoded: defaultMaskImageString, options: .ignoreUnknownCharacters),
+           let image = UIImage(data: data) {
             return image
         } else {
-            print("[VariableBlurView] Couldn't create the gradient mask image.")
-            return UIImage(systemName: "xmark")!
+            // Fallback to a simple system image if decoding fails
+            print("[VariableBlurView] Couldn't create the gradient mask image")
+            // Use a safe fallback that doesn't force unwrap
+            return UIImage(systemName: "xmark") ?? UIImage()
         }
-    }()
+    }
 
-    /// The image encoded in base64 (from PNG data).
+    /// The gradient mask image encoded in base64 format (from PNG data)
     public static let defaultMaskImageString = """
     iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAANBGlDQ1BrQ0dDb2xvclNwYWNlR2Vu
     ZXJpY0dyYXlHYW1tYTJfMgAAWIWlVwdck9cWv9/IAJKwp4ywkWVAgQAyIjOA7CG4iEkggRBiBgLi

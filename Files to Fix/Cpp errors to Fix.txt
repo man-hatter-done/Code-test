@@ -1,203 +1,35 @@
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
-Shared/Magic/zsign/archo.h:34:14: style: inconclusive: The member function 'ZArchO::BO' can be made a const function. Making this function 'const' should not cause compiler errors. Even though the function can be made const function technically it may not make sense conceptually. Think about your design and the task of the function first - is it a function that must not change object internal state? [functionConst]
-    uint32_t BO(uint32_t uVal);
-             ^
-Shared/Magic/zsign/archo.cpp:216:18: note: Technically the member function 'ZArchO::BO' can be const.
-uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
-                 ^
-Shared/Magic/zsign/archo.h:34:14: note: Technically the member function 'ZArchO::BO' can be const.
-    uint32_t BO(uint32_t uVal);
-             ^
-Shared/Magic/zsign/archo.h:35:17: performance: inconclusive: The member function 'ZArchO::GetFileType' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
-    const char *GetFileType(uint32_t uFileType);
-                ^
-Shared/Magic/zsign/archo.cpp:177:21: note: Technically the member function 'ZArchO::GetFileType' can be static (but you may consider moving to unnamed namespace).
-const char *ZArchO::GetFileType(uint32_t uFileType) {
-                    ^
-Shared/Magic/zsign/archo.h:35:17: note: Technically the member function 'ZArchO::GetFileType' can be static (but you may consider moving to unnamed namespace).
-    const char *GetFileType(uint32_t uFileType);
-                ^
-Shared/Magic/zsign/archo.h:36:17: performance: inconclusive: The member function 'ZArchO::GetArch' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
-    const char *GetArch(int cpuType, int cpuSubType);
-                ^
-Shared/Magic/zsign/archo.cpp:115:21: note: Technically the member function 'ZArchO::GetArch' can be static (but you may consider moving to unnamed namespace).
-const char *ZArchO::GetArch(int cpuType, int cpuSubType) {
-                    ^
-Shared/Magic/zsign/archo.h:36:17: note: Technically the member function 'ZArchO::GetArch' can be static (but you may consider moving to unnamed namespace).
-    const char *GetArch(int cpuType, int cpuSubType);
-                ^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
-Shared/Magic/zsign/archo.cpp:42:17: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-    m_pHeader = (mach_header *)m_pBase;
-                ^
-Shared/Magic/zsign/archo.cpp:54:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
+Shared/Magic/zsign/archo.cpp:640:29: style: Variable 'oldPathPadding' is assigned a value that is never used. [unreadVariable]
+    uint32_t oldPathPadding = (8 - oldPathLength % 8) % 8; // NOLINT(clang-analyzer-deadcode.DeadStores)
                             ^
-Shared/Magic/zsign/archo.cpp:57:42: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-                segment_command *seglc = (segment_command *)pLoadCommand;
-                                         ^
-Shared/Magic/zsign/archo.cpp:75:45: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-                segment_command_64 *seglc = (segment_command_64 *)pLoadCommand;
-                                            ^
-Shared/Magic/zsign/archo.cpp:95:54: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-                encryption_info_command *crypt_cmd = (encryption_info_command *)pLoadCommand;
-                                                     ^
-Shared/Magic/zsign/archo.cpp:101:48: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-                codesignature_command *pcslc = (codesignature_command *)pLoadCommand;
-                                               ^
-Shared/Magic/zsign/archo.cpp:248:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:261:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:263:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                 ^
-Shared/Magic/zsign/archo.cpp:276:33: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            load_command *plc = (load_command *)pLoadCommand;
-                                ^
-Shared/Magic/zsign/archo.cpp:278:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-                dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                     ^
-Shared/Magic/zsign/archo.cpp:521:28: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-    load_command *pseglc = (load_command *)m_pLinkEditSegment;
-                           ^
-Shared/Magic/zsign/archo.cpp:524:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            segment_command *seglc = (segment_command *)m_pLinkEditSegment;
-                                     ^
-Shared/Magic/zsign/archo.cpp:531:41: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            segment_command_64 *seglc = (segment_command_64 *)m_pLinkEditSegment;
-                                        ^
-Shared/Magic/zsign/archo.cpp:539:36: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-    codesignature_command *pcslc = (codesignature_command *)m_pCodeSignSegment;
-                                   ^
-Shared/Magic/zsign/archo.cpp:546:17: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        pcslc = (codesignature_command *)(m_pBase + m_uHeaderSize + BO(m_pHeader->sizeofcmds));
-                ^
-Shared/Magic/zsign/archo.cpp:576:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:579:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                 ^
-Shared/Magic/zsign/archo.cpp:607:26: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-    dylib_command *dlc = (dylib_command *)(m_pBase + m_uHeaderSize + BO(m_pHeader->sizeofcmds));
-                         ^
-Shared/Magic/zsign/archo.cpp:642:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:646:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                 ^
-Shared/Magic/zsign/archo.cpp:685:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:688:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                 ^
-Shared/Magic/zsign/archo.cpp:720:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-        load_command *plc = (load_command *)pLoadCommand;
-                            ^
-Shared/Magic/zsign/archo.cpp:722:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
-            dylib_command *dlc = (dylib_command *)pLoadCommand;
-                                 ^
-Shared/Magic/zsign/archo.cpp:35:34: style: The unsigned expression 'uLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
-    if (NULL == pBase || uLength <= 0) {
-                                 ^
-Shared/Magic/zsign/archo.cpp:298:46: style: The unsigned expression 'm_uSignLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
-    if (NULL == m_pSignBase || m_uSignLength <= 0) {
-                                             ^
-Shared/Magic/zsign/archo.cpp:216:30: style: inconclusive: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'. [funcArgNamesDifferent]
-uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
-                             ^
-Shared/Magic/zsign/archo.h:34:26: note: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'.
-    uint32_t BO(uint32_t uVal);
-                         ^
-Shared/Magic/zsign/archo.cpp:216:30: note: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'.
-uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
-                             ^
-Shared/Magic/zsign/archo.cpp:676:42: performance: Parameter 'dylibNames' is passed by value. It could be passed as a const reference which is usually faster and recommended in C++. [passedByValue]
-void ZArchO::uninstallDylibs(set<string> dylibNames) {
-                                         ^
-Shared/Magic/zsign/archo.cpp:637:29: style: Variable 'oldPathPadding' is assigned a value that is never used. [unreadVariable]
-    uint32_t oldPathPadding = (8 - oldPathLength % 8) % 8;
-                            ^
-Shared/Magic/zsign/archo.cpp:639:33: style: Variable 'newLoadCommandSize' is assigned a value that is never used. [unreadVariable]
+Shared/Magic/zsign/archo.cpp:642:33: style: Variable 'newLoadCommandSize' is assigned a value that is never used. [unreadVariable]
     uint32_t newLoadCommandSize = 0;
                                 ^
-Shared/Magic/zsign/archo.cpp:628:0: style: The function 'ChangeDylibPath' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:630:0: style: The function 'ChangeDylibPath' is never used. [unusedFunction]
 
 ^
 Shared/Magic/zsign/archo.cpp:34:0: style: The function 'Init' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:569:0: style: The function 'InjectDyLib' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:571:0: style: The function 'InjectDyLib' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:715:0: style: The function 'ListDylibs' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:718:0: style: The function 'ListDylibs' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:225:0: style: The function 'PrintInfo' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:227:0: style: The function 'PrintInfo' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:512:0: style: The function 'ReallocCodeSignSpace' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:514:0: style: The function 'ReallocCodeSignSpace' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:474:0: style: The function 'Sign' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:476:0: style: The function 'Sign' is never used. [unusedFunction]
 
 ^
-Shared/Magic/zsign/archo.cpp:676:0: style: The function 'uninstallDylibs' is never used. [unusedFunction]
+Shared/Magic/zsign/archo.cpp:679:0: style: The function 'uninstallDylibs' is never used. [unusedFunction]
 
 ^
 nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
 
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
 Shared/Magic/zsign/openssl.cpp:276:32: style: inconclusive: Function 'GenerateCMS' argument 4 names different: declaration 'strCDHashPlist' definition 'strCDHashesPlist'. [funcArgNamesDifferent]
                  const string &strCDHashesPlist, string &strCMSOutput) {
                                ^
@@ -230,12 +62,6 @@ Shared/Magic/zsign/openssl.cpp:586:0: style: The function 'Init' is never used. 
 ^
 nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
 
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
 Shared/Magic/zsign/bundle.h:36:10: performance: inconclusive: The member function 'ZAppBundle::GetSignFolderInfo' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
     bool GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool bGetName = false);
          ^
@@ -245,24 +71,6 @@ bool ZAppBundle::GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool
 Shared/Magic/zsign/bundle.h:36:10: note: Technically the member function 'ZAppBundle::GetSignFolderInfo' can be static (but you may consider moving to unnamed namespace).
     bool GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool bGetName = false);
          ^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
 Shared/Magic/zsign/bundle.cpp:171:77: performance: Prefix ++/-- operators should be preferred for non-primitive types. Pre-increment/decrement can be more efficient than post-increment/decrement. Post-increment/decrement usually involves keeping a copy of the previous value around and adds a little extra code. [postfixOperator]
     for (set<string>::iterator it = setFiles.begin(); it != setFiles.end(); it++) {
                                                                             ^
@@ -271,12 +79,6 @@ Shared/Magic/zsign/bundle.cpp:423:0: style: The function 'SignFolder' is never u
 ^
 nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingInclude]
 
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
 Shared/Magic/zsign/macho.h:25:10: style: inconclusive: The member function 'ZMachO::PrintInfo' can be made a const function. Making this function 'const' should not cause compiler errors. Even though the function can be made const function technically it may not make sense conceptually. Think about your design and the task of the function first - is it a function that must not change object internal state? [functionConst]
     void PrintInfo();
          ^
@@ -286,24 +88,6 @@ void ZMachO::PrintInfo() {
 Shared/Magic/zsign/macho.h:25:10: note: Technically the member function 'ZMachO::PrintInfo' can be const.
     void PrintInfo();
          ^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
 Shared/Magic/zsign/macho.cpp:73:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
             fat_header *pFatHeader = (fat_header *)m_pBase;
                                      ^
@@ -336,30 +120,6 @@ Shared/Magic/zsign/macho.cpp:296:0: style: The function 'RemoveDylib' is never u
 ^
 nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
 
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
 Shared/Magic/zsign/signing.cpp:428:18: style: Condition 'uVersion>=0x20100' is always true [knownConditionTrueFalse]
     if (uVersion >= 0x20100) {
                  ^
@@ -527,57 +287,33 @@ Shared/Magic/zsign/common/json.cpp:1899:13: note: Assuming that condition 'len<=
 Shared/Magic/zsign/common/json.cpp:1902:12: note: Array index out of bounds
         buf[len] = 0;
            ^
-Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JReader {
-^
-Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
-class JWriter {
-^
-Shared/Magic/zsign/common/json.h:179:10: performance: inconclusive: The member function 'JValue::WriteDataToFile' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+Shared/Magic/zsign/common/json.h:224:10: performance: inconclusive: The member function 'JValue::WriteDataToFile' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
     bool WriteDataToFile(const char *file, const char *data, size_t len);
          ^
 Shared/Magic/zsign/common/json.cpp:753:14: note: Technically the member function 'JValue::WriteDataToFile' can be static (but you may consider moving to unnamed namespace).
 bool JValue::WriteDataToFile(const char *file, const char *data, size_t len) {
              ^
-Shared/Magic/zsign/common/json.h:179:10: note: Technically the member function 'JValue::WriteDataToFile' can be static (but you may consider moving to unnamed namespace).
+Shared/Magic/zsign/common/json.h:224:10: note: Technically the member function 'JValue::WriteDataToFile' can be static (but you may consider moving to unnamed namespace).
     bool WriteDataToFile(const char *file, const char *data, size_t len);
          ^
-Shared/Magic/zsign/common/json.h:370:10: performance: inconclusive: The member function 'PReader::decodeString' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+Shared/Magic/zsign/common/json.h:461:10: performance: inconclusive: The member function 'PReader::decodeString' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
     bool decodeString(Token &token, string &decoded, bool filter = true);
          ^
 Shared/Magic/zsign/common/json.cpp:1912:15: note: Technically the member function 'PReader::decodeString' can be static (but you may consider moving to unnamed namespace).
 bool PReader::decodeString(Token &token, string &strdec, bool filter) {
               ^
-Shared/Magic/zsign/common/json.h:370:10: note: Technically the member function 'PReader::decodeString' can be static (but you may consider moving to unnamed namespace).
+Shared/Magic/zsign/common/json.h:461:10: note: Technically the member function 'PReader::decodeString' can be static (but you may consider moving to unnamed namespace).
     bool decodeString(Token &token, string &decoded, bool filter = true);
          ^
-Shared/Magic/zsign/common/json.h:381:10: performance: inconclusive: The member function 'PReader::byteConvert' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+Shared/Magic/zsign/common/json.h:472:10: performance: inconclusive: The member function 'PReader::byteConvert' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
     void byteConvert(uint8_t *v, size_t size);
          ^
 Shared/Magic/zsign/common/json.cpp:1974:15: note: Technically the member function 'PReader::byteConvert' can be static (but you may consider moving to unnamed namespace).
 void PReader::byteConvert(uint8_t *v, size_t size) {
               ^
-Shared/Magic/zsign/common/json.h:381:10: note: Technically the member function 'PReader::byteConvert' can be static (but you may consider moving to unnamed namespace).
+Shared/Magic/zsign/common/json.h:472:10: note: Technically the member function 'PReader::byteConvert' can be static (but you may consider moving to unnamed namespace).
     void byteConvert(uint8_t *v, size_t size);
          ^
-Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int val);
-    ^
-Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(bool val);
-    ^
-Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(double val);
-    ^
-Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(int64_t val);
-    ^
-Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const char *val);
-    ^
-Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
-    JValue(const string &val);
-    ^
 Shared/Magic/zsign/common/json.cpp:2107:47: portability: Casting between unsigned char * and float * which have an incompatible binary data representation. [invalidPointerCast]
                     pv = static_cast<double>(*reinterpret_cast<float*>(buf));
                                               ^
@@ -623,7 +359,7 @@ Shared/Magic/zsign/common/json.cpp:754:45: style: The unsigned expression 'len' 
 Shared/Magic/zsign/common/json.cpp:1492:33: style: inconclusive: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'. [funcArgNamesDifferent]
 string JWriter::v2s(const char *pstr) {
                                 ^
-Shared/Magic/zsign/common/json.h:302:35: note: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'.
+Shared/Magic/zsign/common/json.h:393:35: note: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'.
     static string v2s(const char *val);
                                   ^
 Shared/Magic/zsign/common/json.cpp:1492:33: note: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'.
@@ -632,7 +368,7 @@ string JWriter::v2s(const char *pstr) {
 Shared/Magic/zsign/common/json.cpp:1550:44: style: inconclusive: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'. [funcArgNamesDifferent]
 std::string JWriter::vstring2s(const char *pstr) { return string("\\\"") + pstr + "\\\""; }
                                            ^
-Shared/Magic/zsign/common/json.h:304:41: note: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'.
+Shared/Magic/zsign/common/json.h:395:41: note: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'.
     static string vstring2s(const char *val);
                                         ^
 Shared/Magic/zsign/common/json.cpp:1550:44: note: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'.
@@ -641,7 +377,7 @@ std::string JWriter::vstring2s(const char *pstr) { return string("\\\"") + pstr 
 Shared/Magic/zsign/common/json.cpp:1608:33: style: inconclusive: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
 bool PReader::readValue(JValue &pval, Token &token) {
                                 ^
-Shared/Magic/zsign/common/json.h:360:28: note: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'.
+Shared/Magic/zsign/common/json.h:451:28: note: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'.
     bool readValue(JValue &jval, Token &token);
                            ^
 Shared/Magic/zsign/common/json.cpp:1608:33: note: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'.
@@ -650,7 +386,7 @@ bool PReader::readValue(JValue &pval, Token &token) {
 Shared/Magic/zsign/common/json.cpp:1827:38: style: inconclusive: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
 bool PReader::readDictionary(JValue &pval) {
                                      ^
-Shared/Magic/zsign/common/json.h:365:33: note: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'.
+Shared/Magic/zsign/common/json.h:456:33: note: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'.
     bool readDictionary(JValue &jval);
                                 ^
 Shared/Magic/zsign/common/json.cpp:1827:38: note: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'.
@@ -659,7 +395,7 @@ bool PReader::readDictionary(JValue &pval) {
 Shared/Magic/zsign/common/json.cpp:1855:33: style: inconclusive: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
 bool PReader::readArray(JValue &pval) {
                                 ^
-Shared/Magic/zsign/common/json.h:361:28: note: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'.
+Shared/Magic/zsign/common/json.h:452:28: note: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'.
     bool readArray(JValue &jval);
                            ^
 Shared/Magic/zsign/common/json.cpp:1855:33: note: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'.
@@ -668,7 +404,7 @@ bool PReader::readArray(JValue &pval) {
 Shared/Magic/zsign/common/json.cpp:1874:50: style: inconclusive: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
 bool PReader::decodeNumber(Token &token, JValue &pval) {
                                                  ^
-Shared/Magic/zsign/common/json.h:369:45: note: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'.
+Shared/Magic/zsign/common/json.h:460:45: note: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'.
     bool decodeNumber(Token &token, JValue &jval);
                                             ^
 Shared/Magic/zsign/common/json.cpp:1874:50: note: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'.
@@ -677,7 +413,7 @@ bool PReader::decodeNumber(Token &token, JValue &pval) {
 Shared/Magic/zsign/common/json.cpp:1896:50: style: inconclusive: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
 bool PReader::decodeDouble(Token &token, JValue &pval) {
                                                  ^
-Shared/Magic/zsign/common/json.h:371:45: note: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'.
+Shared/Magic/zsign/common/json.h:462:45: note: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'.
     bool decodeDouble(Token &token, JValue &jval);
                                             ^
 Shared/Magic/zsign/common/json.cpp:1896:50: note: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'.
@@ -686,7 +422,7 @@ bool PReader::decodeDouble(Token &token, JValue &pval) {
 Shared/Magic/zsign/common/json.cpp:1912:50: style: inconclusive: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'. [funcArgNamesDifferent]
 bool PReader::decodeString(Token &token, string &strdec, bool filter) {
                                                  ^
-Shared/Magic/zsign/common/json.h:370:45: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
+Shared/Magic/zsign/common/json.h:461:45: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
     bool decodeString(Token &token, string &decoded, bool filter = true);
                                             ^
 Shared/Magic/zsign/common/json.cpp:1912:50: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
