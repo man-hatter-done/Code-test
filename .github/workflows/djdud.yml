@@ -1,0 +1,146 @@
+name: Code Analysis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analyze_cpp:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Gets full history for better analysis
+
+      - name: Install Cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Create cppcheck_errors.txt file
+        run: echo " " > cppcheck_errors.txt || true
+
+      - name: Run Cppcheck
+        continue-on-error: true
+        run: |
+          # Find all C++ files and process them in smaller batches
+          find . -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" \) | \
+          while read -r file; do
+            cppcheck \
+              --enable=all \
+              --inconclusive \
+              --std=c++11 \
+              --language=c++ \
+              --force \
+              --verbose \
+              --error-exitcode=0 \
+              -Iinclude \
+              -Isrc \
+              "$file" 2>> cppcheck_errors.txt || true
+          done
+          cat cppcheck_errors.txt || true
+
+  analyze_swift:
+    runs-on: macos-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+
+      - name: Verify SwiftLint Installation
+        run: swiftlint version
+
+      - name: Verify SwiftFormat Installation
+        run: swiftformat --version
+
+      - name: Run SwiftLint
+        continue-on-error: true
+        run: |
+          # Run SwiftLint on the entire codebase
+          swiftlint lint \
+            --strict \
+            --reporter xcode \
+            > swiftlint_errors.txt 2>&1 || true
+          cat swiftlint_errors.txt || true
+
+      - name: Run SwiftFormat
+        continue-on-error: true
+        run: |
+          # Run SwiftFormat on the entire codebase
+          swiftformat . \
+            --swiftversion 5.0 \
+            > swiftformat_errors.txt 2>&1 || true
+          cat swiftformat_errors.txt || true
+
+      - name: Ensure swiftlint_errors.txt exists
+        run: echo " " > swiftlint_errors.txt || true
+
+      - name: Ensure swiftformat_errors.txt exists
+        run: echo " " > swiftformat_errors.txt || true
+
+  analyze_infer:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential openjdk-11-jdk maven
+          wget -O infer-linux64-v1.1.0.tar.xz https://github.com/facebook/infer/releases/download/v1.1.0/infer-linux64-v1.1.0.tar.xz
+          tar -xf infer-linux64-v1.1.0.tar.xz
+          sudo mv infer-linux64-v1.1.0 /opt/infer
+          sudo ln -s /opt/infer/bin/infer /usr/local/bin/infer
+
+      - name: Run Infer
+        continue-on-error: true
+        run: |
+          infer run --keep-going -- make
+          infer analyze \
+            --keep-going \
+            --jobs 4 \
+            > infer_errors.txt 2>&1 || true
+          cat infer_errors.txt || true
+
+      - name: Ensure infer_errors.txt exists
+        run: echo " " > infer_errors.txt || true
+
+  create_pull_request:
+    runs-on: ubuntu-22.04
+    needs: [analyze_cpp, analyze_swift, analyze_infer]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create new branch
+        run: git checkout -b analysis-results
+
+      - name: Commit analysis results
+        run: |
+          git add cppcheck_errors.txt swiftlint_errors.txt swiftformat_errors.txt infer_errors.txt
+          git commit -m "Add analysis results"
+
+      - name: Push changes
+        run: git push origin analysis-results
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Add analysis results"
+          branch: analysis-results
+          title: "Add analysis results"
+          body: "This pull request adds the analysis results files."
