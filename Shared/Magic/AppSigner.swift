@@ -2,7 +2,8 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// as expressly permitted under the terms of the Proprietary Software License.
 
 import AlertKit
 import CoreData
@@ -11,20 +12,44 @@ import UIKit
 
 // External function declarations from C/C++ code
 @_silgen_name("zsign")
-func zsign(_ appPath: String, _ provisionPath: String, _ p12Path: String, _ password: String, 
-           _ bundleId: String, _ name: String, _ version: String, _ removeProvisioningFile: Bool) -> Int32
+func zsign(_ appPath: String, 
+           _ provisionPath: String, 
+           _ p12Path: String, 
+           _ password: String, 
+           _ bundleId: String, 
+           _ name: String, 
+           _ version: String, 
+           _ removeProvisioningFile: Bool) -> Int32
 
+// External C++ functions
 @_silgen_name("InjectDyLib")
-func InjectDyLib(_ filePath: String, _ dylibPath: String, _ weakInject: Bool, _ bCreate: Bool) -> Bool
+private func _InjectDyLib(_ filePath: String, _ dylibPath: String, _ weakInject: Bool, _ bCreate: Bool) -> Bool
 
 @_silgen_name("ChangeDylibPath")
-func ChangeDylibPath(_ filePath: String, _ oldPath: String, _ newPath: String) -> Bool
+private func _ChangeDylibPath(_ filePath: String, _ oldPath: String, _ newPath: String) -> Bool
 
 @_silgen_name("ListDylibs")
-func ListDylibs(_ filePath: String, _ dylibPaths: NSMutableArray) -> Bool
+private func _ListDylibs(_ filePath: String, _ dylibPaths: NSMutableArray) -> Bool
 
 @_silgen_name("UninstallDylibs")
-func UninstallDylibs(_ filePath: String, _ dylibPaths: [String]) -> Bool
+private func _UninstallDylibs(_ filePath: String, _ dylibPaths: [String]) -> Bool
+
+// Swift wrapper functions with proper naming conventions
+func injectDyLib(_ filePath: String, _ dylibPath: String, _ weakInject: Bool, _ bCreate: Bool) -> Bool {
+    return _InjectDyLib(filePath, dylibPath, weakInject, bCreate)
+}
+
+func changeDylibPath(_ filePath: String, _ oldPath: String, _ newPath: String) -> Bool {
+    return _ChangeDylibPath(filePath, oldPath, newPath)
+}
+
+func getDylibsList(_ filePath: String, _ dylibPaths: NSMutableArray) -> Bool {
+    return _ListDylibs(filePath, dylibPaths)
+}
+
+func removeDylibs(_ filePath: String, _ dylibPaths: [String]) -> Bool {
+    return _UninstallDylibs(filePath, dylibPaths)
+}
 
 func signInitialApp(bundle: BundleOptions, mainOptions: SigningMainDataWrapper, signingOptions: SigningDataWrapper, appPath: URL, completion: @escaping (Result<(URL, NSManagedObject), Error>) -> Void) {
     UIApplication.shared.isIdleTimerDisabled = true
@@ -166,15 +191,15 @@ private func signAppWithZSign(tmpDirApp: URL, certPaths: (provisionPath: String,
 }
 
 func injectDylib(filePath: String, dylibPath: String, weakInject: Bool) -> Bool {
-    // Call InjectDyLib function - explicitly declared in bridging header
+    // Call injectDyLib function using the Swift wrapper
     let bCreate = false
-    let success = InjectDyLib(filePath, dylibPath, weakInject, bCreate)
+    let success = injectDyLib(filePath, dylibPath, weakInject, bCreate)
     return success
 }
 
 func changeDylib(filePath: String, oldPath: String, newPath: String) -> Bool {
-    // Call ChangeDylibPath function - explicitly declared in bridging header
-    let success = ChangeDylibPath(filePath, oldPath, newPath)
+    // Call changeDylibPath function using the Swift wrapper
+    let success = changeDylibPath(filePath, oldPath, newPath)
     return success
 }
 
@@ -193,10 +218,10 @@ func updateMobileProvision(app: URL) throws {
 }
 
 func listDylibs(filePath: String) -> [String]? {
-    // Call ListDylibs function - explicitly declared in bridging header
+    // Call listDylibs function using the Swift wrapper
     let dylibPathsArray = NSMutableArray()
 
-    let success = ListDylibs(filePath, dylibPathsArray)
+    let success = getDylibsList(filePath, dylibPathsArray)
 
     if success {
         let dylibPaths = dylibPathsArray as! [String]
@@ -208,8 +233,8 @@ func listDylibs(filePath: String) -> [String]? {
 }
 
 func uninstallDylibs(filePath: String, dylibPaths: [String]) -> Bool {
-    // Call UninstallDylibs function - explicitly declared in bridging header
-    return UninstallDylibs(filePath, dylibPaths)
+    // Call removeDylibs function using the Swift wrapper
+    return removeDylibs(filePath, dylibPaths)
 }
 
 func updatePlugIns(options: SigningDataWrapper, app: URL) throws {

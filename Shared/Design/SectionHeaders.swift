@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly
 // permitted under the terms of the Proprietary Software License.
 
 import UIKit
@@ -18,7 +18,6 @@ private enum SectionHeaderConstants {
         /// Button font size
         static let buttonSize: CGFloat = 14
     }
-    
     /// Spacing and margin constants
     enum Spacing {
         /// Default top margin
@@ -36,7 +35,6 @@ private enum SectionHeaderConstants {
         /// Large spacing
         static let largeSpacing: CGFloat = 8
     }
-    
     /// View dimensions
     enum Dimensions {
         /// Button corner radius
@@ -46,7 +44,6 @@ private enum SectionHeaderConstants {
         /// Icon dimension
         static let iconSize: CGFloat = 24
     }
-    
     /// Appearance settings
     enum Appearance {
         /// Border color for image views
@@ -101,11 +98,23 @@ class InsetGroupedSectionHeader: UIView {
         addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SectionHeaderConstants.Spacing.smallSpacing),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -SectionHeaderConstants.Spacing.mediumSpacing),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: topAnchorConstant),
+            titleLabel.leadingAnchor.constraint(
+                equalTo: leadingAnchor, 
+                constant: SectionHeaderConstants.Spacing.smallSpacing
+            ),
+            titleLabel.trailingAnchor.constraint(
+                equalTo: trailingAnchor, 
+                constant: -SectionHeaderConstants.Spacing.mediumSpacing
+            ),
+            titleLabel.topAnchor.constraint(
+                equalTo: topAnchor,
+                constant: topAnchorConstant
+            ),
             // Ensure the label is properly constrained to the bottom for proper sizing
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -SectionHeaderConstants.Spacing.smallSpacing)
+            titleLabel.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -SectionHeaderConstants.Spacing.smallSpacing
+            )
         ])
     }
     
@@ -184,16 +193,37 @@ class SearchAppSectionHeader: UIView {
 
         NSLayoutConstraint.activate([
             // Icon constraints
-            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SectionHeaderConstants.Spacing.largeSpacing),
-            iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: SectionHeaderConstants.Dimensions.iconSize),
-            iconImageView.heightAnchor.constraint(equalToConstant: SectionHeaderConstants.Dimensions.iconSize),
+            iconImageView.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: SectionHeaderConstants.Spacing.largeSpacing
+            ),
+            iconImageView.centerYAnchor.constraint(
+                equalTo: centerYAnchor
+            ),
+            iconImageView.widthAnchor.constraint(
+                equalToConstant: SectionHeaderConstants.Dimensions.iconSize
+            ),
+            iconImageView.heightAnchor.constraint(
+                equalToConstant: SectionHeaderConstants.Dimensions.iconSize
+            ),
 
             // Title constraints
-            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: SectionHeaderConstants.Spacing.largeSpacing),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -SectionHeaderConstants.Spacing.mediumSpacing),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: topAnchorConstant),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topAnchorConstant)
+            titleLabel.leadingAnchor.constraint(
+                equalTo: iconImageView.trailingAnchor,
+                constant: SectionHeaderConstants.Spacing.largeSpacing
+            ),
+            titleLabel.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -SectionHeaderConstants.Spacing.mediumSpacing
+            ),
+            titleLabel.topAnchor.constraint(
+                equalTo: topAnchor,
+                constant: topAnchorConstant
+            ),
+            titleLabel.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -topAnchorConstant
+            )
         ])
     }
     
@@ -325,28 +355,57 @@ class GroupedSectionHeader: UIView {
 
         // Setup constraints
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SectionHeaderConstants.Spacing.leadingPadding),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: topAnchorConstant),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -SectionHeaderConstants.Spacing.trailingPadding)
+            titleLabel.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: SectionHeaderConstants.Spacing.leadingPadding
+            ),
+            titleLabel.topAnchor.constraint(
+                equalTo: topAnchor,
+                constant: topAnchorConstant
+            ),
+            titleLabel.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -SectionHeaderConstants.Spacing.trailingPadding
+            )
         ])
 
         if subtitleLabel.text != "" {
             NSLayoutConstraint.activate([
-                subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: SectionHeaderConstants.Spacing.leadingPadding),
-                subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: SectionHeaderConstants.Spacing.smallSpacing),
-                subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -SectionHeaderConstants.Spacing.trailingPadding),
-                subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topAnchorConstant)
+                subtitleLabel.leadingAnchor.constraint(
+                    equalTo: leadingAnchor,
+                    constant: SectionHeaderConstants.Spacing.leadingPadding
+                ),
+                subtitleLabel.topAnchor.constraint(
+                    equalTo: titleLabel.bottomAnchor,
+                    constant: SectionHeaderConstants.Spacing.smallSpacing
+                ),
+                subtitleLabel.trailingAnchor.constraint(
+                    equalTo: trailingAnchor,
+                    constant: -SectionHeaderConstants.Spacing.trailingPadding
+                ),
+                subtitleLabel.bottomAnchor.constraint(
+                    equalTo: bottomAnchor,
+                    constant: -topAnchorConstant
+                )
             ])
         } else {
             NSLayoutConstraint.activate([
-                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topAnchorConstant)
+                titleLabel.bottomAnchor.constraint(
+                    equalTo: bottomAnchor,
+                    constant: -topAnchorConstant
+                )
             ])
         }
 
         if buttonTitle != nil {
             NSLayoutConstraint.activate([
-                actionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -SectionHeaderConstants.Spacing.leadingPadding),
-                actionButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
+                actionButton.trailingAnchor.constraint(
+                    equalTo: trailingAnchor,
+                    constant: -SectionHeaderConstants.Spacing.leadingPadding
+                ),
+                actionButton.centerYAnchor.constraint(
+                    equalTo: titleLabel.centerYAnchor
+                )
             ])
         }
     }
@@ -367,10 +426,10 @@ class GroupedSectionHeader: UIView {
     override var intrinsicContentSize: CGSize {
         let height: CGFloat
         if subtitleLabel.text != "" {
-            height = titleLabel.intrinsicContentSize.height + 
-                    subtitleLabel.intrinsicContentSize.height + 
-                    topAnchorConstant * 2 + 
-                    SectionHeaderConstants.Spacing.smallSpacing
+            height = titleLabel.intrinsicContentSize.height
+                    + subtitleLabel.intrinsicContentSize.height
+                    + topAnchorConstant * 2
+                    + SectionHeaderConstants.Spacing.smallSpacing
         } else {
             height = titleLabel.intrinsicContentSize.height + topAnchorConstant * 2
         }
