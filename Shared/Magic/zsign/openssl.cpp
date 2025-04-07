@@ -131,7 +131,7 @@ ASN1_TYPE *_GenerateASN1Type(const string &value) {
         BIO_free(ldapbio);
     }
     string a = "asn1=SEQUENCE:A\n[A]\nC=OBJECT:sha256\nB=FORMAT:HEX,OCT:" + value + "\n";
-    int code = BIO_puts(ldapbio, a.c_str());
+    [[maybe_unused]] int code = BIO_puts(ldapbio, a.c_str());
     if (NCONF_load_bio(cnf, ldapbio, &errline) <= 0) {
         BIO_free(ldapbio);
         NCONF_free(cnf);
@@ -149,7 +149,7 @@ ASN1_TYPE *_GenerateASN1Type(const string &value) {
     return ret;
 }
 
-bool _GenerateCMS(X509 *scert, EVP_PKEY *spkey, const string &strCDHashData, const string &strCDHashesPlist,
+bool _GenerateCMS(X509 *scert, EVP_PKEY *spkey, const string &strCDHashData, const string &strCDHashPlist,
                   const string &strCodeDirectorySlotSHA1, const string &strAltnateCodeDirectorySlot256,
                   string &strCMSOutput) {
     if (!scert || !spkey) {
@@ -215,7 +215,7 @@ bool _GenerateCMS(X509 *scert, EVP_PKEY *spkey, const string &strCDHashData, con
     }
 
     int addHashPlist =
-        CMS_signed_add1_attr_by_OBJ(si, obj, 0x4, strCDHashesPlist.c_str(), (int)strCDHashesPlist.size());
+        CMS_signed_add1_attr_by_OBJ(si, obj, 0x4, strCDHashPlist.c_str(), (int)strCDHashPlist.size());
 
     if (!addHashPlist) {
         return CMSError();
@@ -483,13 +483,13 @@ bool GetCMSInfo(uint8_t *pCMSData, uint32_t uCMSLength, JValue &jvOutput) {
                 continue;
             }
 
-            ASN1_OBJECT *obj = X509_ATTRIBUTE_get0_object(attr);
-            if (!obj) {
+            ASN1_OBJECT *attrObj = X509_ATTRIBUTE_get0_object(attr);
+            if (!attrObj) {
                 continue;
             }
 
             char txtobj[128] = {0};
-            OBJ_obj2txt(txtobj, 128, obj, 1);
+            OBJ_obj2txt(txtobj, 128, attrObj, 1);
 
             if (0 == strcmp("1.2.840.113549.1.9.3", txtobj)) { // V_ASN1_OBJECT
                 ASN1_TYPE *av = X509_ATTRIBUTE_get0_type(attr, 0);

@@ -112,7 +112,7 @@ class SectionIcons {
         radius: Int = Int(SectionIconConstants.Sizes.cornerRadius)
     ) {
         // Use modern image renderer API to create the resized image
-        let resizedImage = UIGraphicsImageRenderer(size: size).image { context in
+        let resizedImage = UIGraphicsImageRenderer(size: size).image { _ in
             // Draw the original image scaled to the new size
             originalImage.draw(in: CGRect(origin: .zero, size: size))
         }
@@ -170,7 +170,8 @@ class SectionIcons {
                     case let .failure(error):
                         // Log the error but keep the placeholder image
                         Debug.shared.log(
-                            message: "Failed to load image from URL: \(url.absoluteString), error: \(error.localizedDescription)",
+                            message: "Failed to load image from URL: \(url.absoluteString), " +
+                                "error: \(error.localizedDescription)",
                             type: .debug
                         )
                     }
@@ -213,7 +214,8 @@ class SectionIcons {
                 case let .failure(error):
                     // Log the error and return nil
                     Debug.shared.log(
-                        message: "Failed to load image from URL: \(url.absoluteString), error: \(error.localizedDescription)",
+                        message: "Failed to load image from URL: \(url.absoluteString), " +
+                            "error: \(error.localizedDescription)",
                         type: .debug
                     )
                     DispatchQueue.main.async {

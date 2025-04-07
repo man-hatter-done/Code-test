@@ -425,13 +425,16 @@ bool SlotBuildCodeDirectory(bool bAlternate, uint8_t *pCodeBase, uint32_t uCodeL
     uint32_t uCodeSlots = uPages + (uRemain > 0 ? 1 : 0);
 
     uint32_t uHeaderLength = 44;
-    if (uVersion >= 0x20100) {
+    // Version is always 0x20400, so this check is always true
+    {
         uHeaderLength += sizeof(cdHeader.scatterOffset);
     }
-    if (uVersion >= 0x20200) {
+    // Version is always 0x20400, so this check is always true
+    {
         uHeaderLength += sizeof(cdHeader.teamOffset);
     }
-    if (uVersion >= 0x20300) {
+    // Version is always 0x20400, so this check is always true
+    {
         uHeaderLength += sizeof(cdHeader.spare3);
         uHeaderLength += sizeof(cdHeader.codeLimit64);
     }
@@ -447,10 +450,12 @@ bool SlotBuildCodeDirectory(bool bAlternate, uint8_t *pCodeBase, uint32_t uCodeL
     uint32_t uCodeSlotsLength = uCodeSlots * cdHeader.hashSize;
 
     uint32_t uSlotLength = uHeaderLength + uBundleIDLength + uSpecialSlotsLength + uCodeSlotsLength;
-    if (uVersion >= 0x20100) {
+    // Version is always 0x20400, so this check is always true
+    {
         // todo
     }
-    if (uVersion >= 0x20200) {
+    // Version is always 0x20400, so this check is always true
+    {
         uSlotLength += uTeamIDLength;
     }
 
@@ -460,10 +465,12 @@ bool SlotBuildCodeDirectory(bool bAlternate, uint8_t *pCodeBase, uint32_t uCodeL
     cdHeader.nCodeSlots = BE(uCodeSlots);
 
     uint32_t uHashOffset = uHeaderLength + uBundleIDLength + uSpecialSlotsLength;
-    if (uVersion >= 0x20100) {
+    // Version is always 0x20400, so this check is always true
+    {
         // todo
     }
-    if (uVersion >= 0x20200) {
+    // Version is always 0x20400, so this check is always true
+    {
         uHashOffset += uTeamIDLength;
         cdHeader.teamOffset = BE(uHeaderLength + uBundleIDLength);
     }

@@ -637,9 +637,9 @@ bool ZArchO::ChangeDylibPath(const char *oldPath, const char *newPath) {
     uint32_t oldPathLength = static_cast<uint32_t>(strlen(oldPath));
     uint32_t newPathLength = static_cast<uint32_t>(strlen(newPath));
     // Calculate padding for alignment - oldPathPadding is not used but kept for code clarity
-    uint32_t oldPathPadding = (8 - oldPathLength % 8) % 8; // NOLINT(clang-analyzer-deadcode.DeadStores)
+    [[maybe_unused]] uint32_t oldPathPadding = (8 - oldPathLength % 8) % 8;
     uint32_t newPathPadding = (8 - newPathLength % 8) % 8;
-    uint32_t newLoadCommandSize = 0;
+    [[maybe_unused]] uint32_t newLoadCommandSize = 0;
 
     for (uint32_t i = 0; i < BO(m_pHeader->ncmds); i++) {
         load_command *plc = reinterpret_cast<load_command *>(pLoadCommand);

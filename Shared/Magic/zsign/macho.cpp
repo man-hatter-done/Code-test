@@ -70,10 +70,10 @@ bool ZMachO::OpenFile(const char *szPath) {
     if (NULL != m_pBase) {
         uint32_t magic = *((uint32_t *)m_pBase);
         if (FAT_CIGAM == magic || FAT_MAGIC == magic) {
-            fat_header *pFatHeader = (fat_header *)m_pBase;
+            fat_header *pFatHeader = reinterpret_cast<fat_header *>(m_pBase);
             int nFatArch = (FAT_MAGIC == magic) ? pFatHeader->nfat_arch : LE(pFatHeader->nfat_arch);
             for (int i = 0; i < nFatArch; i++) {
-                fat_arch *pFatArch = (fat_arch *)(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i);
+                fat_arch *pFatArch = reinterpret_cast<fat_arch *>(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i);
                 uint8_t *pArchBase = m_pBase + ((FAT_MAGIC == magic) ? pFatArch->offset : LE(pFatArch->offset));
                 uint32_t uArchLength = (FAT_MAGIC == magic) ? pFatArch->size : LE(pFatArch->size);
                 if (!NewArchO(pArchBase, uArchLength)) {
@@ -100,7 +100,7 @@ bool ZMachO::CloseFile() {
         return false;
     }
 
-    if ((munmap((void *)m_pBase, m_sSize)) < 0) {
+    if ((munmap(static_cast<void*>(m_pBase), m_sSize)) < 0) {
         ZLog::ErrorV(">>> CodeSign Write(munmap) Failed! Error: %p, %lu, %s\n", m_pBase, m_sSize, strerror(errno));
         return false;
     }
@@ -127,7 +127,7 @@ bool ZMachO::Sign(ZSignAsset *pSignAsset, bool bForce, string strBundleId, strin
             jvInfo.readPList(archo->m_strInfoPlist);
             strBundleId = jvInfo["CFBundleIdentifier"].asCString();
             if (strBundleId.empty()) {
-                strBundleId = basename((char *)m_strFile.c_str());
+                strBundleId = basename(const_cast<char *>(m_strFile.c_str()));
             }
         }
 
@@ -181,10 +181,10 @@ bool ZMachO::ReallocCodeSignSpace() {
     } else { // fat
         uint32_t uAlign = 16384;
         vector<fat_arch> arrArches;
-        fat_header fath = *((fat_header *)m_pBase);
+        fat_header fath = *(reinterpret_cast<fat_header *>(m_pBase));
         int nFatArch = (FAT_MAGIC == fath.magic) ? fath.nfat_arch : LE(fath.nfat_arch);
         for (int i = 0; i < nFatArch; i++) {
-            fat_arch arch = *((fat_arch *)(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i));
+            fat_arch arch = *(reinterpret_cast<fat_arch *>(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i));
             arrArches.push_back(arch);
         }
         CloseFile();
@@ -237,7 +237,7 @@ bool ZMachO::ReallocCodeSignSpace() {
             AppendFile(strNewFatMachOFile.c_str(), (const char *)pData, sSize);
             AppendFile(strNewFatMachOFile.c_str(), strPadding);
 
-            munmap((void *)pData, sSize);
+            munmap(static_cast<void *>(pData), sSize);
             RemoveFile(strNewArchOFile.c_str());
         }
 
