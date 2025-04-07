@@ -2,7 +2,8 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly
+// permitted under the terms of the Proprietary Software License.
 
 import UIKit
 import WebKit
@@ -53,7 +54,7 @@ class WebViewController: UIViewController, WKNavigationDelegate {
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 
             forwardButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-            forwardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            forwardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
 
         updateButtonStates()

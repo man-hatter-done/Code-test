@@ -9,7 +9,7 @@ let package = Package(
     products: [
         .library(
             name: "Backdoor",
-            targets: ["Backdoor"]),
+            targets: ["Backdoor"])
     ],
     dependencies: [
         // MARK: - Core Dependencies (Actually used in the codebase)
@@ -53,7 +53,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.0.4"),
 
         // Simplified Vapor dependencies
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.83.1"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.83.1")
     ],
     targets: [
         .target(

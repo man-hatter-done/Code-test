@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except
 // as expressly permitted under the terms of the Proprietary Software License.
 
 import Foundation
@@ -82,7 +82,8 @@ func getFileInfo(_ data: Data, _ offset: Int) throws -> ARFile {
 }
 
 public func extractAR(_ rawData: Data) throws -> [ARFile] {
-    if [UInt8](rawData.subdata(in: Range(0 ... 7))) != [0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A] {
+    let magicBytes = [0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A]
+    if [UInt8](rawData.subdata(in: Range(0 ... 7))) != magicBytes {
         throw ARError.badArchive("Invalid magic")
     }
 

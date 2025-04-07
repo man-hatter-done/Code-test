@@ -2,15 +2,18 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except
 // as expressly permitted under the terms of the Proprietary Software License.
 
 import Foundation
 
 extension Bundle {
-    static func makeLocalizationBundle(preferredLanguageCode: String? = Preferences.preferredLanguageCode) -> Bundle {
+    static func makeLocalizationBundle(
+        preferredLanguageCode: String? = Preferences.preferredLanguageCode
+    ) -> Bundle {
         if let preferredLangCode = preferredLanguageCode,
-           let bundle = Bundle(path: Bundle.main.path(forResource: preferredLangCode, ofType: "lproj")!) {
+           let path = Bundle.main.path(forResource: preferredLangCode, ofType: "lproj"),
+           let bundle = Bundle(path: path) {
             return bundle
         }
 
@@ -27,7 +30,8 @@ extension String {
     }
 
     static func localized(_ name: String, arguments: CVarArg...) -> String {
-        return String(format: NSLocalizedString(name, bundle: .preferredLocalizationBundle, comment: ""), arguments: arguments)
+        let format = NSLocalizedString(name, bundle: .preferredLocalizationBundle, comment: "")
+        return String(format: format, arguments: arguments)
     }
 
     /// Localizes the current string using the main bundle.

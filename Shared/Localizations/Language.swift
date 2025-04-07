@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except
 // as expressly permitted under the terms of the Proprietary Software License.
 
 import Foundation
@@ -18,11 +18,16 @@ struct Language {
             }
 
             let displayLocale = Locale(identifier: languageCode)
-            guard let displayName = displayLocale.localizedString(forLanguageCode: languageCode)?.capitalized(with: displayLocale) else {
+            guard let displayName = displayLocale.localizedString(forLanguageCode: languageCode)?
+                    .capitalized(with: displayLocale) else {
                 return nil
             }
 
-            return Language(displayName: displayName, subtitleText: subtitle, languageCode: languageCode)
+            return Language(
+                displayName: displayName,
+                subtitleText: subtitle,
+                languageCode: languageCode
+            )
         }
     }
 
