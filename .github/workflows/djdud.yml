@@ -118,9 +118,16 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create new branch
+      - name: Determine default branch
         run: |
-          git checkout -b results  # Changed to static branch name "results"
+          DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+          echo "DEFAULT_BRANCH=$DEFAULT_BRANCH" >> $GITHUB_ENV
+
+      - name: Create new branch with timestamp
+        run: |
+          BRANCH_NAME="results-$(date '+%Y%m%d%H%M%S')"
+          git checkout -b $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Move artifacts to root
         run: |
@@ -138,14 +145,15 @@ jobs:
           fi
 
       - name: Push changes
-        run: git push origin results || true
+        run: git push origin ${{ env.BRANCH_NAME }} || true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Add code analysis results"
-          branch: results  # Updated to match the new branch name
+          branch: ${{ env.BRANCH_NAME }}
+          base: ${{ env.DEFAULT_BRANCH }}  # Dynamically set to the default branch
           title: "Code Analysis Results - $(date '+%Y-%m-%d')"
           body: |
             This pull request contains the results of code analysis for C++ and Swift.
