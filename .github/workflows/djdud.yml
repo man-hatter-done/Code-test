@@ -17,8 +17,8 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y cppcheck
 
-      - name: Create output directory
-        run: mkdir -p "Files to Fix" && touch "Files to Fix/cppcheck_errors.txt" || true
+      - name: Set up output file
+        run: touch cppcheck_errors.txt || true
 
       - name: Run Cppcheck
         continue-on-error: true
@@ -35,15 +35,15 @@ jobs:
               --error-exitcode=0 \
               -Iinclude \
               -Isrc \
-              "$file" 2>> "Files to Fix/cppcheck_errors.txt" || true
+              "$file" 2>> cppcheck_errors.txt || true
           done
-          cat "Files to Fix/cppcheck_errors.txt" || true
+          cat cppcheck_errors.txt || true
 
       - name: Upload Cppcheck results
         uses: actions/upload-artifact@v4
         with:
           name: cppcheck-results
-          path: "Files to Fix/cppcheck_errors.txt"
+          path: cppcheck_errors.txt
           if-no-files-found: ignore
 
   analyze_swift:
@@ -74,17 +74,14 @@ jobs:
           swiftlint version || echo "SwiftLint not installed correctly"
           swiftformat --version || echo "SwiftFormat not installed correctly"
 
-      - name: Create output directory
-        run: mkdir -p "Files to Fix"
-
       - name: Run SwiftLint
         continue-on-error: true
         run: |
           swiftlint lint \
             --strict \
             --reporter json \
-            > "Files to Fix/swiftlint_errors.json" 2>&1 || true
-          cat "Files to Fix/swiftlint_errors.json" || true
+            > swiftlint_errors.json 2>&1 || true
+          cat swiftlint_errors.json || true
 
       - name: Run SwiftFormat
         continue-on-error: true
@@ -92,16 +89,16 @@ jobs:
           swiftformat . \
             --swiftversion 5.10 \
             --verbose \
-            > "Files to Fix/swiftformat_errors.txt" 2>&1 || true
-          cat "Files to Fix/swiftformat_errors.txt" || true
+            > swiftformat_errors.txt 2>&1 || true
+          cat swiftformat_errors.txt || true
 
       - name: Upload Swift analysis results
         uses: actions/upload-artifact@v4
         with:
           name: swift-analysis-results
           path: |
-            "Files to Fix/swiftlint_errors.json"
-            "Files to Fix/swiftformat_errors.txt"
+            swiftlint_errors.json
+            swiftformat_errors.txt
           if-no-files-found: ignore
 
   create_pull_request:
@@ -132,17 +129,17 @@ jobs:
           git checkout -b $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Create Files to Fix directory and move artifacts
+      - name: Create Errors to Fix directory and move artifacts
         run: |
-          mkdir -p "Files to Fix"
-          mv artifacts/*/* "Files to Fix/" || true
+          mkdir -p "Errors to Fix"
+          mv artifacts/*/* "Errors to Fix/" || true
           rm -rf artifacts
 
       - name: Commit analysis results
         run: |
-          git add "Files to Fix"/*.txt "Files to Fix"/*.json
+          git add "Errors to Fix"/*.txt "Errors to Fix"/*.json
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Add code analysis results to Files to Fix folder"
+            git commit -m "Add code analysis results to Errors to Fix folder"
           else
             echo "No changes to commit"
             exit 0
@@ -155,13 +152,13 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Add code analysis results to Files to Fix folder"
+          commit-message: "Add code analysis results to Errors to Fix folder"
           branch: ${{ env.BRANCH_NAME }}
           base: ${{ env.DEFAULT_BRANCH }}
           title: "Code Analysis Results - $(date '+%Y-%m-%d')"
           body: |
-            This pull request contains the results of code analysis for C++ and Swift in the "Files to Fix" folder:
-            - Cppcheck results: Files to Fix/cppcheck_errors.txt
-            - SwiftLint results: Files to Fix/swiftlint_errors.json
-            - SwiftFormat results: Files to Fix/swiftformat_errors.txt
+            This pull request contains the results of code analysis for C++ and Swift, stored in the "Errors to Fix" folder:
+            - Cppcheck results: Errors to Fix/cppcheck_errors.txt
+            - SwiftLint results: Errors to Fix/swiftlint_errors.json
+            - SwiftFormat results: Errors to Fix/swiftformat_errors.txt
           labels: "code-quality, automated-pr"
