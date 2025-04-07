@@ -6,7 +6,7 @@
 --header strip
 --disable redundantSelf
 
-# Additional Rules for Xcode 16 and Swift 5.10
+# Additional Rules for Xcode 16 and Swift 5.10 (Enhanced)
 
 # Ensure consistent line breaks and spacing
 --linebreaks lf
@@ -14,36 +14,76 @@
 --blanklines afterImports 1
 --blanklines beforeComments 1
 
-# Enforce modern Swift formatting
+# Enforce modern Swift formatting (Updated)
 --wraparguments beforeFirst
 --wrapparameters beforeFirst
 --maxwidth 120
 --insertblanklines true
 --switchcaseindent true
 
-# Handle closures and trailing closures consistently
+# Handle closures and trailing closures consistently (Enhanced)
 --closurearguments sameLine
 --closureparameters sameLine
 --trailingclosures always
+--closurespacing 1  # Ensure consistent spacing around closures
 
-# Improve type and function formatting
---typeSugar false  # Disable implicit type sugar (e.g., prefer explicit types for clarity)
---allman true      # Use Allman style for braces (opening brace on new line) for better readability
+# Improve type and function formatting (Updated)
+--typeSugar false    # Disable implicit type sugar for clarity
+--allman true        # Use Allman style for braces
 --spacearoundoperators true
+--functionspacing 1  # Add spacing between functions for readability
+--typedefinitionspacing 1  # Add spacing around type definitions
 
-# Enforce strict formatting for collections and literals
+# Enforce strict formatting for collections and literals (Enhanced)
 --arrayliterals multiline
 --dictionaryliterals multiline
+--collectionalignment vertical  # Align collection elements vertically for clarity
 
-# Handle comments and documentation
+# Handle comments and documentation (Updated)
 --comments indent
 --doccomments insideBraces
+--commentspacing 1  # Ensure consistent spacing around comments
+--requireexplicitdoccomments  # Require documentation comments for public APIs
 
-# Enable rules for modern Swift features (e.g., concurrency, result builders)
+# Enable rules for modern Swift features (e.g., concurrency, result builders) (Enhanced)
 --enable explicitSelf
 --enable explicitAcl
 --enable redundantFileprivate
+--enable asyncUsage  # Ensure proper use of async/await (if supported)
+--enable resultBuilderSyntax  # Enforce clean result builder syntax
+--enable swiftuiModifiersOrder  # Ensure SwiftUI modifiers are ordered consistently (if supported)
 
-# Disable rules that might conflict with Swift 5.10 or Xcode 16 preferences
+# Disable rules that might conflict with Swift 5.10 or Xcode 16 preferences (Updated)
 --disable redundantPattern
 --disable redundantLet
+--disable implicitGetter  # Avoid implicit getters for clarity
+--disable forceCast  # Discourage force casting
+--disable forceTry  # Discourage force try
+
+# New Rules for Performance and Security
+--enable strictOptional  # Enforce strict handling of optionals
+--enable noImplicitReturns  # Require explicit returns in closures/functions
+--enable noEmptyFunctions  # Prevent empty function bodies
+--enable noMagicNumbers  # Require constants for magic numbers
+--enable noDirectInit  # Discourage direct initialization of complex types
+
+# Formatting for Large Projects
+--maxFunctionLines 100  # Limit function length for maintainability
+--maxTypeLines 300  # Limit type (struct/class) length
+--maxFileLines 1000  # Limit file length
+--verticalWhitespaceControl consistent  # Ensure consistent vertical whitespace
+
+# SwiftUI and Concurrency Specifics
+--enable swiftuiPropertyWrappers  # Enforce proper use of @State, @Binding, etc.
+--enable actorIsolation  # Ensure proper actor isolation for concurrency
+--enable noCompletionHandlers  # Prefer async/await over completion handlers
+
+# Code Review and Maintainability
+--enable consistentReturn  # Ensure consistent return styles
+--enable noUnusedParameters  # Warn about unused parameters
+--enable noTodoComments  # Discourage TODOs without tickets
+--enable requireTestCoverage  # Encourage unit test coverage (if supported)
+
+# Experimental Features for Xcode 16
+--enable newTypeInferenceRules  # Leverage Swift 5.10's improved type inference (if available)
+--enable strictConcurrencyChecks  # Enforce strict concurrency rules
