@@ -123,11 +123,22 @@ jobs:
 
       - name: Install Infer
         run: |
-          # Use the latest Infer version (1.2.0 as of 2023; update if a newer version is available)
-          wget -O infer-linux64-latest.tar.xz https://github.com/facebook/infer/releases/download/v1.2.0/infer-linux64-v1.2.0.tar.xz
-          tar -xf infer-linux64-latest.tar.xz
-          sudo mv infer-linux64-v1.2.0 /opt/infer
+          # Use Infer version 1.1.0 (known to exist)
+          # Check https://github.com/facebook/infer/releases for the latest version and update the URL if needed
+          INFER_VERSION="1.1.0"
+          INFER_URL="https://github.com/facebook/infer/releases/download/v${INFER_VERSION}/infer-linux64-v${INFER_VERSION}.tar.xz"
+          INFER_FILE="infer-linux64-v${INFER_VERSION}.tar.xz"
+          echo "Downloading Infer v${INFER_VERSION} from ${INFER_URL}"
+          wget -O "${INFER_FILE}" "${INFER_URL}"
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to download Infer from ${INFER_URL}. Please check the URL and version."
+            exit 1
+          fi
+          tar -xf "${INFER_FILE}"
+          sudo mv "infer-linux64-v${INFER_VERSION}" /opt/infer
           sudo ln -s /opt/infer/bin/infer /usr/local/bin/infer
+          # Verify Infer installation
+          infer --version || { echo "Error: Infer installation failed"; exit 1; }
 
       - name: Debug Makefile
         run: |
