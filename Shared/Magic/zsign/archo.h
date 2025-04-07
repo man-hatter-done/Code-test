@@ -48,7 +48,7 @@ public:
     /**
      * Prints information about the Mach-O binary
      */
-    void PrintInfo();
+    void PrintInfo() const;
     
     /**
      * Checks if the binary is an executable
