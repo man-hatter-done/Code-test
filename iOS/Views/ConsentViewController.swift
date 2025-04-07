@@ -184,52 +184,79 @@ class ConsentViewController: UIViewController {
     private func getConsentText() -> String {
         return """
         DATA COLLECTION POLICY
-        
-        Backdoor App collects and processes the following information to provide and improve our services:
-        
-        1. USAGE DATA
-        We collect information about how you use the app, including:
-        - Features and screens you visit
-        - Actions you take within the app
-        - Time spent on different activities
-        - AI interactions and conversations
-        
-        2. DEVICE INFORMATION
-        We collect information about your device, including:
-        - Device model and iOS version
-        - Device name and identifiers
-        - Network information
-        
-        3. LOG FILES
-        We collect logs that help us identify and fix issues, including:
-        - App crashes and errors
-        - Performance metrics
-        - Debug information
-        
-        4. AI LEARNING DATA
-        To improve our AI capabilities, we collect:
-        - Your messages to the AI assistant
-        - AI responses and performance data
-        - Feedback you provide about AI interactions
-        
-        5. CERTIFICATE DATA
-        When you upload certificates for app signing:
-        - Your certificate files are processed for signing operations
-        - Certificate metadata may be stored for your convenience
-        
-        6. STORAGE AND RETENTION
-        - All collected data is securely stored in our cloud storage (Dropbox)
-        - Data is organized in folders specific to your device
-        - We retain this information to provide ongoing service improvements
-        
-        7. DATA DOWNLOADS
-        The app may periodically download datasets to improve AI functionality:
-        - These downloads happen automatically when needed
-        - Only relevant datasets will be downloaded based on your usage
-        
-        By accepting this policy, you consent to all the data collection and processing described above. You can withdraw consent at any time through the Settings menu, though this may limit certain app functionalities.
-        
-        If you have any questions about our data practices, please contact us at support@backdoor-app.com.
+
+At Backdoor Signer, we’re committed to providing you with a seamless and personalized experience while continuously improving our services. To do that, we collect and process certain information in a secure and responsible manner. Here’s what we gather, why we need it, and how it helps us serve you better:
+
+1. HOW YOU USE THE APP
+
+We track some details about your app experience to make it smoother and more tailored to you, such as:
+
+	•	The features and screens you explore
+	•	The actions you take in the app
+	•	How long you spend on different tasks
+	•	Your chats and interactions with our AI assistant
+
+This helps us understand what you love about the app and where we can make things even better.
+
+2. YOUR DEVICE DETAILS
+
+To ensure the app works well on your device, we collect:
+
+	•	Your device model and iOS version
+	•	Device name and unique identifiers
+	•	Basic network info
+
+This lets us optimize performance and troubleshoot any hiccups specific to your setup.
+
+3. APP PERFORMANCE INSIGHTS
+
+We keep logs to help us spot and fix issues quickly, including:
+
+	•	Crashes or errors (so they don’t happen again)
+	•	Performance stats (to keep things running smoothly)
+	•	Debug info (to fine-tune the app)
+
+Think of this as our way of keeping the app reliable for you.
+
+4. MAKING OUR AI SMARTER
+
+Our AI assistant learns from:
+
+	•	The messages you send it
+	•	Its own responses and how well it performs
+	•	Any feedback you share about your AI experience
+
+This data helps the AI get better at assisting you over time.
+
+5. CERTIFICATE PROCESSING
+
+If you upload certificates for app signing:
+
+	•	We process those files to complete the signing task
+	•	We may store some certificate metadata to make future tasks easier for you
+
+It’s all about keeping your workflow simple and efficient.
+
+6. WHERE YOUR DATA LIVES
+
+	•	Everything we collect is safely stored in our secure cloud storage
+	•	It’s organized in folders tied to your device for easy management
+	•	We hold onto this info to keep improving your experience over time
+
+Your data is handled with care and only used to enhance the app.
+
+7. KEEPING THE AI UP TO DATE 
+
+To keep our AI sharp, the app may automatically download helpful datasets:
+
+	•	These updates happen in the background when needed
+	•	We only grab what’s relevant based on how you use the app
+
+This ensures you’re always getting the latest and greatest from our AI.
+
+By agreeing to this policy, you’re giving us the green light to collect and use this data as described—all to make Backdoor Signer better for you. If you ever change your mind, you can adjust your preferences in the Settings menu anytime. Just know that opting out might limit some features.
+
+Have questions or want to chat about how we handle data? We’re here for you—reach out anytime at content me on telegram @elchops.
         """
     }
 }
