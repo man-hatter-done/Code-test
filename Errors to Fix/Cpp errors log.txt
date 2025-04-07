@@ -1,0 +1,1614 @@
+﻿2025-04-07T02:23:50.1552322Z Current runner version: '2.323.0'
+2025-04-07T02:23:50.1576354Z ##[group]Operating System
+2025-04-07T02:23:50.1577104Z Ubuntu
+2025-04-07T02:23:50.1577583Z 22.04.5
+2025-04-07T02:23:50.1578141Z LTS
+2025-04-07T02:23:50.1578627Z ##[endgroup]
+2025-04-07T02:23:50.1579110Z ##[group]Runner Image
+2025-04-07T02:23:50.1579745Z Image: ubuntu-22.04
+2025-04-07T02:23:50.1580246Z Version: 20250323.1.0
+2025-04-07T02:23:50.1581275Z Included Software: https://github.com/actions/runner-images/blob/ubuntu22/20250323.1/images/ubuntu/Ubuntu2204-Readme.md
+2025-04-07T02:23:50.1582674Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu22%2F20250323.1
+2025-04-07T02:23:50.1583522Z ##[endgroup]
+2025-04-07T02:23:50.1584050Z ##[group]Runner Image Provisioner
+2025-04-07T02:23:50.1584616Z 2.0.422.1
+2025-04-07T02:23:50.1585096Z ##[endgroup]
+2025-04-07T02:23:50.1587594Z ##[group]GITHUB_TOKEN Permissions
+2025-04-07T02:23:50.1589570Z Actions: write
+2025-04-07T02:23:50.1590286Z Attestations: write
+2025-04-07T02:23:50.1590956Z Checks: write
+2025-04-07T02:23:50.1591463Z Contents: write
+2025-04-07T02:23:50.1592019Z Deployments: write
+2025-04-07T02:23:50.1592529Z Discussions: write
+2025-04-07T02:23:50.1593058Z Issues: write
+2025-04-07T02:23:50.1593484Z Metadata: read
+2025-04-07T02:23:50.1594023Z Models: read
+2025-04-07T02:23:50.1594481Z Packages: write
+2025-04-07T02:23:50.1594948Z Pages: write
+2025-04-07T02:23:50.1595445Z PullRequests: write
+2025-04-07T02:23:50.1596169Z RepositoryProjects: write
+2025-04-07T02:23:50.1596717Z SecurityEvents: write
+2025-04-07T02:23:50.1597288Z Statuses: write
+2025-04-07T02:23:50.1597800Z ##[endgroup]
+2025-04-07T02:23:50.1600644Z Secret source: Actions
+2025-04-07T02:23:50.1602117Z Prepare workflow directory
+2025-04-07T02:23:50.1933334Z Prepare all required actions
+2025-04-07T02:23:50.1970522Z Getting action download info
+2025-04-07T02:23:50.6082618Z ##[group]Download immutable action package 'actions/checkout@v3'
+2025-04-07T02:23:50.6083624Z Version: 3.6.0
+2025-04-07T02:23:50.6084599Z Digest: sha256:942562b9c7d4b1f2557f1da21f4d3eb4eb4fd01f2ad78b2a6e187d1b193e0a0f
+2025-04-07T02:23:50.6085956Z Source commit SHA: f43a0e5ff2bd294095638e18286ca9a3d1956744
+2025-04-07T02:23:50.6086980Z ##[endgroup]
+2025-04-07T02:23:50.8155531Z Complete job name: analyze_cpp
+2025-04-07T02:23:50.8900994Z ##[group]Run actions/checkout@v3
+2025-04-07T02:23:50.8902170Z with:
+2025-04-07T02:23:50.8902594Z   fetch-depth: 0
+2025-04-07T02:23:50.8903047Z   repository: Main-app-backdoor/Main-app
+2025-04-07T02:23:50.8903731Z   token: ***
+2025-04-07T02:23:50.8904114Z   ssh-strict: true
+2025-04-07T02:23:50.8904543Z   persist-credentials: true
+2025-04-07T02:23:50.8904992Z   clean: true
+2025-04-07T02:23:50.8905404Z   sparse-checkout-cone-mode: true
+2025-04-07T02:23:50.8905890Z   fetch-tags: false
+2025-04-07T02:23:50.8906445Z   lfs: false
+2025-04-07T02:23:50.8906813Z   submodules: false
+2025-04-07T02:23:50.8907245Z   set-safe-directory: true
+2025-04-07T02:23:50.8908020Z ##[endgroup]
+2025-04-07T02:23:51.1090968Z Syncing repository: Main-app-backdoor/Main-app
+2025-04-07T02:23:51.1093445Z ##[group]Getting Git version info
+2025-04-07T02:23:51.1094217Z Working directory is '/home/runner/work/Main-app/Main-app'
+2025-04-07T02:23:51.1095279Z [command]/usr/bin/git version
+2025-04-07T02:23:51.1172310Z git version 2.49.0
+2025-04-07T02:23:51.1201905Z ##[endgroup]
+2025-04-07T02:23:51.1220565Z Temporarily overriding HOME='/home/runner/work/_temp/90232b67-ee0a-46b7-88fe-da9bb2e7633f' before making global git config changes
+2025-04-07T02:23:51.1223203Z Adding repository directory to the temporary git global config as a safe directory
+2025-04-07T02:23:51.1225252Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Main-app/Main-app
+2025-04-07T02:23:51.1259486Z Deleting the contents of '/home/runner/work/Main-app/Main-app'
+2025-04-07T02:23:51.1264969Z ##[group]Initializing the repository
+2025-04-07T02:23:51.1269562Z [command]/usr/bin/git init /home/runner/work/Main-app/Main-app
+2025-04-07T02:23:51.1345072Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-04-07T02:23:51.1346726Z hint: is subject to change. To configure the initial branch name to use in all
+2025-04-07T02:23:51.1347789Z hint: of your new repositories, which will suppress this warning, call:
+2025-04-07T02:23:51.1348599Z hint:
+2025-04-07T02:23:51.1349156Z hint: 	git config --global init.defaultBranch <name>
+2025-04-07T02:23:51.1349830Z hint:
+2025-04-07T02:23:51.1350451Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-04-07T02:23:51.1351584Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-04-07T02:23:51.1352993Z hint:
+2025-04-07T02:23:51.1353790Z hint: 	git branch -m <name>
+2025-04-07T02:23:51.1355202Z Initialized empty Git repository in /home/runner/work/Main-app/Main-app/.git/
+2025-04-07T02:23:51.1365611Z [command]/usr/bin/git remote add origin https://github.com/Main-app-backdoor/Main-app
+2025-04-07T02:23:51.1399729Z ##[endgroup]
+2025-04-07T02:23:51.1400520Z ##[group]Disabling automatic garbage collection
+2025-04-07T02:23:51.1401892Z [command]/usr/bin/git config --local gc.auto 0
+2025-04-07T02:23:51.1429425Z ##[endgroup]
+2025-04-07T02:23:51.1430141Z ##[group]Setting up auth
+2025-04-07T02:23:51.1434260Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-04-07T02:23:51.1463461Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-04-07T02:23:51.1807143Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-04-07T02:23:51.1836485Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-04-07T02:23:51.2072795Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-04-07T02:23:51.2107244Z ##[endgroup]
+2025-04-07T02:23:51.2108684Z ##[group]Fetching the repository
+2025-04-07T02:23:51.2116757Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --progress --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2025-04-07T02:23:51.6013287Z remote: Enumerating objects: 831, done.        
+2025-04-07T02:23:51.6015374Z remote: Counting objects:   0% (1/127)        
+2025-04-07T02:23:51.6016892Z remote: Counting objects:   1% (2/127)        
+2025-04-07T02:23:51.6017822Z remote: Counting objects:   2% (3/127)        
+2025-04-07T02:23:51.6018687Z remote: Counting objects:   3% (4/127)        
+2025-04-07T02:23:51.6019543Z remote: Counting objects:   4% (6/127)        
+2025-04-07T02:23:51.6020705Z remote: Counting objects:   5% (7/127)        
+2025-04-07T02:23:51.6021630Z remote: Counting objects:   6% (8/127)        
+2025-04-07T02:23:51.6022489Z remote: Counting objects:   7% (9/127)        
+2025-04-07T02:23:51.6023367Z remote: Counting objects:   8% (11/127)        
+2025-04-07T02:23:51.6024284Z remote: Counting objects:   9% (12/127)        
+2025-04-07T02:23:51.6025167Z remote: Counting objects:  10% (13/127)        
+2025-04-07T02:23:51.6026242Z remote: Counting objects:  11% (14/127)        
+2025-04-07T02:23:51.6027220Z remote: Counting objects:  12% (16/127)        
+2025-04-07T02:23:51.6028194Z remote: Counting objects:  13% (17/127)        
+2025-04-07T02:23:51.6029227Z remote: Counting objects:  14% (18/127)        
+2025-04-07T02:23:51.6030208Z remote: Counting objects:  15% (20/127)        
+2025-04-07T02:23:51.6031228Z remote: Counting objects:  16% (21/127)        
+2025-04-07T02:23:51.6032269Z remote: Counting objects:  17% (22/127)        
+2025-04-07T02:23:51.6033301Z remote: Counting objects:  18% (23/127)        
+2025-04-07T02:23:51.6034344Z remote: Counting objects:  19% (25/127)        
+2025-04-07T02:23:51.6035369Z remote: Counting objects:  20% (26/127)        
+2025-04-07T02:23:51.6036514Z remote: Counting objects:  21% (27/127)        
+2025-04-07T02:23:51.6037854Z remote: Counting objects:  22% (28/127)        
+2025-04-07T02:23:51.6038889Z remote: Counting objects:  23% (30/127)        
+2025-04-07T02:23:51.6039968Z remote: Counting objects:  24% (31/127)        
+2025-04-07T02:23:51.6041168Z remote: Counting objects:  25% (32/127)        
+2025-04-07T02:23:51.6042510Z remote: Counting objects:  26% (34/127)        
+2025-04-07T02:23:51.6043837Z remote: Counting objects:  27% (35/127)        
+2025-04-07T02:23:51.6045205Z remote: Counting objects:  28% (36/127)        
+2025-04-07T02:23:51.6046871Z remote: Counting objects:  29% (37/127)        
+2025-04-07T02:23:51.6048240Z remote: Counting objects:  30% (39/127)        
+2025-04-07T02:23:51.6049591Z remote: Counting objects:  31% (40/127)        
+2025-04-07T02:23:51.6050969Z remote: Counting objects:  32% (41/127)        
+2025-04-07T02:23:51.6052380Z remote: Counting objects:  33% (42/127)        
+2025-04-07T02:23:51.6053768Z remote: Counting objects:  34% (44/127)        
+2025-04-07T02:23:51.6113872Z remote: Counting objects:  35% (45/127)        
+2025-04-07T02:23:51.6115849Z remote: Counting objects:  36% (46/127)        
+2025-04-07T02:23:51.6118059Z remote: Counting objects:  37% (47/127)        
+2025-04-07T02:23:51.6119508Z remote: Counting objects:  38% (49/127)        
+2025-04-07T02:23:51.6120956Z remote: Counting objects:  39% (50/127)        
+2025-04-07T02:23:51.6122461Z remote: Counting objects:  40% (51/127)        
+2025-04-07T02:23:51.6124020Z remote: Counting objects:  41% (53/127)        
+2025-04-07T02:23:51.6125525Z remote: Counting objects:  42% (54/127)        
+2025-04-07T02:23:51.6127269Z remote: Counting objects:  43% (55/127)        
+2025-04-07T02:23:51.6128772Z remote: Counting objects:  44% (56/127)        
+2025-04-07T02:23:51.6130305Z remote: Counting objects:  45% (58/127)        
+2025-04-07T02:23:51.6131843Z remote: Counting objects:  46% (59/127)        
+2025-04-07T02:23:51.6133361Z remote: Counting objects:  47% (60/127)        
+2025-04-07T02:23:51.6134851Z remote: Counting objects:  48% (61/127)        
+2025-04-07T02:23:51.6136527Z remote: Counting objects:  49% (63/127)        
+2025-04-07T02:23:51.6138030Z remote: Counting objects:  50% (64/127)        
+2025-04-07T02:23:51.6139733Z remote: Counting objects:  51% (65/127)        
+2025-04-07T02:23:51.6141172Z remote: Counting objects:  52% (67/127)        
+2025-04-07T02:23:51.6142593Z remote: Counting objects:  53% (68/127)        
+2025-04-07T02:23:51.6143998Z remote: Counting objects:  54% (69/127)        
+2025-04-07T02:23:51.6145405Z remote: Counting objects:  55% (70/127)        
+2025-04-07T02:23:51.6146994Z remote: Counting objects:  56% (72/127)        
+2025-04-07T02:23:51.6148400Z remote: Counting objects:  57% (73/127)        
+2025-04-07T02:23:51.6149796Z remote: Counting objects:  58% (74/127)        
+2025-04-07T02:23:51.6151190Z remote: Counting objects:  59% (75/127)        
+2025-04-07T02:23:51.6152568Z remote: Counting objects:  60% (77/127)        
+2025-04-07T02:23:51.6153976Z remote: Counting objects:  61% (78/127)        
+2025-04-07T02:23:51.6155380Z remote: Counting objects:  62% (79/127)        
+2025-04-07T02:23:51.6156942Z remote: Counting objects:  63% (81/127)        
+2025-04-07T02:23:51.6158352Z remote: Counting objects:  64% (82/127)        
+2025-04-07T02:23:51.6159828Z remote: Counting objects:  65% (83/127)        
+2025-04-07T02:23:51.6161218Z remote: Counting objects:  66% (84/127)        
+2025-04-07T02:23:51.6162607Z remote: Counting objects:  67% (86/127)        
+2025-04-07T02:23:51.6163991Z remote: Counting objects:  68% (87/127)        
+2025-04-07T02:23:51.6165363Z remote: Counting objects:  69% (88/127)        
+2025-04-07T02:23:51.6166981Z remote: Counting objects:  70% (89/127)        
+2025-04-07T02:23:51.6168380Z remote: Counting objects:  71% (91/127)        
+2025-04-07T02:23:51.6169770Z remote: Counting objects:  72% (92/127)        
+2025-04-07T02:23:51.6171176Z remote: Counting objects:  73% (93/127)        
+2025-04-07T02:23:51.6172591Z remote: Counting objects:  74% (94/127)        
+2025-04-07T02:23:51.6174163Z remote: Counting objects:  75% (96/127)        
+2025-04-07T02:23:51.6175576Z remote: Counting objects:  76% (97/127)        
+2025-04-07T02:23:51.6177177Z remote: Counting objects:  77% (98/127)        
+2025-04-07T02:23:51.6178605Z remote: Counting objects:  78% (100/127)        
+2025-04-07T02:23:51.6180041Z remote: Counting objects:  79% (101/127)        
+2025-04-07T02:23:51.6181441Z remote: Counting objects:  80% (102/127)        
+2025-04-07T02:23:51.6182848Z remote: Counting objects:  81% (103/127)        
+2025-04-07T02:23:51.6184237Z remote: Counting objects:  82% (105/127)        
+2025-04-07T02:23:51.6185633Z remote: Counting objects:  83% (106/127)        
+2025-04-07T02:23:51.6187150Z remote: Counting objects:  84% (107/127)        
+2025-04-07T02:23:51.6188546Z remote: Counting objects:  85% (108/127)        
+2025-04-07T02:23:51.6189943Z remote: Counting objects:  86% (110/127)        
+2025-04-07T02:23:51.6191343Z remote: Counting objects:  87% (111/127)        
+2025-04-07T02:23:51.6192740Z remote: Counting objects:  88% (112/127)        
+2025-04-07T02:23:51.6194144Z remote: Counting objects:  89% (114/127)        
+2025-04-07T02:23:51.6195551Z remote: Counting objects:  90% (115/127)        
+2025-04-07T02:23:51.6197088Z remote: Counting objects:  91% (116/127)        
+2025-04-07T02:23:51.6198526Z remote: Counting objects:  92% (117/127)        
+2025-04-07T02:23:51.6199937Z remote: Counting objects:  93% (119/127)        
+2025-04-07T02:23:51.6201337Z remote: Counting objects:  94% (120/127)        
+2025-04-07T02:23:51.6202758Z remote: Counting objects:  95% (121/127)        
+2025-04-07T02:23:51.6204162Z remote: Counting objects:  96% (122/127)        
+2025-04-07T02:23:51.6205576Z remote: Counting objects:  97% (124/127)        
+2025-04-07T02:23:51.6207073Z remote: Counting objects:  98% (125/127)        
+2025-04-07T02:23:51.6208474Z remote: Counting objects:  99% (126/127)        
+2025-04-07T02:23:51.6209865Z remote: Counting objects: 100% (127/127)        
+2025-04-07T02:23:51.6211355Z remote: Counting objects: 100% (127/127), done.        
+2025-04-07T02:23:51.6256875Z remote: Compressing objects:   0% (1/105)        
+2025-04-07T02:23:51.6259086Z remote: Compressing objects:   1% (2/105)        
+2025-04-07T02:23:51.6260726Z remote: Compressing objects:   2% (3/105)        
+2025-04-07T02:23:51.6262127Z remote: Compressing objects:   3% (4/105)        
+2025-04-07T02:23:51.6263517Z remote: Compressing objects:   4% (5/105)        
+2025-04-07T02:23:51.6264878Z remote: Compressing objects:   5% (6/105)        
+2025-04-07T02:23:51.6266526Z remote: Compressing objects:   6% (7/105)        
+2025-04-07T02:23:51.6267929Z remote: Compressing objects:   7% (8/105)        
+2025-04-07T02:23:51.6269293Z remote: Compressing objects:   8% (9/105)        
+2025-04-07T02:23:51.6270687Z remote: Compressing objects:   9% (10/105)        
+2025-04-07T02:23:51.6272073Z remote: Compressing objects:  10% (11/105)        
+2025-04-07T02:23:51.6273455Z remote: Compressing objects:  11% (12/105)        
+2025-04-07T02:23:51.6274853Z remote: Compressing objects:  12% (13/105)        
+2025-04-07T02:23:51.6276346Z remote: Compressing objects:  13% (14/105)        
+2025-04-07T02:23:51.6277747Z remote: Compressing objects:  14% (15/105)        
+2025-04-07T02:23:51.6279376Z remote: Compressing objects:  15% (16/105)        
+2025-04-07T02:23:51.6281363Z remote: Compressing objects:  16% (17/105)        
+2025-04-07T02:23:51.6283661Z remote: Compressing objects:  17% (18/105)        
+2025-04-07T02:23:51.6285349Z remote: Compressing objects:  18% (19/105)        
+2025-04-07T02:23:51.6286927Z remote: Compressing objects:  19% (20/105)        
+2025-04-07T02:23:51.6288315Z remote: Compressing objects:  20% (21/105)        
+2025-04-07T02:23:51.6289716Z remote: Compressing objects:  21% (23/105)        
+2025-04-07T02:23:51.6291117Z remote: Compressing objects:  22% (24/105)        
+2025-04-07T02:23:51.6292508Z remote: Compressing objects:  23% (25/105)        
+2025-04-07T02:23:51.6293892Z remote: Compressing objects:  24% (26/105)        
+2025-04-07T02:23:51.6295520Z remote: Compressing objects:  25% (27/105)        
+2025-04-07T02:23:51.6297020Z remote: Compressing objects:  26% (28/105)        
+2025-04-07T02:23:51.6298417Z remote: Compressing objects:  27% (29/105)        
+2025-04-07T02:23:51.6299802Z remote: Compressing objects:  28% (30/105)        
+2025-04-07T02:23:51.6301180Z remote: Compressing objects:  29% (31/105)        
+2025-04-07T02:23:51.6302542Z remote: Compressing objects:  30% (32/105)        
+2025-04-07T02:23:51.6303923Z remote: Compressing objects:  31% (33/105)        
+2025-04-07T02:23:51.6305288Z remote: Compressing objects:  32% (34/105)        
+2025-04-07T02:23:51.6306749Z remote: Compressing objects:  33% (35/105)        
+2025-04-07T02:23:51.6308127Z remote: Compressing objects:  34% (36/105)        
+2025-04-07T02:23:51.6309492Z remote: Compressing objects:  35% (37/105)        
+2025-04-07T02:23:51.6310861Z remote: Compressing objects:  36% (38/105)        
+2025-04-07T02:23:51.6312250Z remote: Compressing objects:  37% (39/105)        
+2025-04-07T02:23:51.6313641Z remote: Compressing objects:  38% (40/105)        
+2025-04-07T02:23:51.6315016Z remote: Compressing objects:  39% (41/105)        
+2025-04-07T02:23:51.6316689Z remote: Compressing objects:  40% (42/105)        
+2025-04-07T02:23:51.6318073Z remote: Compressing objects:  41% (44/105)        
+2025-04-07T02:23:51.6319436Z remote: Compressing objects:  42% (45/105)        
+2025-04-07T02:23:51.6320823Z remote: Compressing objects:  43% (46/105)        
+2025-04-07T02:23:51.6322523Z remote: Compressing objects:  44% (47/105)        
+2025-04-07T02:23:51.6325747Z remote: Compressing objects:  45% (48/105)        
+2025-04-07T02:23:51.6328523Z remote: Compressing objects:  46% (49/105)        
+2025-04-07T02:23:51.6330265Z remote: Compressing objects:  47% (50/105)        
+2025-04-07T02:23:51.6331950Z remote: Compressing objects:  48% (51/105)        
+2025-04-07T02:23:51.6333424Z remote: Compressing objects:  49% (52/105)        
+2025-04-07T02:23:51.6334791Z remote: Compressing objects:  50% (53/105)        
+2025-04-07T02:23:51.6336452Z remote: Compressing objects:  51% (54/105)        
+2025-04-07T02:23:51.6337843Z remote: Compressing objects:  52% (55/105)        
+2025-04-07T02:23:51.6339389Z remote: Compressing objects:  53% (56/105)        
+2025-04-07T02:23:51.6340753Z remote: Compressing objects:  54% (57/105)        
+2025-04-07T02:23:51.6342136Z remote: Compressing objects:  55% (58/105)        
+2025-04-07T02:23:51.6343461Z remote: Compressing objects:  56% (59/105)        
+2025-04-07T02:23:51.6344796Z remote: Compressing objects:  57% (60/105)        
+2025-04-07T02:23:51.6346286Z remote: Compressing objects:  58% (61/105)        
+2025-04-07T02:23:51.6347737Z remote: Compressing objects:  59% (62/105)        
+2025-04-07T02:23:51.6349059Z remote: Compressing objects:  60% (63/105)        
+2025-04-07T02:23:51.6350382Z remote: Compressing objects:  61% (65/105)        
+2025-04-07T02:23:51.6351777Z remote: Compressing objects:  62% (66/105)        
+2025-04-07T02:23:51.6353185Z remote: Compressing objects:  63% (67/105)        
+2025-04-07T02:23:51.6354601Z remote: Compressing objects:  64% (68/105)        
+2025-04-07T02:23:51.6355943Z remote: Compressing objects:  65% (69/105)        
+2025-04-07T02:23:51.6357444Z remote: Compressing objects:  66% (70/105)        
+2025-04-07T02:23:51.6358777Z remote: Compressing objects:  67% (71/105)        
+2025-04-07T02:23:51.6360191Z remote: Compressing objects:  68% (72/105)        
+2025-04-07T02:23:51.6362014Z remote: Compressing objects:  69% (73/105)        
+2025-04-07T02:23:51.6363877Z remote: Compressing objects:  70% (74/105)        
+2025-04-07T02:23:51.6365899Z remote: Compressing objects:  71% (75/105)        
+2025-04-07T02:23:51.6367438Z remote: Compressing objects:  72% (76/105)        
+2025-04-07T02:23:51.6368780Z remote: Compressing objects:  73% (77/105)        
+2025-04-07T02:23:51.6370124Z remote: Compressing objects:  74% (78/105)        
+2025-04-07T02:23:51.6371473Z remote: Compressing objects:  75% (79/105)        
+2025-04-07T02:23:51.6373048Z remote: Compressing objects:  76% (80/105)        
+2025-04-07T02:23:51.6374391Z remote: Compressing objects:  77% (81/105)        
+2025-04-07T02:23:51.6375724Z remote: Compressing objects:  78% (82/105)        
+2025-04-07T02:23:51.6377352Z remote: Compressing objects:  79% (83/105)        
+2025-04-07T02:23:51.6378697Z remote: Compressing objects:  80% (84/105)        
+2025-04-07T02:23:51.6380005Z remote: Compressing objects:  81% (86/105)        
+2025-04-07T02:23:51.6381336Z remote: Compressing objects:  82% (87/105)        
+2025-04-07T02:23:51.6382649Z remote: Compressing objects:  83% (88/105)        
+2025-04-07T02:23:51.6383951Z remote: Compressing objects:  84% (89/105)        
+2025-04-07T02:23:51.6385271Z remote: Compressing objects:  85% (90/105)        
+2025-04-07T02:23:51.6386823Z remote: Compressing objects:  86% (91/105)        
+2025-04-07T02:23:51.6388162Z remote: Compressing objects:  87% (92/105)        
+2025-04-07T02:23:51.6389489Z remote: Compressing objects:  88% (93/105)        
+2025-04-07T02:23:51.6390824Z remote: Compressing objects:  89% (94/105)        
+2025-04-07T02:23:51.6392161Z remote: Compressing objects:  90% (95/105)        
+2025-04-07T02:23:51.6393474Z remote: Compressing objects:  91% (96/105)        
+2025-04-07T02:23:51.6394804Z remote: Compressing objects:  92% (97/105)        
+2025-04-07T02:23:51.6396243Z remote: Compressing objects:  93% (98/105)        
+2025-04-07T02:23:51.6397568Z remote: Compressing objects:  94% (99/105)        
+2025-04-07T02:23:51.6398889Z remote: Compressing objects:  95% (100/105)        
+2025-04-07T02:23:51.6400212Z remote: Compressing objects:  96% (101/105)        
+2025-04-07T02:23:51.6401552Z remote: Compressing objects:  97% (102/105)        
+2025-04-07T02:23:51.6402886Z remote: Compressing objects:  98% (103/105)        
+2025-04-07T02:23:51.6404213Z remote: Compressing objects:  99% (104/105)        
+2025-04-07T02:23:51.6405554Z remote: Compressing objects: 100% (105/105)        
+2025-04-07T02:23:51.6407084Z remote: Compressing objects: 100% (105/105), done.        
+2025-04-07T02:23:51.6408442Z Receiving objects:   0% (1/831)
+2025-04-07T02:23:51.6409431Z Receiving objects:   1% (9/831)
+2025-04-07T02:23:51.7624561Z Receiving objects:   2% (17/831)
+2025-04-07T02:23:51.8815670Z Receiving objects:   3% (25/831)
+2025-04-07T02:23:51.8817196Z Receiving objects:   4% (34/831)
+2025-04-07T02:23:51.8821200Z Receiving objects:   5% (42/831)
+2025-04-07T02:23:51.8825059Z Receiving objects:   6% (50/831)
+2025-04-07T02:23:51.8829915Z Receiving objects:   7% (59/831)
+2025-04-07T02:23:51.8833409Z Receiving objects:   8% (67/831)
+2025-04-07T02:23:51.8838596Z Receiving objects:   9% (75/831)
+2025-04-07T02:23:51.8843441Z Receiving objects:  10% (84/831)
+2025-04-07T02:23:51.8848712Z Receiving objects:  11% (92/831)
+2025-04-07T02:23:51.8854292Z Receiving objects:  12% (100/831)
+2025-04-07T02:23:51.8859591Z Receiving objects:  13% (109/831)
+2025-04-07T02:23:51.8873541Z Receiving objects:  14% (117/831)
+2025-04-07T02:23:51.8878264Z Receiving objects:  15% (125/831)
+2025-04-07T02:23:51.8884859Z Receiving objects:  16% (133/831)
+2025-04-07T02:23:51.8899670Z Receiving objects:  17% (142/831)
+2025-04-07T02:23:51.8905055Z Receiving objects:  18% (150/831)
+2025-04-07T02:23:51.8907602Z Receiving objects:  19% (158/831)
+2025-04-07T02:23:51.8908569Z Receiving objects:  20% (167/831)
+2025-04-07T02:23:51.8909080Z Receiving objects:  21% (175/831)
+2025-04-07T02:23:51.8912030Z Receiving objects:  22% (183/831)
+2025-04-07T02:23:51.8918720Z Receiving objects:  23% (192/831)
+2025-04-07T02:23:51.8920216Z Receiving objects:  24% (200/831)
+2025-04-07T02:23:51.8923321Z Receiving objects:  25% (208/831)
+2025-04-07T02:23:51.8926385Z Receiving objects:  26% (217/831)
+2025-04-07T02:23:51.8932892Z Receiving objects:  27% (225/831)
+2025-04-07T02:23:51.8941836Z Receiving objects:  28% (233/831)
+2025-04-07T02:23:51.8951347Z Receiving objects:  29% (241/831)
+2025-04-07T02:23:51.8956567Z Receiving objects:  30% (250/831)
+2025-04-07T02:23:51.8983890Z Receiving objects:  31% (258/831)
+2025-04-07T02:23:51.9166675Z Receiving objects:  32% (266/831)
+2025-04-07T02:23:51.9167330Z Receiving objects:  33% (275/831)
+2025-04-07T02:23:51.9177104Z Receiving objects:  34% (283/831)
+2025-04-07T02:23:51.9178769Z Receiving objects:  35% (291/831)
+2025-04-07T02:23:51.9186479Z Receiving objects:  36% (300/831)
+2025-04-07T02:23:51.9200368Z Receiving objects:  37% (308/831)
+2025-04-07T02:23:51.9203624Z Receiving objects:  38% (316/831)
+2025-04-07T02:23:51.9210504Z Receiving objects:  39% (325/831)
+2025-04-07T02:23:51.9217294Z Receiving objects:  40% (333/831)
+2025-04-07T02:23:51.9226703Z Receiving objects:  41% (341/831)
+2025-04-07T02:23:51.9229881Z Receiving objects:  42% (350/831)
+2025-04-07T02:23:51.9234319Z Receiving objects:  43% (358/831)
+2025-04-07T02:23:51.9236636Z Receiving objects:  44% (366/831)
+2025-04-07T02:23:51.9241597Z Receiving objects:  45% (374/831)
+2025-04-07T02:23:51.9244453Z Receiving objects:  46% (383/831)
+2025-04-07T02:23:51.9248168Z Receiving objects:  47% (391/831)
+2025-04-07T02:23:51.9252435Z Receiving objects:  48% (399/831)
+2025-04-07T02:23:51.9254527Z Receiving objects:  49% (408/831)
+2025-04-07T02:23:51.9257645Z Receiving objects:  50% (416/831)
+2025-04-07T02:23:51.9263479Z Receiving objects:  51% (424/831)
+2025-04-07T02:23:51.9266874Z Receiving objects:  52% (433/831)
+2025-04-07T02:23:51.9272027Z Receiving objects:  53% (441/831)
+2025-04-07T02:23:51.9274779Z Receiving objects:  54% (449/831)
+2025-04-07T02:23:51.9278457Z Receiving objects:  55% (458/831)
+2025-04-07T02:23:51.9281793Z Receiving objects:  56% (466/831)
+2025-04-07T02:23:51.9282321Z Receiving objects:  57% (474/831)
+2025-04-07T02:23:51.9282713Z Receiving objects:  58% (482/831)
+2025-04-07T02:23:51.9283758Z Receiving objects:  59% (491/831)
+2025-04-07T02:23:51.9288082Z Receiving objects:  60% (499/831)
+2025-04-07T02:23:51.9288739Z Receiving objects:  61% (507/831)
+2025-04-07T02:23:51.9291827Z Receiving objects:  62% (516/831)
+2025-04-07T02:23:51.9295676Z Receiving objects:  63% (524/831)
+2025-04-07T02:23:51.9297634Z Receiving objects:  64% (532/831)
+2025-04-07T02:23:51.9298468Z Receiving objects:  65% (541/831)
+2025-04-07T02:23:51.9300805Z Receiving objects:  66% (549/831)
+2025-04-07T02:23:51.9305397Z Receiving objects:  67% (557/831)
+2025-04-07T02:23:51.9307483Z Receiving objects:  68% (566/831)
+2025-04-07T02:23:51.9310730Z Receiving objects:  69% (574/831)
+2025-04-07T02:23:51.9314195Z Receiving objects:  70% (582/831)
+2025-04-07T02:23:51.9315099Z Receiving objects:  71% (591/831)
+2025-04-07T02:23:51.9319842Z Receiving objects:  72% (599/831)
+2025-04-07T02:23:51.9322538Z Receiving objects:  73% (607/831)
+2025-04-07T02:23:51.9325274Z Receiving objects:  74% (615/831)
+2025-04-07T02:23:51.9328907Z Receiving objects:  75% (624/831)
+2025-04-07T02:23:51.9330884Z Receiving objects:  76% (632/831)
+2025-04-07T02:23:51.9334077Z Receiving objects:  77% (640/831)
+2025-04-07T02:23:51.9335940Z Receiving objects:  78% (649/831)
+2025-04-07T02:23:52.1284715Z Receiving objects:  79% (657/831)
+2025-04-07T02:23:52.2217500Z Receiving objects:  80% (665/831)
+2025-04-07T02:23:52.2219545Z Receiving objects:  81% (674/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2220134Z Receiving objects:  82% (682/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2224519Z Receiving objects:  83% (690/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2226363Z remote: Total 831 (delta 61), reused 6 (delta 3), pack-reused 704 (from 2)        
+2025-04-07T02:23:52.2227226Z Receiving objects:  84% (699/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2229285Z Receiving objects:  85% (707/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2230772Z Receiving objects:  86% (715/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2231872Z Receiving objects:  87% (723/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2234375Z Receiving objects:  88% (732/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2235423Z Receiving objects:  89% (740/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2236663Z Receiving objects:  90% (748/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2237551Z Receiving objects:  91% (757/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2238110Z Receiving objects:  92% (765/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2238658Z Receiving objects:  93% (773/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2239266Z Receiving objects:  94% (782/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2239817Z Receiving objects:  95% (790/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2240364Z Receiving objects:  96% (798/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2240907Z Receiving objects:  97% (807/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2241447Z Receiving objects:  98% (815/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2243860Z Receiving objects:  99% (823/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2244430Z Receiving objects: 100% (831/831), 25.87 MiB | 51.73 MiB/s
+2025-04-07T02:23:52.2245022Z Receiving objects: 100% (831/831), 33.14 MiB | 56.37 MiB/s, done.
+2025-04-07T02:23:52.2248189Z Resolving deltas:   0% (0/244)
+2025-04-07T02:23:52.2248588Z Resolving deltas:   1% (3/244)
+2025-04-07T02:23:52.2248934Z Resolving deltas:   2% (5/244)
+2025-04-07T02:23:52.2249450Z Resolving deltas:   3% (8/244)
+2025-04-07T02:23:52.2251461Z Resolving deltas:   4% (10/244)
+2025-04-07T02:23:52.2253078Z Resolving deltas:   5% (13/244)
+2025-04-07T02:23:52.2256458Z Resolving deltas:   6% (15/244)
+2025-04-07T02:23:52.2257896Z Resolving deltas:   7% (18/244)
+2025-04-07T02:23:52.2258308Z Resolving deltas:   8% (20/244)
+2025-04-07T02:23:52.2258695Z Resolving deltas:   9% (22/244)
+2025-04-07T02:23:52.2259241Z Resolving deltas:  10% (26/244)
+2025-04-07T02:23:52.2259595Z Resolving deltas:  11% (27/244)
+2025-04-07T02:23:52.2260640Z Resolving deltas:  12% (30/244)
+2025-04-07T02:23:52.2264589Z Resolving deltas:  13% (32/244)
+2025-04-07T02:23:52.2266257Z Resolving deltas:  14% (35/244)
+2025-04-07T02:23:52.2266739Z Resolving deltas:  15% (37/244)
+2025-04-07T02:23:52.2267108Z Resolving deltas:  16% (40/244)
+2025-04-07T02:23:52.2267475Z Resolving deltas:  17% (42/244)
+2025-04-07T02:23:52.2267854Z Resolving deltas:  18% (44/244)
+2025-04-07T02:23:52.2268226Z Resolving deltas:  19% (47/244)
+2025-04-07T02:23:52.2270860Z Resolving deltas:  20% (49/244)
+2025-04-07T02:23:52.2271859Z Resolving deltas:  21% (52/244)
+2025-04-07T02:23:52.2272746Z Resolving deltas:  22% (54/244)
+2025-04-07T02:23:52.2274742Z Resolving deltas:  23% (57/244)
+2025-04-07T02:23:52.2275116Z Resolving deltas:  24% (59/244)
+2025-04-07T02:23:52.2275594Z Resolving deltas:  25% (61/244)
+2025-04-07T02:23:52.2279573Z Resolving deltas:  26% (64/244)
+2025-04-07T02:23:52.2279988Z Resolving deltas:  27% (66/244)
+2025-04-07T02:23:52.2280464Z Resolving deltas:  28% (69/244)
+2025-04-07T02:23:52.2280881Z Resolving deltas:  29% (71/244)
+2025-04-07T02:23:52.2281364Z Resolving deltas:  30% (75/244)
+2025-04-07T02:23:52.2281743Z Resolving deltas:  31% (76/244)
+2025-04-07T02:23:52.2282180Z Resolving deltas:  32% (79/244)
+2025-04-07T02:23:52.2283068Z Resolving deltas:  33% (81/244)
+2025-04-07T02:23:52.2283427Z Resolving deltas:  34% (84/244)
+2025-04-07T02:23:52.2285142Z Resolving deltas:  35% (86/244)
+2025-04-07T02:23:52.2285643Z Resolving deltas:  36% (88/244)
+2025-04-07T02:23:52.2286169Z Resolving deltas:  37% (91/244)
+2025-04-07T02:23:52.2286520Z Resolving deltas:  38% (93/244)
+2025-04-07T02:23:52.2286980Z Resolving deltas:  39% (96/244)
+2025-04-07T02:23:52.2287388Z Resolving deltas:  40% (98/244)
+2025-04-07T02:23:52.2287813Z Resolving deltas:  41% (101/244)
+2025-04-07T02:23:52.2288239Z Resolving deltas:  42% (103/244)
+2025-04-07T02:23:52.2288659Z Resolving deltas:  43% (105/244)
+2025-04-07T02:23:52.2289129Z Resolving deltas:  44% (109/244)
+2025-04-07T02:23:52.2289569Z Resolving deltas:  45% (110/244)
+2025-04-07T02:23:52.2290000Z Resolving deltas:  46% (113/244)
+2025-04-07T02:23:52.2290367Z Resolving deltas:  47% (115/244)
+2025-04-07T02:23:52.2290724Z Resolving deltas:  48% (118/244)
+2025-04-07T02:23:52.2291076Z Resolving deltas:  49% (120/244)
+2025-04-07T02:23:52.2291433Z Resolving deltas:  50% (122/244)
+2025-04-07T02:23:52.2291791Z Resolving deltas:  51% (125/244)
+2025-04-07T02:23:52.2292385Z Resolving deltas:  52% (127/244)
+2025-04-07T02:23:52.2292740Z Resolving deltas:  53% (130/244)
+2025-04-07T02:23:52.2293108Z Resolving deltas:  54% (132/244)
+2025-04-07T02:23:52.2295136Z Resolving deltas:  55% (135/244)
+2025-04-07T02:23:52.2299576Z Resolving deltas:  56% (137/244)
+2025-04-07T02:23:52.2299971Z Resolving deltas:  57% (140/244)
+2025-04-07T02:23:52.2300342Z Resolving deltas:  58% (142/244)
+2025-04-07T02:23:52.2300705Z Resolving deltas:  59% (144/244)
+2025-04-07T02:23:52.2301073Z Resolving deltas:  60% (147/244)
+2025-04-07T02:23:52.2301832Z Resolving deltas:  61% (149/244)
+2025-04-07T02:23:52.2302556Z Resolving deltas:  62% (152/244)
+2025-04-07T02:23:52.2306676Z Resolving deltas:  63% (154/244)
+2025-04-07T02:23:52.2307350Z Resolving deltas:  64% (158/244)
+2025-04-07T02:23:52.2307748Z Resolving deltas:  65% (159/244)
+2025-04-07T02:23:52.2308723Z Resolving deltas:  66% (162/244)
+2025-04-07T02:23:52.2310452Z Resolving deltas:  67% (164/244)
+2025-04-07T02:23:52.2311350Z Resolving deltas:  68% (166/244)
+2025-04-07T02:23:52.2311744Z Resolving deltas:  69% (169/244)
+2025-04-07T02:23:52.2313256Z Resolving deltas:  70% (172/244)
+2025-04-07T02:23:52.2315218Z Resolving deltas:  71% (174/244)
+2025-04-07T02:23:52.2316934Z Resolving deltas:  72% (177/244)
+2025-04-07T02:23:52.2317367Z Resolving deltas:  73% (179/244)
+2025-04-07T02:23:52.2317756Z Resolving deltas:  74% (181/244)
+2025-04-07T02:23:52.2318144Z Resolving deltas:  75% (183/244)
+2025-04-07T02:23:52.2318542Z Resolving deltas:  76% (186/244)
+2025-04-07T02:23:52.2318929Z Resolving deltas:  77% (188/244)
+2025-04-07T02:23:52.2319312Z Resolving deltas:  78% (191/244)
+2025-04-07T02:23:52.2319659Z Resolving deltas:  79% (193/244)
+2025-04-07T02:23:52.2320002Z Resolving deltas:  80% (196/244)
+2025-04-07T02:23:52.2320341Z Resolving deltas:  81% (198/244)
+2025-04-07T02:23:52.2320698Z Resolving deltas:  82% (201/244)
+2025-04-07T02:23:52.2321059Z Resolving deltas:  83% (203/244)
+2025-04-07T02:23:52.2321437Z Resolving deltas:  84% (205/244)
+2025-04-07T02:23:52.2321797Z Resolving deltas:  85% (208/244)
+2025-04-07T02:23:52.2322130Z Resolving deltas:  86% (210/244)
+2025-04-07T02:23:52.2322511Z Resolving deltas:  87% (213/244)
+2025-04-07T02:23:52.2323103Z Resolving deltas:  88% (215/244)
+2025-04-07T02:23:52.2323474Z Resolving deltas:  89% (218/244)
+2025-04-07T02:23:52.2325870Z Resolving deltas:  90% (220/244)
+2025-04-07T02:23:52.2326379Z Resolving deltas:  91% (223/244)
+2025-04-07T02:23:52.2326594Z Resolving deltas:  92% (225/244)
+2025-04-07T02:23:52.2326799Z Resolving deltas:  93% (227/244)
+2025-04-07T02:23:52.2326991Z Resolving deltas:  94% (230/244)
+2025-04-07T02:23:52.2327187Z Resolving deltas:  95% (232/244)
+2025-04-07T02:23:52.2327383Z Resolving deltas:  96% (235/244)
+2025-04-07T02:23:52.2327577Z Resolving deltas:  97% (237/244)
+2025-04-07T02:23:52.2327777Z Resolving deltas:  98% (240/244)
+2025-04-07T02:23:52.3207101Z Resolving deltas:  99% (242/244)
+2025-04-07T02:23:52.3207627Z Resolving deltas: 100% (244/244)
+2025-04-07T02:23:52.3208426Z Resolving deltas: 100% (244/244), done.
+2025-04-07T02:23:52.3613228Z From https://github.com/Main-app-backdoor/Main-app
+2025-04-07T02:23:52.3613942Z  * [new branch]      BackdoorBDG-patch-1 -> origin/BackdoorBDG-patch-1
+2025-04-07T02:23:52.3614795Z  * [new branch]      BackdoorBDG-patch-2 -> origin/BackdoorBDG-patch-2
+2025-04-07T02:23:52.3617038Z  * [new branch]      main                -> origin/main
+2025-04-07T02:23:52.3618921Z  * [new branch]      mentat-0-3          -> origin/mentat-0-3
+2025-04-07T02:23:52.3620906Z  * [new branch]      mentat-0-4          -> origin/mentat-0-4
+2025-04-07T02:23:52.3623037Z  * [new branch]      mentat-2-1-fix-build-errors -> origin/mentat-2-1-fix-build-errors
+2025-04-07T02:23:52.3624847Z  * [new branch]      mentat-2-2          -> origin/mentat-2-2
+2025-04-07T02:23:52.3626854Z  * [new branch]      mentat-7-1          -> origin/mentat-7-1
+2025-04-07T02:23:52.3628969Z  * [new branch]      mentat-7-2          -> origin/mentat-7-2
+2025-04-07T02:23:52.3630913Z  * [new branch]      sync-backdoor-app   -> origin/sync-backdoor-app
+2025-04-07T02:23:52.3632641Z  * [new tag]         analysis-report-e338a18a1b6c7d87418cd1caa5e7b90eeb702e62 -> analysis-report-e338a18a1b6c7d87418cd1caa5e7b90eeb702e62
+2025-04-07T02:23:52.3671551Z [command]/usr/bin/git branch --list --remote origin/main
+2025-04-07T02:23:52.3693880Z   origin/main
+2025-04-07T02:23:52.3702359Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2025-04-07T02:23:52.3721033Z 0d985db354da82f9c234d756a072fe05a6ce58e6
+2025-04-07T02:23:52.3727043Z ##[endgroup]
+2025-04-07T02:23:52.3727617Z ##[group]Determining the checkout info
+2025-04-07T02:23:52.3729599Z ##[endgroup]
+2025-04-07T02:23:52.3730153Z ##[group]Checking out the ref
+2025-04-07T02:23:52.3731837Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-04-07T02:23:53.2870401Z Switched to a new branch 'main'
+2025-04-07T02:23:53.2872099Z branch 'main' set up to track 'origin/main'.
+2025-04-07T02:23:53.3139696Z ##[endgroup]
+2025-04-07T02:23:53.3174861Z [command]/usr/bin/git log -1 --format='%H'
+2025-04-07T02:23:53.3197912Z '0d985db354da82f9c234d756a072fe05a6ce58e6'
+2025-04-07T02:23:53.3420021Z ##[group]Run sudo apt-get update && sudo apt-get install -y cppcheck
+2025-04-07T02:23:53.3420537Z [36;1msudo apt-get update && sudo apt-get install -y cppcheck[0m
+2025-04-07T02:23:53.3517618Z shell: /usr/bin/bash -e {0}
+2025-04-07T02:23:53.3517856Z ##[endgroup]
+2025-04-07T02:23:53.4553315Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [142 B]
+2025-04-07T02:23:53.5371954Z Hit:2 http://azure.archive.ubuntu.com/ubuntu jammy InRelease
+2025-04-07T02:23:53.5394147Z Get:3 http://azure.archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+2025-04-07T02:23:53.5439624Z Get:4 http://azure.archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+2025-04-07T02:23:53.5462036Z Get:5 http://azure.archive.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+2025-04-07T02:23:53.5573460Z Get:6 https://packages.microsoft.com/repos/azure-cli jammy InRelease [3596 B]
+2025-04-07T02:23:53.5695339Z Get:7 https://packages.microsoft.com/ubuntu/22.04/prod jammy InRelease [3632 B]
+2025-04-07T02:23:53.7331368Z Get:8 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [2461 kB]
+2025-04-07T02:23:53.7577774Z Get:9 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [404 kB]
+2025-04-07T02:23:53.7607304Z Get:10 http://azure.archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [18.5 kB]
+2025-04-07T02:23:53.7618814Z Get:11 http://azure.archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [3259 kB]
+2025-04-07T02:23:53.7780647Z Get:12 http://azure.archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [577 kB]
+2025-04-07T02:23:53.7820826Z Get:13 http://azure.archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 c-n-f Metadata [676 B]
+2025-04-07T02:23:53.7833039Z Get:14 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1198 kB]
+2025-04-07T02:23:53.7912760Z Get:15 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [295 kB]
+2025-04-07T02:23:53.7933322Z Get:16 http://azure.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [28.7 kB]
+2025-04-07T02:23:53.7946961Z Get:17 http://azure.archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [46.5 kB]
+2025-04-07T02:23:53.8401071Z Get:18 http://azure.archive.ubuntu.com/ubuntu jammy-updates/multiverse Translation-en [11.8 kB]
+2025-04-07T02:23:53.8413220Z Get:19 http://azure.archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 c-n-f Metadata [592 B]
+2025-04-07T02:23:53.8426451Z Get:20 http://azure.archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [30.0 kB]
+2025-04-07T02:23:53.8441307Z Get:21 http://azure.archive.ubuntu.com/ubuntu jammy-backports/universe amd64 c-n-f Metadata [672 B]
+2025-04-07T02:23:53.9223319Z Get:22 http://azure.archive.ubuntu.com/ubuntu jammy-security/main amd64 Packages [2212 kB]
+2025-04-07T02:23:53.9342284Z Get:23 http://azure.archive.ubuntu.com/ubuntu jammy-security/main Translation-en [340 kB]
+2025-04-07T02:23:53.9368209Z Get:24 http://azure.archive.ubuntu.com/ubuntu jammy-security/main amd64 c-n-f Metadata [13.6 kB]
+2025-04-07T02:23:53.9376513Z Get:25 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [3127 kB]
+2025-04-07T02:23:53.9562322Z Get:26 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted Translation-en [556 kB]
+2025-04-07T02:23:53.9609179Z Get:27 http://azure.archive.ubuntu.com/ubuntu jammy-security/restricted amd64 c-n-f Metadata [624 B]
+2025-04-07T02:23:53.9621330Z Get:28 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [970 kB]
+2025-04-07T02:23:53.9686341Z Get:29 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe Translation-en [208 kB]
+2025-04-07T02:23:53.9728006Z Get:30 http://azure.archive.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [21.7 kB]
+2025-04-07T02:23:53.9735710Z Get:31 http://azure.archive.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [39.6 kB]
+2025-04-07T02:23:53.9865656Z Get:34 https://packages.microsoft.com/repos/azure-cli jammy/main amd64 Packages [2269 B]
+2025-04-07T02:23:54.0203844Z Get:32 http://azure.archive.ubuntu.com/ubuntu jammy-security/multiverse Translation-en [8716 B]
+2025-04-07T02:23:54.0214764Z Get:33 http://azure.archive.ubuntu.com/ubuntu jammy-security/multiverse amd64 c-n-f Metadata [368 B]
+2025-04-07T02:23:54.0778458Z Get:35 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main amd64 Packages [207 kB]
+2025-04-07T02:23:54.1231286Z Get:36 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main armhf Packages [18.7 kB]
+2025-04-07T02:23:54.1350669Z Get:37 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main arm64 Packages [54.6 kB]
+2025-04-07T02:23:59.5651388Z Fetched 16.5 MB in 2s (8379 kB/s)
+2025-04-07T02:24:00.3131941Z Reading package lists...
+2025-04-07T02:24:00.3713544Z Reading package lists...
+2025-04-07T02:24:00.5240599Z Building dependency tree...
+2025-04-07T02:24:00.5252116Z Reading state information...
+2025-04-07T02:24:00.6525572Z Suggested packages:
+2025-04-07T02:24:00.6525865Z   cppcheck-gui clang clang-tidy
+2025-04-07T02:24:00.6654974Z The following NEW packages will be installed:
+2025-04-07T02:24:00.6659962Z   cppcheck
+2025-04-07T02:24:00.6802647Z 0 upgraded, 1 newly installed, 0 to remove and 91 not upgraded.
+2025-04-07T02:24:00.6803146Z Need to get 2016 kB of archives.
+2025-04-07T02:24:00.6804516Z After this operation, 9120 kB of additional disk space will be used.
+2025-04-07T02:24:00.6804925Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [142 B]
+2025-04-07T02:24:00.7576752Z Get:2 http://azure.archive.ubuntu.com/ubuntu jammy/universe amd64 cppcheck amd64 2.7-1 [2016 kB]
+2025-04-07T02:24:01.0694858Z Fetched 2016 kB in 0s (16.9 MB/s)
+2025-04-07T02:24:01.0940535Z Selecting previously unselected package cppcheck.
+2025-04-07T02:24:01.1191715Z (Reading database ... 
+2025-04-07T02:24:01.1192074Z (Reading database ... 5%
+2025-04-07T02:24:01.1192352Z (Reading database ... 10%
+2025-04-07T02:24:01.1192624Z (Reading database ... 15%
+2025-04-07T02:24:01.1192857Z (Reading database ... 20%
+2025-04-07T02:24:01.1193101Z (Reading database ... 25%
+2025-04-07T02:24:01.1193339Z (Reading database ... 30%
+2025-04-07T02:24:01.1193566Z (Reading database ... 35%
+2025-04-07T02:24:01.1193791Z (Reading database ... 40%
+2025-04-07T02:24:01.1194024Z (Reading database ... 45%
+2025-04-07T02:24:01.1194247Z (Reading database ... 50%
+2025-04-07T02:24:01.1601577Z (Reading database ... 55%
+2025-04-07T02:24:01.1919653Z (Reading database ... 60%
+2025-04-07T02:24:01.2176241Z (Reading database ... 65%
+2025-04-07T02:24:01.2621503Z (Reading database ... 70%
+2025-04-07T02:24:01.2934753Z (Reading database ... 75%
+2025-04-07T02:24:01.3365267Z (Reading database ... 80%
+2025-04-07T02:24:01.4074355Z (Reading database ... 85%
+2025-04-07T02:24:01.4552783Z (Reading database ... 90%
+2025-04-07T02:24:01.4954984Z (Reading database ... 95%
+2025-04-07T02:24:01.4955399Z (Reading database ... 100%
+2025-04-07T02:24:01.4956366Z (Reading database ... 270956 files and directories currently installed.)
+2025-04-07T02:24:01.5008628Z Preparing to unpack .../cppcheck_2.7-1_amd64.deb ...
+2025-04-07T02:24:01.5050398Z Unpacking cppcheck (2.7-1) ...
+2025-04-07T02:24:01.5978205Z Setting up cppcheck (2.7-1) ...
+2025-04-07T02:24:01.6006140Z Processing triggers for man-db (2.10.2-1) ...
+2025-04-07T02:24:02.2606887Z NEEDRESTART-VER: 3.5
+2025-04-07T02:24:02.6174293Z NEEDRESTART-KCUR: 6.8.0-1021-azure
+2025-04-07T02:24:02.6174832Z NEEDRESTART-KEXP: 6.8.0-1021-azure
+2025-04-07T02:24:02.6175173Z NEEDRESTART-KSTA: 1
+2025-04-07T02:24:04.2981069Z ##[group]Run echo " " > cppcheck_errors.txt || true
+2025-04-07T02:24:04.2981453Z [36;1mecho " " > cppcheck_errors.txt || true[0m
+2025-04-07T02:24:04.3043146Z shell: /usr/bin/bash -e {0}
+2025-04-07T02:24:04.3043381Z ##[endgroup]
+2025-04-07T02:24:04.3140061Z ##[group]Run # Find all C++ files and process them in smaller batches
+2025-04-07T02:24:04.3140520Z [36;1m# Find all C++ files and process them in smaller batches[0m
+2025-04-07T02:24:04.3140936Z [36;1mfind . -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" \) | \[0m
+2025-04-07T02:24:04.3141272Z [36;1mwhile read -r file; do[0m
+2025-04-07T02:24:04.3141481Z [36;1m  cppcheck \[0m
+2025-04-07T02:24:04.3141670Z [36;1m    --enable=all \[0m
+2025-04-07T02:24:04.3141873Z [36;1m    --inconclusive \[0m
+2025-04-07T02:24:04.3142082Z [36;1m    --std=c++11 \[0m
+2025-04-07T02:24:04.3142271Z [36;1m    --language=c++ \[0m
+2025-04-07T02:24:04.3142466Z [36;1m    --force \[0m
+2025-04-07T02:24:04.3142644Z [36;1m    --verbose \[0m
+2025-04-07T02:24:04.3142843Z [36;1m    --error-exitcode=0 \[0m
+2025-04-07T02:24:04.3143057Z [36;1m    -Iinclude \[0m
+2025-04-07T02:24:04.3143237Z [36;1m    -Isrc \[0m
+2025-04-07T02:24:04.3143468Z [36;1m    "$file" 2>> cppcheck_errors.txt || true[0m
+2025-04-07T02:24:04.3143707Z [36;1mdone[0m
+2025-04-07T02:24:04.3143885Z [36;1mcat cppcheck_errors.txt || true[0m
+2025-04-07T02:24:04.3197676Z shell: /usr/bin/bash -e {0}
+2025-04-07T02:24:04.3197899Z ##[endgroup]
+2025-04-07T02:24:04.4099660Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:04.4100310Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:04.4143890Z Checking Shared/Magic/zsign/archo.cpp ...
+2025-04-07T02:24:04.4144334Z Defines:
+2025-04-07T02:24:04.4144582Z Undefines:
+2025-04-07T02:24:04.4144839Z Includes:
+2025-04-07T02:24:04.4145091Z Platform:Native
+2025-04-07T02:24:04.5672128Z Checking Shared/Magic/zsign/archo.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:04.6978918Z Checking Shared/Magic/zsign/archo.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:04.8444378Z Checking Shared/Magic/zsign/archo.cpp: _WIN32...
+2025-04-07T02:24:05.0136780Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:05.0137429Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:05.0179852Z Checking Shared/Magic/zsign/openssl.cpp ...
+2025-04-07T02:24:05.0180251Z Defines:
+2025-04-07T02:24:05.0180437Z Undefines:
+2025-04-07T02:24:05.0180617Z Includes:
+2025-04-07T02:24:05.0180769Z Platform:Native
+2025-04-07T02:24:05.1169337Z Checking Shared/Magic/zsign/openssl.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:05.1917940Z Checking Shared/Magic/zsign/openssl.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:05.2807296Z Checking Shared/Magic/zsign/openssl.cpp: _WIN32...
+2025-04-07T02:24:05.3639417Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:05.3640023Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:05.3684103Z Checking Shared/Magic/zsign/bundle.cpp ...
+2025-04-07T02:24:05.3684789Z Defines:
+2025-04-07T02:24:05.3685064Z Undefines:
+2025-04-07T02:24:05.3685325Z Includes:
+2025-04-07T02:24:05.3685583Z Platform:Native
+2025-04-07T02:24:05.4930485Z Checking Shared/Magic/zsign/bundle.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:05.5998350Z Checking Shared/Magic/zsign/bundle.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:05.7225343Z Checking Shared/Magic/zsign/bundle.cpp: _WIN32...
+2025-04-07T02:24:05.8344957Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:05.8345556Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:05.8388141Z Checking Shared/Magic/zsign/macho.cpp ...
+2025-04-07T02:24:05.8388526Z Defines:
+2025-04-07T02:24:05.8388759Z Undefines:
+2025-04-07T02:24:05.8388987Z Includes:
+2025-04-07T02:24:05.8389238Z Platform:Native
+2025-04-07T02:24:05.9005821Z Checking Shared/Magic/zsign/macho.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:05.9545902Z Checking Shared/Magic/zsign/macho.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:06.0101952Z Checking Shared/Magic/zsign/macho.cpp: _WIN32...
+2025-04-07T02:24:06.0633832Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:06.0634412Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:06.0677542Z Checking Shared/Magic/zsign/signing.cpp ...
+2025-04-07T02:24:06.0677906Z Defines:
+2025-04-07T02:24:06.0678121Z Undefines:
+2025-04-07T02:24:06.0678327Z Includes:
+2025-04-07T02:24:06.0678566Z Platform:Native
+2025-04-07T02:24:06.2345300Z Checking Shared/Magic/zsign/signing.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:06.3798705Z Checking Shared/Magic/zsign/signing.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:06.5396582Z Checking Shared/Magic/zsign/signing.cpp: _WIN32...
+2025-04-07T02:24:06.6880247Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:06.6880863Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:06.6925972Z Checking Shared/Magic/zsign/common/json.cpp ...
+2025-04-07T02:24:06.6926581Z Defines:
+2025-04-07T02:24:06.6926832Z Undefines:
+2025-04-07T02:24:06.6927077Z Includes:
+2025-04-07T02:24:06.6927334Z Platform:Native
+2025-04-07T02:24:07.0127201Z Checking Shared/Magic/zsign/common/json.cpp: _MSC_VER;_WIN32...
+2025-04-07T02:24:07.3212374Z Checking Shared/Magic/zsign/common/json.cpp: _WIN32...
+2025-04-07T02:24:07.6281938Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:07.6282397Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:07.6325058Z Checking Shared/Magic/zsign/common/common.cpp ...
+2025-04-07T02:24:07.6325471Z Defines:
+2025-04-07T02:24:07.6325663Z Undefines:
+2025-04-07T02:24:07.6325852Z Includes:
+2025-04-07T02:24:07.6326202Z Platform:Native
+2025-04-07T02:24:07.7125031Z Checking Shared/Magic/zsign/common/common.cpp: S_IFMT;S_IFREG;S_ISREG...
+2025-04-07T02:24:07.7150566Z Checking Shared/Magic/zsign/common/common.cpp: WINDOWS...
+2025-04-07T02:24:07.7976155Z (information) Couldn't find path given by -I 'include/'
+2025-04-07T02:24:07.7976770Z (information) Couldn't find path given by -I 'src/'
+2025-04-07T02:24:07.8019726Z Checking Shared/Magic/zsign/common/base64.cpp ...
+2025-04-07T02:24:07.8020206Z Defines:
+2025-04-07T02:24:07.8020460Z Undefines:
+2025-04-07T02:24:07.8020708Z Includes:
+2025-04-07T02:24:07.8020965Z Platform:Native
+2025-04-07T02:24:07.8264370Z  
+2025-04-07T02:24:07.8265965Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8267857Z class JReader {
+2025-04-07T02:24:07.8268143Z ^
+2025-04-07T02:24:07.8269565Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8271249Z class JWriter {
+2025-04-07T02:24:07.8271519Z ^
+2025-04-07T02:24:07.8278977Z Shared/Magic/zsign/archo.h:34:14: style: inconclusive: The member function 'ZArchO::BO' can be made a const function. Making this function 'const' should not cause compiler errors. Even though the function can be made const function technically it may not make sense conceptually. Think about your design and the task of the function first - is it a function that must not change object internal state? [functionConst]
+2025-04-07T02:24:07.8281518Z     uint32_t BO(uint32_t uVal);
+2025-04-07T02:24:07.8281860Z              ^
+2025-04-07T02:24:07.8282491Z Shared/Magic/zsign/archo.cpp:216:18: note: Technically the member function 'ZArchO::BO' can be const.
+2025-04-07T02:24:07.8283245Z uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
+2025-04-07T02:24:07.8283586Z                  ^
+2025-04-07T02:24:07.8283934Z Shared/Magic/zsign/archo.h:34:14: note: Technically the member function 'ZArchO::BO' can be const.
+2025-04-07T02:24:07.8284339Z     uint32_t BO(uint32_t uVal);
+2025-04-07T02:24:07.8284534Z              ^
+2025-04-07T02:24:07.8286617Z Shared/Magic/zsign/archo.h:35:17: performance: inconclusive: The member function 'ZArchO::GetFileType' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8288379Z     const char *GetFileType(uint32_t uFileType);
+2025-04-07T02:24:07.8288621Z                 ^
+2025-04-07T02:24:07.8289147Z Shared/Magic/zsign/archo.cpp:177:21: note: Technically the member function 'ZArchO::GetFileType' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8289787Z const char *ZArchO::GetFileType(uint32_t uFileType) {
+2025-04-07T02:24:07.8290042Z                     ^
+2025-04-07T02:24:07.8290598Z Shared/Magic/zsign/archo.h:35:17: note: Technically the member function 'ZArchO::GetFileType' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8291186Z     const char *GetFileType(uint32_t uFileType);
+2025-04-07T02:24:07.8291412Z                 ^
+2025-04-07T02:24:07.8293047Z Shared/Magic/zsign/archo.h:36:17: performance: inconclusive: The member function 'ZArchO::GetArch' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8294752Z     const char *GetArch(int cpuType, int cpuSubType);
+2025-04-07T02:24:07.8294986Z                 ^
+2025-04-07T02:24:07.8295498Z Shared/Magic/zsign/archo.cpp:115:21: note: Technically the member function 'ZArchO::GetArch' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8296440Z const char *ZArchO::GetArch(int cpuType, int cpuSubType) {
+2025-04-07T02:24:07.8296723Z                     ^
+2025-04-07T02:24:07.8297226Z Shared/Magic/zsign/archo.h:36:17: note: Technically the member function 'ZArchO::GetArch' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8297797Z     const char *GetArch(int cpuType, int cpuSubType);
+2025-04-07T02:24:07.8298035Z                 ^
+2025-04-07T02:24:07.8299017Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8300031Z     JValue(int val);
+2025-04-07T02:24:07.8300190Z     ^
+2025-04-07T02:24:07.8301143Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8302323Z     JValue(bool val);
+2025-04-07T02:24:07.8302479Z     ^
+2025-04-07T02:24:07.8303415Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8304563Z     JValue(double val);
+2025-04-07T02:24:07.8304729Z     ^
+2025-04-07T02:24:07.8305776Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8307052Z     JValue(int64_t val);
+2025-04-07T02:24:07.8307232Z     ^
+2025-04-07T02:24:07.8308168Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8309167Z     JValue(const char *val);
+2025-04-07T02:24:07.8309351Z     ^
+2025-04-07T02:24:07.8310274Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8311293Z     JValue(const string &val);
+2025-04-07T02:24:07.8311479Z     ^
+2025-04-07T02:24:07.8312961Z Shared/Magic/zsign/archo.cpp:42:17: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8314573Z     m_pHeader = (mach_header *)m_pBase;
+2025-04-07T02:24:07.8314872Z                 ^
+2025-04-07T02:24:07.8316547Z Shared/Magic/zsign/archo.cpp:54:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8318089Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8318351Z                             ^
+2025-04-07T02:24:07.8319814Z Shared/Magic/zsign/archo.cpp:57:42: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8321359Z                 segment_command *seglc = (segment_command *)pLoadCommand;
+2025-04-07T02:24:07.8321649Z                                          ^
+2025-04-07T02:24:07.8323133Z Shared/Magic/zsign/archo.cpp:75:45: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8324865Z                 segment_command_64 *seglc = (segment_command_64 *)pLoadCommand;
+2025-04-07T02:24:07.8325171Z                                             ^
+2025-04-07T02:24:07.8327069Z Shared/Magic/zsign/archo.cpp:95:54: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8328688Z                 encryption_info_command *crypt_cmd = (encryption_info_command *)pLoadCommand;
+2025-04-07T02:24:07.8329049Z                                                      ^
+2025-04-07T02:24:07.8330539Z Shared/Magic/zsign/archo.cpp:101:48: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8332160Z                 codesignature_command *pcslc = (codesignature_command *)pLoadCommand;
+2025-04-07T02:24:07.8332495Z                                                ^
+2025-04-07T02:24:07.8333976Z Shared/Magic/zsign/archo.cpp:248:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8335497Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8335747Z                             ^
+2025-04-07T02:24:07.8337440Z Shared/Magic/zsign/archo.cpp:261:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8338953Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8339204Z                             ^
+2025-04-07T02:24:07.8340683Z Shared/Magic/zsign/archo.cpp:263:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8342217Z             dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8342483Z                                  ^
+2025-04-07T02:24:07.8343964Z Shared/Magic/zsign/archo.cpp:276:33: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8345618Z             load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8345875Z                                 ^
+2025-04-07T02:24:07.8347685Z Shared/Magic/zsign/archo.cpp:278:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8349234Z                 dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8349502Z                                      ^
+2025-04-07T02:24:07.8350994Z Shared/Magic/zsign/archo.cpp:521:28: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8352542Z     load_command *pseglc = (load_command *)m_pLinkEditSegment;
+2025-04-07T02:24:07.8352814Z                            ^
+2025-04-07T02:24:07.8354293Z Shared/Magic/zsign/archo.cpp:524:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8355857Z             segment_command *seglc = (segment_command *)m_pLinkEditSegment;
+2025-04-07T02:24:07.8356438Z                                      ^
+2025-04-07T02:24:07.8357928Z Shared/Magic/zsign/archo.cpp:531:41: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8359506Z             segment_command_64 *seglc = (segment_command_64 *)m_pLinkEditSegment;
+2025-04-07T02:24:07.8359807Z                                         ^
+2025-04-07T02:24:07.8361292Z Shared/Magic/zsign/archo.cpp:539:36: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8362880Z     codesignature_command *pcslc = (codesignature_command *)m_pCodeSignSegment;
+2025-04-07T02:24:07.8363205Z                                    ^
+2025-04-07T02:24:07.8364687Z Shared/Magic/zsign/archo.cpp:546:17: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8366654Z         pcslc = (codesignature_command *)(m_pBase + m_uHeaderSize + BO(m_pHeader->sizeofcmds));
+2025-04-07T02:24:07.8366998Z                 ^
+2025-04-07T02:24:07.8368579Z Shared/Magic/zsign/archo.cpp:576:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8370115Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8370364Z                             ^
+2025-04-07T02:24:07.8371841Z Shared/Magic/zsign/archo.cpp:579:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8373356Z             dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8373612Z                                  ^
+2025-04-07T02:24:07.8375090Z Shared/Magic/zsign/archo.cpp:607:26: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8376915Z     dylib_command *dlc = (dylib_command *)(m_pBase + m_uHeaderSize + BO(m_pHeader->sizeofcmds));
+2025-04-07T02:24:07.8377264Z                          ^
+2025-04-07T02:24:07.8378732Z Shared/Magic/zsign/archo.cpp:642:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8380258Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8380504Z                             ^
+2025-04-07T02:24:07.8382124Z Shared/Magic/zsign/archo.cpp:646:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8383661Z             dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8383908Z                                  ^
+2025-04-07T02:24:07.8385387Z Shared/Magic/zsign/archo.cpp:685:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8387164Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8387406Z                             ^
+2025-04-07T02:24:07.8388865Z Shared/Magic/zsign/archo.cpp:688:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8390377Z             dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8390729Z                                  ^
+2025-04-07T02:24:07.8392229Z Shared/Magic/zsign/archo.cpp:720:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8393768Z         load_command *plc = (load_command *)pLoadCommand;
+2025-04-07T02:24:07.8394018Z                             ^
+2025-04-07T02:24:07.8395487Z Shared/Magic/zsign/archo.cpp:722:34: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8397114Z             dylib_command *dlc = (dylib_command *)pLoadCommand;
+2025-04-07T02:24:07.8397377Z                                  ^
+2025-04-07T02:24:07.8397982Z Shared/Magic/zsign/archo.cpp:35:34: style: The unsigned expression 'uLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8398608Z     if (NULL == pBase || uLength <= 0) {
+2025-04-07T02:24:07.8398824Z                                  ^
+2025-04-07T02:24:07.8399540Z Shared/Magic/zsign/archo.cpp:298:46: style: The unsigned expression 'm_uSignLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8400200Z     if (NULL == m_pSignBase || m_uSignLength <= 0) {
+2025-04-07T02:24:07.8400460Z                                              ^
+2025-04-07T02:24:07.8401061Z Shared/Magic/zsign/archo.cpp:216:30: style: inconclusive: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8401778Z uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
+2025-04-07T02:24:07.8402110Z                              ^
+2025-04-07T02:24:07.8402530Z Shared/Magic/zsign/archo.h:34:26: note: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'.
+2025-04-07T02:24:07.8402978Z     uint32_t BO(uint32_t uVal);
+2025-04-07T02:24:07.8403161Z                          ^
+2025-04-07T02:24:07.8403583Z Shared/Magic/zsign/archo.cpp:216:30: note: Function 'BO' argument 1 names different: declaration 'uVal' definition 'uValue'.
+2025-04-07T02:24:07.8404148Z uint32_t ZArchO::BO(uint32_t uValue) { return m_bBigEndian ? LE(uValue) : uValue; }
+2025-04-07T02:24:07.8404465Z                              ^
+2025-04-07T02:24:07.8405118Z Shared/Magic/zsign/archo.cpp:676:42: performance: Parameter 'dylibNames' is passed by value. It could be passed as a const reference which is usually faster and recommended in C++. [passedByValue]
+2025-04-07T02:24:07.8405956Z void ZArchO::uninstallDylibs(set<string> dylibNames) {
+2025-04-07T02:24:07.8406323Z                                          ^
+2025-04-07T02:24:07.8406794Z Shared/Magic/zsign/archo.cpp:637:29: style: Variable 'oldPathPadding' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8407323Z     uint32_t oldPathPadding = (8 - oldPathLength % 8) % 8;
+2025-04-07T02:24:07.8407587Z                             ^
+2025-04-07T02:24:07.8408040Z Shared/Magic/zsign/archo.cpp:639:33: style: Variable 'newLoadCommandSize' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8408538Z     uint32_t newLoadCommandSize = 0;
+2025-04-07T02:24:07.8408748Z                                 ^
+2025-04-07T02:24:07.8409254Z Shared/Magic/zsign/archo.cpp:628:0: style: The function 'ChangeDylibPath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8409612Z 
+2025-04-07T02:24:07.8409674Z ^
+2025-04-07T02:24:07.8409966Z Shared/Magic/zsign/archo.cpp:34:0: style: The function 'Init' is never used. [unusedFunction]
+2025-04-07T02:24:07.8410274Z 
+2025-04-07T02:24:07.8410334Z ^
+2025-04-07T02:24:07.8410648Z Shared/Magic/zsign/archo.cpp:569:0: style: The function 'InjectDyLib' is never used. [unusedFunction]
+2025-04-07T02:24:07.8410987Z 
+2025-04-07T02:24:07.8411039Z ^
+2025-04-07T02:24:07.8411347Z Shared/Magic/zsign/archo.cpp:715:0: style: The function 'ListDylibs' is never used. [unusedFunction]
+2025-04-07T02:24:07.8411677Z 
+2025-04-07T02:24:07.8411731Z ^
+2025-04-07T02:24:07.8412039Z Shared/Magic/zsign/archo.cpp:225:0: style: The function 'PrintInfo' is never used. [unusedFunction]
+2025-04-07T02:24:07.8412362Z 
+2025-04-07T02:24:07.8412415Z ^
+2025-04-07T02:24:07.8412766Z Shared/Magic/zsign/archo.cpp:512:0: style: The function 'ReallocCodeSignSpace' is never used. [unusedFunction]
+2025-04-07T02:24:07.8413137Z 
+2025-04-07T02:24:07.8413189Z ^
+2025-04-07T02:24:07.8413483Z Shared/Magic/zsign/archo.cpp:474:0: style: The function 'Sign' is never used. [unusedFunction]
+2025-04-07T02:24:07.8413794Z 
+2025-04-07T02:24:07.8413855Z ^
+2025-04-07T02:24:07.8414180Z Shared/Magic/zsign/archo.cpp:676:0: style: The function 'uninstallDylibs' is never used. [unusedFunction]
+2025-04-07T02:24:07.8414524Z 
+2025-04-07T02:24:07.8414585Z ^
+2025-04-07T02:24:07.8415749Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8417018Z 
+2025-04-07T02:24:07.8417835Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8418777Z class JReader {
+2025-04-07T02:24:07.8418926Z ^
+2025-04-07T02:24:07.8419784Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8420718Z class JWriter {
+2025-04-07T02:24:07.8420867Z ^
+2025-04-07T02:24:07.8421811Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8422812Z     JValue(int val);
+2025-04-07T02:24:07.8422978Z     ^
+2025-04-07T02:24:07.8423927Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8425072Z     JValue(bool val);
+2025-04-07T02:24:07.8425240Z     ^
+2025-04-07T02:24:07.8426268Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8427273Z     JValue(double val);
+2025-04-07T02:24:07.8427439Z     ^
+2025-04-07T02:24:07.8428470Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8429478Z     JValue(int64_t val);
+2025-04-07T02:24:07.8429644Z     ^
+2025-04-07T02:24:07.8430576Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8431605Z     JValue(const char *val);
+2025-04-07T02:24:07.8431782Z     ^
+2025-04-07T02:24:07.8432713Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8433719Z     JValue(const string &val);
+2025-04-07T02:24:07.8433897Z     ^
+2025-04-07T02:24:07.8434531Z Shared/Magic/zsign/openssl.cpp:276:32: style: inconclusive: Function 'GenerateCMS' argument 4 names different: declaration 'strCDHashPlist' definition 'strCDHashesPlist'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8435284Z                  const string &strCDHashesPlist, string &strCMSOutput) {
+2025-04-07T02:24:07.8435563Z                                ^
+2025-04-07T02:24:07.8436189Z Shared/Magic/zsign/openssl.h:17:32: note: Function 'GenerateCMS' argument 4 names different: declaration 'strCDHashPlist' definition 'strCDHashesPlist'.
+2025-04-07T02:24:07.8436800Z                  const string &strCDHashPlist, string &strCMSOutput);
+2025-04-07T02:24:07.8437064Z                                ^
+2025-04-07T02:24:07.8437603Z Shared/Magic/zsign/openssl.cpp:276:32: note: Function 'GenerateCMS' argument 4 names different: declaration 'strCDHashPlist' definition 'strCDHashesPlist'.
+2025-04-07T02:24:07.8438231Z                  const string &strCDHashesPlist, string &strCMSOutput) {
+2025-04-07T02:24:07.8438498Z                                ^
+2025-04-07T02:24:07.8438891Z Shared/Magic/zsign/openssl.cpp:486:26: style: Local variable 'obj' shadows outer variable [shadowVariable]
+2025-04-07T02:24:07.8439349Z             ASN1_OBJECT *obj = X509_ATTRIBUTE_get0_object(attr);
+2025-04-07T02:24:07.8439608Z                          ^
+2025-04-07T02:24:07.8439883Z Shared/Magic/zsign/openssl.cpp:449:24: note: Shadowed declaration
+2025-04-07T02:24:07.8440210Z     const ASN1_OBJECT *obj = CMS_get0_type(cms);
+2025-04-07T02:24:07.8440447Z                        ^
+2025-04-07T02:24:07.8440690Z Shared/Magic/zsign/openssl.cpp:486:26: note: Shadow variable
+2025-04-07T02:24:07.8441014Z             ASN1_OBJECT *obj = X509_ATTRIBUTE_get0_object(attr);
+2025-04-07T02:24:07.8441259Z                          ^
+2025-04-07T02:24:07.8441675Z Shared/Magic/zsign/openssl.cpp:134:14: style: Variable 'code' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8442139Z     int code = BIO_puts(ldapbio, a.c_str());
+2025-04-07T02:24:07.8442484Z              ^
+2025-04-07T02:24:07.8442838Z Shared/Magic/zsign/openssl.cpp:275:0: style: The function 'GenerateCMS' is never used. [unusedFunction]
+2025-04-07T02:24:07.8443182Z 
+2025-04-07T02:24:07.8443236Z ^
+2025-04-07T02:24:07.8443564Z Shared/Magic/zsign/openssl.cpp:438:0: style: The function 'GetCMSInfo' is never used. [unusedFunction]
+2025-04-07T02:24:07.8443896Z 
+2025-04-07T02:24:07.8443948Z ^
+2025-04-07T02:24:07.8444254Z Shared/Magic/zsign/openssl.cpp:586:0: style: The function 'Init' is never used. [unusedFunction]
+2025-04-07T02:24:07.8444569Z 
+2025-04-07T02:24:07.8444627Z ^
+2025-04-07T02:24:07.8445885Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8447152Z 
+2025-04-07T02:24:07.8447947Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8448881Z class JReader {
+2025-04-07T02:24:07.8449029Z ^
+2025-04-07T02:24:07.8449885Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8450803Z class JWriter {
+2025-04-07T02:24:07.8450952Z ^
+2025-04-07T02:24:07.8452631Z Shared/Magic/zsign/bundle.h:36:10: performance: inconclusive: The member function 'ZAppBundle::GetSignFolderInfo' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8454512Z     bool GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool bGetName = false);
+2025-04-07T02:24:07.8454868Z          ^
+2025-04-07T02:24:07.8455421Z Shared/Magic/zsign/bundle.cpp:67:18: note: Technically the member function 'ZAppBundle::GetSignFolderInfo' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8456289Z bool ZAppBundle::GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool bGetName) {
+2025-04-07T02:24:07.8456666Z                  ^
+2025-04-07T02:24:07.8457214Z Shared/Magic/zsign/bundle.h:36:10: note: Technically the member function 'ZAppBundle::GetSignFolderInfo' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8457962Z     bool GetSignFolderInfo(const string &strFolder, JValue &jvNode, bool bGetName = false);
+2025-04-07T02:24:07.8458315Z          ^
+2025-04-07T02:24:07.8459262Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8460279Z     JValue(int val);
+2025-04-07T02:24:07.8460434Z     ^
+2025-04-07T02:24:07.8461373Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8462493Z     JValue(bool val);
+2025-04-07T02:24:07.8462651Z     ^
+2025-04-07T02:24:07.8463583Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8464575Z     JValue(double val);
+2025-04-07T02:24:07.8464736Z     ^
+2025-04-07T02:24:07.8465772Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8466868Z     JValue(int64_t val);
+2025-04-07T02:24:07.8467039Z     ^
+2025-04-07T02:24:07.8467967Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8469002Z     JValue(const char *val);
+2025-04-07T02:24:07.8469187Z     ^
+2025-04-07T02:24:07.8470116Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8471125Z     JValue(const string &val);
+2025-04-07T02:24:07.8471317Z     ^
+2025-04-07T02:24:07.8472358Z Shared/Magic/zsign/bundle.cpp:171:77: performance: Prefix ++/-- operators should be preferred for non-primitive types. Pre-increment/decrement can be more efficient than post-increment/decrement. Post-increment/decrement usually involves keeping a copy of the previous value around and adds a little extra code. [postfixOperator]
+2025-04-07T02:24:07.8473644Z     for (set<string>::iterator it = setFiles.begin(); it != setFiles.end(); it++) {
+2025-04-07T02:24:07.8473996Z                                                                             ^
+2025-04-07T02:24:07.8474428Z Shared/Magic/zsign/bundle.cpp:423:0: style: The function 'SignFolder' is never used. [unusedFunction]
+2025-04-07T02:24:07.8474773Z 
+2025-04-07T02:24:07.8474834Z ^
+2025-04-07T02:24:07.8476075Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingInclude]
+2025-04-07T02:24:07.8477226Z 
+2025-04-07T02:24:07.8478032Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8478962Z class JReader {
+2025-04-07T02:24:07.8479111Z ^
+2025-04-07T02:24:07.8479975Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8480904Z class JWriter {
+2025-04-07T02:24:07.8481048Z ^
+2025-04-07T02:24:07.8482282Z Shared/Magic/zsign/macho.h:25:10: style: inconclusive: The member function 'ZMachO::PrintInfo' can be made a const function. Making this function 'const' should not cause compiler errors. Even though the function can be made const function technically it may not make sense conceptually. Think about your design and the task of the function first - is it a function that must not change object internal state? [functionConst]
+2025-04-07T02:24:07.8483712Z     void PrintInfo();
+2025-04-07T02:24:07.8483881Z          ^
+2025-04-07T02:24:07.8484248Z Shared/Magic/zsign/macho.cpp:110:14: note: Technically the member function 'ZMachO::PrintInfo' can be const.
+2025-04-07T02:24:07.8484674Z void ZMachO::PrintInfo() {
+2025-04-07T02:24:07.8484859Z              ^
+2025-04-07T02:24:07.8485206Z Shared/Magic/zsign/macho.h:25:10: note: Technically the member function 'ZMachO::PrintInfo' can be const.
+2025-04-07T02:24:07.8485614Z     void PrintInfo();
+2025-04-07T02:24:07.8485771Z          ^
+2025-04-07T02:24:07.8486939Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8487970Z     JValue(int val);
+2025-04-07T02:24:07.8488130Z     ^
+2025-04-07T02:24:07.8489071Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8490069Z     JValue(bool val);
+2025-04-07T02:24:07.8490231Z     ^
+2025-04-07T02:24:07.8491176Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8492185Z     JValue(double val);
+2025-04-07T02:24:07.8492349Z     ^
+2025-04-07T02:24:07.8493280Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8494288Z     JValue(int64_t val);
+2025-04-07T02:24:07.8494461Z     ^
+2025-04-07T02:24:07.8495393Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8496503Z     JValue(const char *val);
+2025-04-07T02:24:07.8496681Z     ^
+2025-04-07T02:24:07.8497622Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8498639Z     JValue(const string &val);
+2025-04-07T02:24:07.8498820Z     ^
+2025-04-07T02:24:07.8500258Z Shared/Magic/zsign/macho.cpp:73:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8501819Z             fat_header *pFatHeader = (fat_header *)m_pBase;
+2025-04-07T02:24:07.8502068Z                                      ^
+2025-04-07T02:24:07.8503699Z Shared/Magic/zsign/macho.cpp:76:38: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8505297Z                 fat_arch *pFatArch = (fat_arch *)(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i);
+2025-04-07T02:24:07.8505629Z                                      ^
+2025-04-07T02:24:07.8507327Z Shared/Magic/zsign/macho.cpp:184:29: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8508849Z         fat_header fath = *((fat_header *)m_pBase);
+2025-04-07T02:24:07.8509083Z                             ^
+2025-04-07T02:24:07.8510570Z Shared/Magic/zsign/macho.cpp:187:31: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8512169Z             fat_arch arch = *((fat_arch *)(m_pBase + sizeof(fat_header) + sizeof(fat_arch) * i));
+2025-04-07T02:24:07.8512489Z                               ^
+2025-04-07T02:24:07.8513091Z Shared/Magic/zsign/macho.cpp:99:36: style: The unsigned expression 'm_sSize' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8513706Z     if (NULL == m_pBase || m_sSize <= 0) {
+2025-04-07T02:24:07.8513930Z                                    ^
+2025-04-07T02:24:07.8514547Z Shared/Magic/zsign/macho.cpp:166:24: style: The unsigned expression 'uNewLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8515170Z         if (uNewLength <= 0) {
+2025-04-07T02:24:07.8515358Z                        ^
+2025-04-07T02:24:07.8515692Z Shared/Magic/zsign/macho.cpp:256:22: style: Unused variable: arrMachOesSizes [unusedVariable]
+2025-04-07T02:24:07.8516187Z     vector<uint32_t> arrMachOesSizes;
+2025-04-07T02:24:07.8516398Z                      ^
+2025-04-07T02:24:07.8516721Z Shared/Magic/zsign/macho.cpp:40:0: style: The function 'Free' is never used. [unusedFunction]
+2025-04-07T02:24:07.8517035Z 
+2025-04-07T02:24:07.8517097Z ^
+2025-04-07T02:24:07.8517392Z Shared/Magic/zsign/macho.cpp:30:0: style: The function 'InitV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8517706Z 
+2025-04-07T02:24:07.8517760Z ^
+2025-04-07T02:24:07.8518080Z Shared/Magic/zsign/macho.cpp:296:0: style: The function 'RemoveDylib' is never used. [unusedFunction]
+2025-04-07T02:24:07.8518419Z 
+2025-04-07T02:24:07.8518474Z ^
+2025-04-07T02:24:07.8519646Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8520814Z 
+2025-04-07T02:24:07.8521629Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8522692Z class JReader {
+2025-04-07T02:24:07.8522851Z ^
+2025-04-07T02:24:07.8523708Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8524641Z class JWriter {
+2025-04-07T02:24:07.8524785Z ^
+2025-04-07T02:24:07.8525832Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8526949Z     JValue(int val);
+2025-04-07T02:24:07.8527108Z     ^
+2025-04-07T02:24:07.8528046Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8529041Z     JValue(bool val);
+2025-04-07T02:24:07.8529204Z     ^
+2025-04-07T02:24:07.8530142Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8531172Z     JValue(double val);
+2025-04-07T02:24:07.8531337Z     ^
+2025-04-07T02:24:07.8532279Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8533300Z     JValue(int64_t val);
+2025-04-07T02:24:07.8533469Z     ^
+2025-04-07T02:24:07.8534397Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8535404Z     JValue(const char *val);
+2025-04-07T02:24:07.8535579Z     ^
+2025-04-07T02:24:07.8536610Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8537634Z     JValue(const string &val);
+2025-04-07T02:24:07.8537814Z     ^
+2025-04-07T02:24:07.8538195Z Shared/Magic/zsign/signing.cpp:428:18: style: Condition 'uVersion>=0x20100' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8538645Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8538826Z                  ^
+2025-04-07T02:24:07.8539165Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8539559Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8539753Z                         ^
+2025-04-07T02:24:07.8540069Z Shared/Magic/zsign/signing.cpp:428:18: note: Condition 'uVersion>=0x20100' is always true
+2025-04-07T02:24:07.8540440Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8540612Z                  ^
+2025-04-07T02:24:07.8541008Z Shared/Magic/zsign/signing.cpp:431:18: style: Condition 'uVersion>=0x20200' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8541578Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8541759Z                  ^
+2025-04-07T02:24:07.8542092Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8542483Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8542675Z                         ^
+2025-04-07T02:24:07.8542985Z Shared/Magic/zsign/signing.cpp:431:18: note: Condition 'uVersion>=0x20200' is always true
+2025-04-07T02:24:07.8543346Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8543519Z                  ^
+2025-04-07T02:24:07.8543906Z Shared/Magic/zsign/signing.cpp:434:18: style: Condition 'uVersion>=0x20300' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8544352Z     if (uVersion >= 0x20300) {
+2025-04-07T02:24:07.8544631Z                  ^
+2025-04-07T02:24:07.8544965Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8545358Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8545549Z                         ^
+2025-04-07T02:24:07.8563980Z Shared/Magic/zsign/signing.cpp:434:18: note: Condition 'uVersion>=0x20300' is always true
+2025-04-07T02:24:07.8564629Z     if (uVersion >= 0x20300) {
+2025-04-07T02:24:07.8564972Z                  ^
+2025-04-07T02:24:07.8565703Z Shared/Magic/zsign/signing.cpp:450:18: style: Condition 'uVersion>=0x20100' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8566737Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8567082Z                  ^
+2025-04-07T02:24:07.8567678Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8568415Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8568769Z                         ^
+2025-04-07T02:24:07.8569369Z Shared/Magic/zsign/signing.cpp:450:18: note: Condition 'uVersion>=0x20100' is always true
+2025-04-07T02:24:07.8570048Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8570387Z                  ^
+2025-04-07T02:24:07.8571103Z Shared/Magic/zsign/signing.cpp:453:18: style: Condition 'uVersion>=0x20200' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8571924Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8572249Z                  ^
+2025-04-07T02:24:07.8572866Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8573587Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8573950Z                         ^
+2025-04-07T02:24:07.8574521Z Shared/Magic/zsign/signing.cpp:453:18: note: Condition 'uVersion>=0x20200' is always true
+2025-04-07T02:24:07.8575181Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8575501Z                  ^
+2025-04-07T02:24:07.8576473Z Shared/Magic/zsign/signing.cpp:463:18: style: Condition 'uVersion>=0x20100' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8577318Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8577656Z                  ^
+2025-04-07T02:24:07.8578297Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8579020Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8579367Z                         ^
+2025-04-07T02:24:07.8579954Z Shared/Magic/zsign/signing.cpp:463:18: note: Condition 'uVersion>=0x20100' is always true
+2025-04-07T02:24:07.8580622Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8580944Z                  ^
+2025-04-07T02:24:07.8581673Z Shared/Magic/zsign/signing.cpp:466:18: style: Condition 'uVersion>=0x20200' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8582487Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8582755Z                  ^
+2025-04-07T02:24:07.8583127Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8583535Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8583735Z                         ^
+2025-04-07T02:24:07.8584056Z Shared/Magic/zsign/signing.cpp:466:18: note: Condition 'uVersion>=0x20200' is always true
+2025-04-07T02:24:07.8584602Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8584778Z                  ^
+2025-04-07T02:24:07.8585182Z Shared/Magic/zsign/signing.cpp:474:18: style: Condition 'uVersion>=0x20100' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8585632Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8585808Z                  ^
+2025-04-07T02:24:07.8586373Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8586773Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8586975Z                         ^
+2025-04-07T02:24:07.8587289Z Shared/Magic/zsign/signing.cpp:474:18: note: Condition 'uVersion>=0x20100' is always true
+2025-04-07T02:24:07.8587801Z     if (uVersion >= 0x20100) {
+2025-04-07T02:24:07.8587984Z                  ^
+2025-04-07T02:24:07.8588396Z Shared/Magic/zsign/signing.cpp:477:18: style: Condition 'uVersion>=0x20200' is always true [knownConditionTrueFalse]
+2025-04-07T02:24:07.8588877Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8589060Z                  ^
+2025-04-07T02:24:07.8589404Z Shared/Magic/zsign/signing.cpp:384:25: note: Assignment 'uVersion=0x20400', assigned value is 132096
+2025-04-07T02:24:07.8589794Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8589986Z                         ^
+2025-04-07T02:24:07.8590296Z Shared/Magic/zsign/signing.cpp:477:18: note: Condition 'uVersion>=0x20200' is always true
+2025-04-07T02:24:07.8590652Z     if (uVersion >= 0x20200) {
+2025-04-07T02:24:07.8590833Z                  ^
+2025-04-07T02:24:07.8592320Z Shared/Magic/zsign/signing.cpp:281:35: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8593928Z     CS_CodeDirectory cdHeader = *((CS_CodeDirectory *)pSlotBase);
+2025-04-07T02:24:07.8594225Z                                   ^
+2025-04-07T02:24:07.8595720Z Shared/Magic/zsign/signing.cpp:597:25: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8597418Z     CS_SuperBlob *psb = (CS_SuperBlob *)pCSBase;
+2025-04-07T02:24:07.8597665Z                         ^
+2025-04-07T02:24:07.8599148Z Shared/Magic/zsign/signing.cpp:605:25: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8600675Z     CS_SuperBlob *psb = (CS_SuperBlob *)pCSBase;
+2025-04-07T02:24:07.8600900Z                         ^
+2025-04-07T02:24:07.8602385Z Shared/Magic/zsign/signing.cpp:615:25: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8604074Z     CS_BlobIndex *pbi = (CS_BlobIndex *)(pCSBase + sizeof(CS_SuperBlob));
+2025-04-07T02:24:07.8604366Z                         ^
+2025-04-07T02:24:07.8605823Z Shared/Magic/zsign/signing.cpp:660:35: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8607578Z     CS_CodeDirectory cdHeader = *((CS_CodeDirectory *)pSlotBase);
+2025-04-07T02:24:07.8607864Z                                   ^
+2025-04-07T02:24:07.8609502Z Shared/Magic/zsign/signing.cpp:672:25: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8611020Z     CS_SuperBlob *psb = (CS_SuperBlob *)pCSBase;
+2025-04-07T02:24:07.8611249Z                         ^
+2025-04-07T02:24:07.8612706Z Shared/Magic/zsign/signing.cpp:677:25: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8614277Z     CS_BlobIndex *pbi = (CS_BlobIndex *)(pCSBase + sizeof(CS_SuperBlob));
+2025-04-07T02:24:07.8614568Z                         ^
+2025-04-07T02:24:07.8616222Z Shared/Magic/zsign/signing.cpp:682:47: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8617800Z                 CS_CodeDirectory cdHeader = *((CS_CodeDirectory *)pSlotBase);
+2025-04-07T02:24:07.8618096Z                                               ^
+2025-04-07T02:24:07.8619611Z Shared/Magic/zsign/signing.cpp:689:47: style: C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+2025-04-07T02:24:07.8621171Z                 CS_CodeDirectory cdHeader = *((CS_CodeDirectory *)pSlotBase);
+2025-04-07T02:24:07.8621456Z                                               ^
+2025-04-07T02:24:07.8622304Z Shared/Magic/zsign/signing.cpp:438:18: style: Finding the same expression on both sides of an operator is suspicious and might indicate a cut and paste or logic error. Please examine this code carefully to determine if it is correct. [knownConditionTrueFalse]
+2025-04-07T02:24:07.8623154Z     if (uVersion >= 0x20400) {
+2025-04-07T02:24:07.8623334Z                  ^
+2025-04-07T02:24:07.8623643Z Shared/Magic/zsign/signing.cpp:384:25: note: 'uVersion' is assigned value '0x20400' here.
+2025-04-07T02:24:07.8624008Z     uint32_t uVersion = 0x20400;
+2025-04-07T02:24:07.8624332Z                         ^
+2025-04-07T02:24:07.8624670Z Shared/Magic/zsign/signing.cpp:438:18: note: The comparison 'uVersion >= 0x20400' is always true.
+2025-04-07T02:24:07.8625058Z     if (uVersion >= 0x20400) {
+2025-04-07T02:24:07.8625247Z                  ^
+2025-04-07T02:24:07.8625836Z Shared/Magic/zsign/signing.cpp:380:42: style: The unsigned expression 'uCodeLength' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8626808Z     if (NULL == pCodeBase || uCodeLength <= 0 || strBundleId.empty() || strTeamId.empty()) {
+2025-04-07T02:24:07.8627155Z                                          ^
+2025-04-07T02:24:07.8627663Z Shared/Magic/zsign/signing.cpp:666:0: style: The function 'GetCodeSignatureExistsCodeSlotsData' is never used. [unusedFunction]
+2025-04-07T02:24:07.8628221Z 
+2025-04-07T02:24:07.8628295Z ^
+2025-04-07T02:24:07.8628671Z Shared/Magic/zsign/signing.cpp:596:0: style: The function 'GetCodeSignatureLength' is never used. [unusedFunction]
+2025-04-07T02:24:07.8629060Z 
+2025-04-07T02:24:07.8629121Z ^
+2025-04-07T02:24:07.8629477Z Shared/Magic/zsign/signing.cpp:604:0: style: The function 'ParseCodeSignature' is never used. [unusedFunction]
+2025-04-07T02:24:07.8629850Z 
+2025-04-07T02:24:07.8629905Z ^
+2025-04-07T02:24:07.8630257Z Shared/Magic/zsign/signing.cpp:565:0: style: The function 'SlotBuildCMSSignature' is never used. [unusedFunction]
+2025-04-07T02:24:07.8630636Z 
+2025-04-07T02:24:07.8630690Z ^
+2025-04-07T02:24:07.8631088Z Shared/Magic/zsign/signing.cpp:373:0: style: The function 'SlotBuildCodeDirectory' is never used. [unusedFunction]
+2025-04-07T02:24:07.8631466Z 
+2025-04-07T02:24:07.8631518Z ^
+2025-04-07T02:24:07.8631891Z Shared/Magic/zsign/signing.cpp:253:0: style: The function 'SlotBuildDerEntitlements' is never used. [unusedFunction]
+2025-04-07T02:24:07.8632277Z 
+2025-04-07T02:24:07.8632332Z ^
+2025-04-07T02:24:07.8632691Z Shared/Magic/zsign/signing.cpp:237:0: style: The function 'SlotBuildEntitlements' is never used. [unusedFunction]
+2025-04-07T02:24:07.8633066Z 
+2025-04-07T02:24:07.8633124Z ^
+2025-04-07T02:24:07.8633474Z Shared/Magic/zsign/signing.cpp:140:0: style: The function 'SlotBuildRequirements' is never used. [unusedFunction]
+2025-04-07T02:24:07.8633844Z 
+2025-04-07T02:24:07.8633903Z ^
+2025-04-07T02:24:07.8634249Z Shared/Magic/zsign/signing.cpp:655:0: style: The function 'SlotGetCodeSlotsData' is never used. [unusedFunction]
+2025-04-07T02:24:07.8634624Z 
+2025-04-07T02:24:07.8634677Z ^
+2025-04-07T02:24:07.8635839Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8637165Z 
+2025-04-07T02:24:07.8637698Z Shared/Magic/zsign/common/json.cpp:1136:12: warning: Either the condition 'len<=szbuf' is redundant or the array 'buf[512]' is accessed at index 512, which is out of bounds. [arrayIndexOutOfBoundsCond]
+2025-04-07T02:24:07.8638373Z         buf[len] = 0;
+2025-04-07T02:24:07.8638543Z            ^
+2025-04-07T02:24:07.8638895Z Shared/Magic/zsign/common/json.cpp:1133:13: note: Assuming that condition 'len<=szbuf' is not redundant
+2025-04-07T02:24:07.8639308Z     if (len <= szbuf) {
+2025-04-07T02:24:07.8639475Z             ^
+2025-04-07T02:24:07.8639747Z Shared/Magic/zsign/common/json.cpp:1136:12: note: Array index out of bounds
+2025-04-07T02:24:07.8640075Z         buf[len] = 0;
+2025-04-07T02:24:07.8640237Z            ^
+2025-04-07T02:24:07.8640838Z Shared/Magic/zsign/common/json.cpp:1902:12: warning: Either the condition 'len<=szbuf' is redundant or the array 'buf[512]' is accessed at index 512, which is out of bounds. [arrayIndexOutOfBoundsCond]
+2025-04-07T02:24:07.8641491Z         buf[len] = 0;
+2025-04-07T02:24:07.8641650Z            ^
+2025-04-07T02:24:07.8641984Z Shared/Magic/zsign/common/json.cpp:1899:13: note: Assuming that condition 'len<=szbuf' is not redundant
+2025-04-07T02:24:07.8642513Z     if (len <= szbuf) {
+2025-04-07T02:24:07.8642673Z             ^
+2025-04-07T02:24:07.8642939Z Shared/Magic/zsign/common/json.cpp:1902:12: note: Array index out of bounds
+2025-04-07T02:24:07.8643262Z         buf[len] = 0;
+2025-04-07T02:24:07.8643421Z            ^
+2025-04-07T02:24:07.8644306Z Shared/Magic/zsign/common/json.h:230:1: style: The class 'JReader' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8645252Z class JReader {
+2025-04-07T02:24:07.8645408Z ^
+2025-04-07T02:24:07.8646567Z Shared/Magic/zsign/common/json.h:285:1: style: The class 'JWriter' does not declare a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior. [noConstructor]
+2025-04-07T02:24:07.8647526Z class JWriter {
+2025-04-07T02:24:07.8647674Z ^
+2025-04-07T02:24:07.8649372Z Shared/Magic/zsign/common/json.h:179:10: performance: inconclusive: The member function 'JValue::WriteDataToFile' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8651210Z     bool WriteDataToFile(const char *file, const char *data, size_t len);
+2025-04-07T02:24:07.8651519Z          ^
+2025-04-07T02:24:07.8652071Z Shared/Magic/zsign/common/json.cpp:753:14: note: Technically the member function 'JValue::WriteDataToFile' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8652814Z bool JValue::WriteDataToFile(const char *file, const char *data, size_t len) {
+2025-04-07T02:24:07.8653138Z              ^
+2025-04-07T02:24:07.8653683Z Shared/Magic/zsign/common/json.h:179:10: note: Technically the member function 'JValue::WriteDataToFile' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8654373Z     bool WriteDataToFile(const char *file, const char *data, size_t len);
+2025-04-07T02:24:07.8654680Z          ^
+2025-04-07T02:24:07.8656597Z Shared/Magic/zsign/common/json.h:370:10: performance: inconclusive: The member function 'PReader::decodeString' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8658400Z     bool decodeString(Token &token, string &decoded, bool filter = true);
+2025-04-07T02:24:07.8658695Z          ^
+2025-04-07T02:24:07.8659245Z Shared/Magic/zsign/common/json.cpp:1912:15: note: Technically the member function 'PReader::decodeString' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8659942Z bool PReader::decodeString(Token &token, string &strdec, bool filter) {
+2025-04-07T02:24:07.8660246Z               ^
+2025-04-07T02:24:07.8660799Z Shared/Magic/zsign/common/json.h:370:10: note: Technically the member function 'PReader::decodeString' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8661496Z     bool decodeString(Token &token, string &decoded, bool filter = true);
+2025-04-07T02:24:07.8661798Z          ^
+2025-04-07T02:24:07.8663499Z Shared/Magic/zsign/common/json.h:381:10: performance: inconclusive: The member function 'PReader::byteConvert' can be made a static function. Making a function static can bring a performance benefit since no 'this' instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to a unnamed namespace. [functionStatic]
+2025-04-07T02:24:07.8665382Z     void byteConvert(uint8_t *v, size_t size);
+2025-04-07T02:24:07.8665608Z          ^
+2025-04-07T02:24:07.8666441Z Shared/Magic/zsign/common/json.cpp:1974:15: note: Technically the member function 'PReader::byteConvert' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8667133Z void PReader::byteConvert(uint8_t *v, size_t size) {
+2025-04-07T02:24:07.8667384Z               ^
+2025-04-07T02:24:07.8667924Z Shared/Magic/zsign/common/json.h:381:10: note: Technically the member function 'PReader::byteConvert' can be static (but you may consider moving to unnamed namespace).
+2025-04-07T02:24:07.8668534Z     void byteConvert(uint8_t *v, size_t size);
+2025-04-07T02:24:07.8668750Z          ^
+2025-04-07T02:24:07.8669713Z Shared/Magic/zsign/common/json.h:75:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8670721Z     JValue(int val);
+2025-04-07T02:24:07.8670885Z     ^
+2025-04-07T02:24:07.8671831Z Shared/Magic/zsign/common/json.h:76:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8672833Z     JValue(bool val);
+2025-04-07T02:24:07.8673001Z     ^
+2025-04-07T02:24:07.8673937Z Shared/Magic/zsign/common/json.h:77:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8674947Z     JValue(double val);
+2025-04-07T02:24:07.8675116Z     ^
+2025-04-07T02:24:07.8676160Z Shared/Magic/zsign/common/json.h:78:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8677172Z     JValue(int64_t val);
+2025-04-07T02:24:07.8677336Z     ^
+2025-04-07T02:24:07.8678272Z Shared/Magic/zsign/common/json.h:79:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8679282Z     JValue(const char *val);
+2025-04-07T02:24:07.8679461Z     ^
+2025-04-07T02:24:07.8680397Z Shared/Magic/zsign/common/json.h:80:5: style: Class 'JValue' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+2025-04-07T02:24:07.8681401Z     JValue(const string &val);
+2025-04-07T02:24:07.8681596Z     ^
+2025-04-07T02:24:07.8682162Z Shared/Magic/zsign/common/json.cpp:2107:36: portability: Casting between unsigned char * and float * which have an incompatible binary data representation. [invalidPointerCast]
+2025-04-07T02:24:07.8682952Z                     pv = (double)(*(float *)buf);
+2025-04-07T02:24:07.8683183Z                                    ^
+2025-04-07T02:24:07.8683815Z Shared/Magic/zsign/common/json.cpp:2109:28: portability: Casting between unsigned char * and double * which have an incompatible binary data representation. [invalidPointerCast]
+2025-04-07T02:24:07.8684458Z                     pv = (*(double *)buf);
+2025-04-07T02:24:07.8684674Z                            ^
+2025-04-07T02:24:07.8685268Z Shared/Magic/zsign/common/json.cpp:2127:42: portability: Casting between unsigned char * and double * which have an incompatible binary data representation. [invalidPointerCast]
+2025-04-07T02:24:07.8685950Z                 pv.assignDate(((time_t)(*(double *)buf)) + 978278400);
+2025-04-07T02:24:07.8686425Z                                          ^
+2025-04-07T02:24:07.8687293Z Shared/Magic/zsign/common/json.cpp:1975:13: style: The scope of the variable 'tmp' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+2025-04-07T02:24:07.8688155Z void f(int x)
+2025-04-07T02:24:07.8688301Z {
+2025-04-07T02:24:07.8688441Z     int i = 0;
+2025-04-07T02:24:07.8688586Z     if (x) {
+2025-04-07T02:24:07.8688751Z         // it's safe to move 'int i = 0;' here
+2025-04-07T02:24:07.8688973Z         for (int n = 0; n < 10; ++n) {
+2025-04-07T02:24:07.8689224Z             // it is possible but not safe to move 'int i = 0;' here
+2025-04-07T02:24:07.8689501Z             do_something(&i);
+2025-04-07T02:24:07.8689690Z         }
+2025-04-07T02:24:07.8689825Z     }
+2025-04-07T02:24:07.8689954Z }
+2025-04-07T02:24:07.8690273Z When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+2025-04-07T02:24:07.8690642Z     uint8_t tmp = 0;
+2025-04-07T02:24:07.8690809Z             ^
+2025-04-07T02:24:07.8691600Z Shared/Magic/zsign/common/json.cpp:2012:14: style: The scope of the variable 'wc' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+2025-04-07T02:24:07.8692448Z void f(int x)
+2025-04-07T02:24:07.8692584Z {
+2025-04-07T02:24:07.8692712Z     int i = 0;
+2025-04-07T02:24:07.8692858Z     if (x) {
+2025-04-07T02:24:07.8693015Z         // it's safe to move 'int i = 0;' here
+2025-04-07T02:24:07.8693248Z         for (int n = 0; n < 10; ++n) {
+2025-04-07T02:24:07.8693500Z             // it is possible but not safe to move 'int i = 0;' here
+2025-04-07T02:24:07.8693762Z             do_something(&i);
+2025-04-07T02:24:07.8693938Z         }
+2025-04-07T02:24:07.8694071Z     }
+2025-04-07T02:24:07.8694197Z }
+2025-04-07T02:24:07.8694489Z When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+2025-04-07T02:24:07.8694850Z     uint16_t wc = 0;
+2025-04-07T02:24:07.8695021Z              ^
+2025-04-07T02:24:07.8695601Z Shared/Magic/zsign/common/json.cpp:754:45: style: The unsigned expression 'len' will never be negative so it is either pointless or an error to check if it is. [unsignedLessThanZero]
+2025-04-07T02:24:07.8696346Z     if (NULL == file || NULL == data || len <= 0) {
+2025-04-07T02:24:07.8696588Z                                             ^
+2025-04-07T02:24:07.8697251Z Shared/Magic/zsign/common/json.cpp:1146:50: style: inconclusive: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8697969Z bool JReader::decodeString(Token &token, string &strdec) {
+2025-04-07T02:24:07.8698246Z                                                  ^
+2025-04-07T02:24:07.8698779Z Shared/Magic/zsign/common/json.h:271:45: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
+2025-04-07T02:24:07.8699339Z     bool decodeString(Token &token, string &decoded);
+2025-04-07T02:24:07.8699719Z                                             ^
+2025-04-07T02:24:07.8700249Z Shared/Magic/zsign/common/json.cpp:1146:50: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
+2025-04-07T02:24:07.8700834Z bool JReader::decodeString(Token &token, string &strdec) {
+2025-04-07T02:24:07.8701106Z                                                  ^
+2025-04-07T02:24:07.8701708Z Shared/Magic/zsign/common/json.cpp:1492:33: style: inconclusive: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8702326Z string JWriter::v2s(const char *pstr) {
+2025-04-07T02:24:07.8702548Z                                 ^
+2025-04-07T02:24:07.8703096Z Shared/Magic/zsign/common/json.h:302:35: note: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'.
+2025-04-07T02:24:07.8703576Z     static string v2s(const char *val);
+2025-04-07T02:24:07.8703792Z                                   ^
+2025-04-07T02:24:07.8704256Z Shared/Magic/zsign/common/json.cpp:1492:33: note: Function 'v2s' argument 1 names different: declaration 'val' definition 'pstr'.
+2025-04-07T02:24:07.8704757Z string JWriter::v2s(const char *pstr) {
+2025-04-07T02:24:07.8704966Z                                 ^
+2025-04-07T02:24:07.8705583Z Shared/Magic/zsign/common/json.cpp:1550:44: style: inconclusive: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8706457Z std::string JWriter::vstring2s(const char *pstr) { return string("\\\"") + pstr + "\\\""; }
+2025-04-07T02:24:07.8706820Z                                            ^
+2025-04-07T02:24:07.8707314Z Shared/Magic/zsign/common/json.h:304:41: note: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'.
+2025-04-07T02:24:07.8707825Z     static string vstring2s(const char *val);
+2025-04-07T02:24:07.8708054Z                                         ^
+2025-04-07T02:24:07.8708545Z Shared/Magic/zsign/common/json.cpp:1550:44: note: Function 'vstring2s' argument 1 names different: declaration 'val' definition 'pstr'.
+2025-04-07T02:24:07.8709192Z std::string JWriter::vstring2s(const char *pstr) { return string("\\\"") + pstr + "\\\""; }
+2025-04-07T02:24:07.8709546Z                                            ^
+2025-04-07T02:24:07.8710173Z Shared/Magic/zsign/common/json.cpp:1608:33: style: inconclusive: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8710850Z bool PReader::readValue(JValue &pval, Token &token) {
+2025-04-07T02:24:07.8711101Z                                 ^
+2025-04-07T02:24:07.8711570Z Shared/Magic/zsign/common/json.h:360:28: note: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8712088Z     bool readValue(JValue &jval, Token &token);
+2025-04-07T02:24:07.8712318Z                            ^
+2025-04-07T02:24:07.8712796Z Shared/Magic/zsign/common/json.cpp:1608:33: note: Function 'readValue' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8713344Z bool PReader::readValue(JValue &pval, Token &token) {
+2025-04-07T02:24:07.8713595Z                                 ^
+2025-04-07T02:24:07.8714222Z Shared/Magic/zsign/common/json.cpp:1827:38: style: inconclusive: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8714902Z bool PReader::readDictionary(JValue &pval) {
+2025-04-07T02:24:07.8715131Z                                      ^
+2025-04-07T02:24:07.8715650Z Shared/Magic/zsign/common/json.h:365:33: note: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8716268Z     bool readDictionary(JValue &jval);
+2025-04-07T02:24:07.8716478Z                                 ^
+2025-04-07T02:24:07.8716982Z Shared/Magic/zsign/common/json.cpp:1827:38: note: Function 'readDictionary' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8717650Z bool PReader::readDictionary(JValue &pval) {
+2025-04-07T02:24:07.8717882Z                                      ^
+2025-04-07T02:24:07.8718493Z Shared/Magic/zsign/common/json.cpp:1855:33: style: inconclusive: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8719133Z bool PReader::readArray(JValue &pval) {
+2025-04-07T02:24:07.8719347Z                                 ^
+2025-04-07T02:24:07.8719811Z Shared/Magic/zsign/common/json.h:361:28: note: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8720309Z     bool readArray(JValue &jval);
+2025-04-07T02:24:07.8720499Z                            ^
+2025-04-07T02:24:07.8721080Z Shared/Magic/zsign/common/json.cpp:1855:33: note: Function 'readArray' argument 1 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8721604Z bool PReader::readArray(JValue &pval) {
+2025-04-07T02:24:07.8721817Z                                 ^
+2025-04-07T02:24:07.8722433Z Shared/Magic/zsign/common/json.cpp:1874:50: style: inconclusive: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8723121Z bool PReader::decodeNumber(Token &token, JValue &pval) {
+2025-04-07T02:24:07.8723393Z                                                  ^
+2025-04-07T02:24:07.8723896Z Shared/Magic/zsign/common/json.h:369:45: note: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8724425Z     bool decodeNumber(Token &token, JValue &jval);
+2025-04-07T02:24:07.8724670Z                                             ^
+2025-04-07T02:24:07.8725196Z Shared/Magic/zsign/common/json.cpp:1874:50: note: Function 'decodeNumber' argument 2 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8725759Z bool PReader::decodeNumber(Token &token, JValue &pval) {
+2025-04-07T02:24:07.8726118Z                                                  ^
+2025-04-07T02:24:07.8726761Z Shared/Magic/zsign/common/json.cpp:1896:50: style: inconclusive: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8727449Z bool PReader::decodeDouble(Token &token, JValue &pval) {
+2025-04-07T02:24:07.8727707Z                                                  ^
+2025-04-07T02:24:07.8728204Z Shared/Magic/zsign/common/json.h:371:45: note: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8728724Z     bool decodeDouble(Token &token, JValue &jval);
+2025-04-07T02:24:07.8728959Z                                             ^
+2025-04-07T02:24:07.8729467Z Shared/Magic/zsign/common/json.cpp:1896:50: note: Function 'decodeDouble' argument 2 names different: declaration 'jval' definition 'pval'.
+2025-04-07T02:24:07.8730027Z bool PReader::decodeDouble(Token &token, JValue &pval) {
+2025-04-07T02:24:07.8730288Z                                                  ^
+2025-04-07T02:24:07.8730963Z Shared/Magic/zsign/common/json.cpp:1912:50: style: inconclusive: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8731716Z bool PReader::decodeString(Token &token, string &strdec, bool filter) {
+2025-04-07T02:24:07.8732026Z                                                  ^
+2025-04-07T02:24:07.8732541Z Shared/Magic/zsign/common/json.h:370:45: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
+2025-04-07T02:24:07.8733151Z     bool decodeString(Token &token, string &decoded, bool filter = true);
+2025-04-07T02:24:07.8733469Z                                             ^
+2025-04-07T02:24:07.8733993Z Shared/Magic/zsign/common/json.cpp:1912:50: note: Function 'decodeString' argument 2 names different: declaration 'decoded' definition 'strdec'.
+2025-04-07T02:24:07.8734781Z bool PReader::decodeString(Token &token, string &strdec, bool filter) {
+2025-04-07T02:24:07.8735091Z                                                  ^
+2025-04-07T02:24:07.8735513Z Shared/Magic/zsign/common/json.cpp:1001:18: style: Local variable 'c' shadows outer variable [shadowVariable]
+2025-04-07T02:24:07.8735946Z             char c = GetNextChar();
+2025-04-07T02:24:07.8736244Z                  ^
+2025-04-07T02:24:07.8736499Z Shared/Magic/zsign/common/json.cpp:998:10: note: Shadowed declaration
+2025-04-07T02:24:07.8736821Z     char c = GetNextChar();
+2025-04-07T02:24:07.8736999Z          ^
+2025-04-07T02:24:07.8737242Z Shared/Magic/zsign/common/json.cpp:1001:18: note: Shadow variable
+2025-04-07T02:24:07.8737541Z             char c = GetNextChar();
+2025-04-07T02:24:07.8737740Z                  ^
+2025-04-07T02:24:07.8738222Z Shared/Magic/zsign/common/json.cpp:1008:18: style: Local variable 'c' shadows outer variable [shadowVariable]
+2025-04-07T02:24:07.8738655Z             char c = GetNextChar();
+2025-04-07T02:24:07.8738852Z                  ^
+2025-04-07T02:24:07.8739108Z Shared/Magic/zsign/common/json.cpp:998:10: note: Shadowed declaration
+2025-04-07T02:24:07.8739419Z     char c = GetNextChar();
+2025-04-07T02:24:07.8739592Z          ^
+2025-04-07T02:24:07.8739824Z Shared/Magic/zsign/common/json.cpp:1008:18: note: Shadow variable
+2025-04-07T02:24:07.8740120Z             char c = GetNextChar();
+2025-04-07T02:24:07.8740315Z                  ^
+2025-04-07T02:24:07.8740683Z Shared/Magic/zsign/common/json.cpp:518:27: style: Parameter 'jv' can be declared with const [constParameter]
+2025-04-07T02:24:07.8741116Z bool JValue::join(JValue &jv) {
+2025-04-07T02:24:07.8741313Z                           ^
+2025-04-07T02:24:07.8741699Z Shared/Magic/zsign/common/json.cpp:538:29: style: Parameter 'jv' can be declared with const [constParameter]
+2025-04-07T02:24:07.8742128Z bool JValue::append(JValue &jv) {
+2025-04-07T02:24:07.8742325Z                             ^
+2025-04-07T02:24:07.8742730Z Shared/Magic/zsign/common/json.cpp:1912:35: style: Parameter 'token' can be declared with const [constParameter]
+2025-04-07T02:24:07.8743269Z bool PReader::decodeString(Token &token, string &strdec, bool filter) {
+2025-04-07T02:24:07.8743573Z                                   ^
+2025-04-07T02:24:07.8744016Z Shared/Magic/zsign/common/json.cpp:1975:17: style: Variable 'tmp' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8744467Z     uint8_t tmp = 0;
+2025-04-07T02:24:07.8744629Z                 ^
+2025-04-07T02:24:07.8745027Z Shared/Magic/zsign/common/json.cpp:2012:17: style: Variable 'wc' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8745472Z     uint16_t wc = 0;
+2025-04-07T02:24:07.8745623Z                 ^
+2025-04-07T02:24:07.8746809Z Shared/Magic/zsign/common/json.cpp:460:32: performance: Prefix ++/-- operators should be preferred for non-primitive types. Pre-increment/decrement can be more efficient than post-increment/decrement. Post-increment/decrement usually involves keeping a copy of the previous value around and adds a little extra code. [postfixOperator]
+2025-04-07T02:24:07.8747937Z         for (; itbeg != itend; itbeg++) {
+2025-04-07T02:24:07.8748153Z                                ^
+2025-04-07T02:24:07.8748573Z Shared/Magic/zsign/common/json.cpp:593:0: style: The function 'assignDateString' is never used. [unusedFunction]
+2025-04-07T02:24:07.8748945Z 
+2025-04-07T02:24:07.8748999Z ^
+2025-04-07T02:24:07.8749318Z Shared/Magic/zsign/common/json.cpp:505:0: style: The function 'back' is never used. [unusedFunction]
+2025-04-07T02:24:07.8749651Z 
+2025-04-07T02:24:07.8749711Z ^
+2025-04-07T02:24:07.8750024Z Shared/Magic/zsign/common/json.cpp:492:0: style: The function 'front' is never used. [unusedFunction]
+2025-04-07T02:24:07.8750363Z 
+2025-04-07T02:24:07.8750419Z ^
+2025-04-07T02:24:07.8750730Z Shared/Magic/zsign/common/json.cpp:518:0: style: The function 'join' is never used. [unusedFunction]
+2025-04-07T02:24:07.8751063Z 
+2025-04-07T02:24:07.8751116Z ^
+2025-04-07T02:24:07.8751577Z Shared/Magic/zsign/common/json.cpp:804:0: style: The function 'readPListPath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8751942Z 
+2025-04-07T02:24:07.8751994Z ^
+2025-04-07T02:24:07.8752323Z Shared/Magic/zsign/common/json.cpp:794:0: style: The function 'readPath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8752663Z 
+2025-04-07T02:24:07.8752714Z ^
+2025-04-07T02:24:07.8753062Z Shared/Magic/zsign/common/json.cpp:834:0: style: The function 'styleWritePath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8753427Z 
+2025-04-07T02:24:07.8753479Z ^
+2025-04-07T02:24:07.8753810Z Shared/Magic/zsign/common/json.cpp:1550:0: style: The function 'vstring2s' is never used. [unusedFunction]
+2025-04-07T02:24:07.8754157Z 
+2025-04-07T02:24:07.8754214Z ^
+2025-04-07T02:24:07.8754658Z Shared/Magic/zsign/common/json.cpp:824:0: style: The function 'writePListPath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8755027Z 
+2025-04-07T02:24:07.8755079Z ^
+2025-04-07T02:24:07.8755406Z Shared/Magic/zsign/common/json.cpp:814:0: style: The function 'writePath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8755758Z 
+2025-04-07T02:24:07.8755809Z ^
+2025-04-07T02:24:07.8757072Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8758235Z 
+2025-04-07T02:24:07.8758751Z Shared/Magic/zsign/common/common.cpp:40:32: style: inconclusive: Function 'IsRegularFile' argument 1 names different: declaration 'szFile' definition 'file'. [funcArgNamesDifferent]
+2025-04-07T02:24:07.8759427Z bool IsRegularFile(const char *file) {
+2025-04-07T02:24:07.8759647Z                                ^
+2025-04-07T02:24:07.8760137Z Shared/Magic/zsign/common/common.h:61:32: note: Function 'IsRegularFile' argument 1 names different: declaration 'szFile' definition 'file'.
+2025-04-07T02:24:07.8760679Z bool IsRegularFile(const char *szFile);
+2025-04-07T02:24:07.8760893Z                                ^
+2025-04-07T02:24:07.8761388Z Shared/Magic/zsign/common/common.cpp:40:32: note: Function 'IsRegularFile' argument 1 names different: declaration 'szFile' definition 'file'.
+2025-04-07T02:24:07.8761920Z bool IsRegularFile(const char *file) {
+2025-04-07T02:24:07.8762132Z                                ^
+2025-04-07T02:24:07.8762562Z Shared/Magic/zsign/common/common.cpp:100:24: style: Parameter 'strData' can be declared with const [constParameter]
+2025-04-07T02:24:07.8763082Z bool WriteFile(string &strData, const char *szFormatPath, ...) {
+2025-04-07T02:24:07.8763373Z                        ^
+2025-04-07T02:24:07.8763811Z Shared/Magic/zsign/common/common.cpp:301:18: style: Variable 'fsize' is assigned a value that is never used. [unreadVariable]
+2025-04-07T02:24:07.8764284Z     double fsize = 0;
+2025-04-07T02:24:07.8764451Z                  ^
+2025-04-07T02:24:07.8765173Z Shared/Magic/zsign/common/common.cpp:43:0: information: Skipping configuration 'S_IFMT;S_IFREG;S_ISREG' since the value of 'S_ISREG' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+2025-04-07T02:24:07.8765945Z     return S_ISREG(info.st_mode);
+2025-04-07T02:24:07.8766232Z ^
+2025-04-07T02:24:07.8766919Z Shared/Magic/zsign/common/common.cpp:276:0: information: Skipping configuration 'S_IFMT;S_IFREG;S_ISREG' since the value of 'S_ISREG' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+2025-04-07T02:24:07.8767682Z         if (S_ISREG(stbuf.st_mode)) {
+2025-04-07T02:24:07.8767889Z ^
+2025-04-07T02:24:07.8768241Z Shared/Magic/zsign/common/common.cpp:398:0: style: The function 'ByteAlign' is never used. [unusedFunction]
+2025-04-07T02:24:07.8768606Z 
+2025-04-07T02:24:07.8768658Z ^
+2025-04-07T02:24:07.8769017Z Shared/Magic/zsign/common/common.cpp:187:0: style: The function 'CreateFolderV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8769504Z 
+2025-04-07T02:24:07.8769556Z ^
+2025-04-07T02:24:07.8769893Z Shared/Magic/zsign/common/common.cpp:682:0: style: The function 'Debug' is never used. [unusedFunction]
+2025-04-07T02:24:07.8770239Z 
+2025-04-07T02:24:07.8770291Z ^
+2025-04-07T02:24:07.8770629Z Shared/Magic/zsign/common/common.cpp:689:0: style: The function 'DebugV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8771000Z 
+2025-04-07T02:24:07.8771057Z ^
+2025-04-07T02:24:07.8771444Z Shared/Magic/zsign/common/common.cpp:246:0: style: The function 'GetCanonicalizePath' is never used. [unusedFunction]
+2025-04-07T02:24:07.8771848Z 
+2025-04-07T02:24:07.8771901Z ^
+2025-04-07T02:24:07.8772377Z Shared/Magic/zsign/common/common.cpp:298:0: style: The function 'GetFileSizeString' is never used. [unusedFunction]
+2025-04-07T02:24:07.8772772Z 
+2025-04-07T02:24:07.8772827Z ^
+2025-04-07T02:24:07.8773184Z Shared/Magic/zsign/common/common.cpp:293:0: style: The function 'GetFileSizeV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8773556Z 
+2025-04-07T02:24:07.8773608Z ^
+2025-04-07T02:24:07.8773960Z Shared/Magic/zsign/common/common.cpp:331:0: style: The function 'GetUnixStamp' is never used. [unusedFunction]
+2025-04-07T02:24:07.8774321Z 
+2025-04-07T02:24:07.8774372Z ^
+2025-04-07T02:24:07.8774706Z Shared/Magic/zsign/common/common.cpp:697:0: style: The function 'IsDebug' is never used. [unusedFunction]
+2025-04-07T02:24:07.8775053Z 
+2025-04-07T02:24:07.8775103Z ^
+2025-04-07T02:24:07.8775458Z Shared/Magic/zsign/common/common.cpp:227:0: style: The function 'IsFileExistsV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8775828Z 
+2025-04-07T02:24:07.8775889Z ^
+2025-04-07T02:24:07.8776336Z Shared/Magic/zsign/common/common.cpp:171:0: style: The function 'IsFolderV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8776698Z 
+2025-04-07T02:24:07.8776751Z ^
+2025-04-07T02:24:07.8777095Z Shared/Magic/zsign/common/common.cpp:321:0: style: The function 'IsPathSuffix' is never used. [unusedFunction]
+2025-04-07T02:24:07.8777470Z 
+2025-04-07T02:24:07.8777523Z ^
+2025-04-07T02:24:07.8777869Z Shared/Magic/zsign/common/common.cpp:40:0: style: The function 'IsRegularFile' is never used. [unusedFunction]
+2025-04-07T02:24:07.8778235Z 
+2025-04-07T02:24:07.8778288Z ^
+2025-04-07T02:24:07.8778626Z Shared/Magic/zsign/common/common.cpp:232:0: style: The function 'IsZipFile' is never used. [unusedFunction]
+2025-04-07T02:24:07.8778979Z 
+2025-04-07T02:24:07.8779029Z ^
+2025-04-07T02:24:07.8779356Z Shared/Magic/zsign/common/common.cpp:563:0: style: The function 'Print' is never used. [unusedFunction]
+2025-04-07T02:24:07.8779698Z 
+2025-04-07T02:24:07.8779752Z ^
+2025-04-07T02:24:07.8780124Z Shared/Magic/zsign/common/common.cpp:454:0: style: The function 'PrintDataSHASum' is never used. [unusedFunction]
+2025-04-07T02:24:07.8780507Z 
+2025-04-07T02:24:07.8780560Z ^
+2025-04-07T02:24:07.8780900Z Shared/Magic/zsign/common/common.cpp:570:0: style: The function 'PrintResult' is never used. [unusedFunction]
+2025-04-07T02:24:07.8781269Z 
+2025-04-07T02:24:07.8781320Z ^
+2025-04-07T02:24:07.8781661Z Shared/Magic/zsign/common/common.cpp:215:0: style: The function 'RemoveFileV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8782029Z 
+2025-04-07T02:24:07.8782080Z ^
+2025-04-07T02:24:07.8782433Z Shared/Magic/zsign/common/common.cpp:208:0: style: The function 'RemoveFolderV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8782806Z 
+2025-04-07T02:24:07.8782859Z ^
+2025-04-07T02:24:07.8783198Z Shared/Magic/zsign/common/common.cpp:429:0: style: The function 'SHA1Text' is never used. [unusedFunction]
+2025-04-07T02:24:07.8783548Z 
+2025-04-07T02:24:07.8783600Z ^
+2025-04-07T02:24:07.8783951Z Shared/Magic/zsign/common/common.cpp:505:0: style: The function 'SHASumBase64' is never used. [unusedFunction]
+2025-04-07T02:24:07.8784318Z 
+2025-04-07T02:24:07.8784376Z ^
+2025-04-07T02:24:07.8784739Z Shared/Magic/zsign/common/common.cpp:515:0: style: The function 'SHASumBase64File' is never used. [unusedFunction]
+2025-04-07T02:24:07.8785238Z 
+2025-04-07T02:24:07.8785297Z ^
+2025-04-07T02:24:07.8785640Z Shared/Magic/zsign/common/common.cpp:579:0: style: The function 'SetLogLever' is never used. [unusedFunction]
+2025-04-07T02:24:07.8786104Z 
+2025-04-07T02:24:07.8786158Z ^
+2025-04-07T02:24:07.8786503Z Shared/Magic/zsign/common/common.cpp:400:0: style: The function 'StringFormat' is never used. [unusedFunction]
+2025-04-07T02:24:07.8786870Z 
+2025-04-07T02:24:07.8786924Z ^
+2025-04-07T02:24:07.8787273Z Shared/Magic/zsign/common/common.cpp:416:0: style: The function 'StringSplit' is never used. [unusedFunction]
+2025-04-07T02:24:07.8787636Z 
+2025-04-07T02:24:07.8787691Z ^
+2025-04-07T02:24:07.8788027Z Shared/Magic/zsign/common/common.cpp:634:0: style: The function 'SuccessV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8788374Z 
+2025-04-07T02:24:07.8788553Z ^
+2025-04-07T02:24:07.8788906Z Shared/Magic/zsign/common/common.cpp:343:0: style: The function 'SystemExec' is never used. [unusedFunction]
+2025-04-07T02:24:07.8789270Z 
+2025-04-07T02:24:07.8789328Z ^
+2025-04-07T02:24:07.8789656Z Shared/Magic/zsign/common/common.cpp:650:0: style: The function 'Warn' is never used. [unusedFunction]
+2025-04-07T02:24:07.8789999Z 
+2025-04-07T02:24:07.8790057Z ^
+2025-04-07T02:24:07.8790381Z Shared/Magic/zsign/common/common.cpp:658:0: style: The function 'WarnV' is never used. [unusedFunction]
+2025-04-07T02:24:07.8790729Z 
+2025-04-07T02:24:07.8790783Z ^
+2025-04-07T02:24:07.8791111Z Shared/Magic/zsign/common/common.cpp:383:0: style: The function '_Swap' is never used. [unusedFunction]
+2025-04-07T02:24:07.8791457Z 
+2025-04-07T02:24:07.8791510Z ^
+2025-04-07T02:24:07.8792652Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingInclude]
+2025-04-07T02:24:07.8793791Z 
+2025-04-07T02:24:07.8794863Z nofile:0:0: information: Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project's include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config. [missingIncludeSystem]
+2025-04-07T02:24:07.8796120Z 
+2025-04-07T02:24:07.8856321Z Post job cleanup.
+2025-04-07T02:24:07.9557742Z [command]/usr/bin/git version
+2025-04-07T02:24:07.9590944Z git version 2.49.0
+2025-04-07T02:24:07.9632942Z Temporarily overriding HOME='/home/runner/work/_temp/4c6d7147-da84-46c1-bdf7-705ede96b804' before making global git config changes
+2025-04-07T02:24:07.9633900Z Adding repository directory to the temporary git global config as a safe directory
+2025-04-07T02:24:07.9636828Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Main-app/Main-app
+2025-04-07T02:24:07.9666819Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-04-07T02:24:07.9694979Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-04-07T02:24:07.9921520Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-04-07T02:24:07.9940974Z http.https://github.com/.extraheader
+2025-04-07T02:24:07.9951831Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-04-07T02:24:07.9980014Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-04-07T02:24:08.0299500Z Cleaning up orphan processes
