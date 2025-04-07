@@ -1,54 +1,76 @@
-# Based on LLVM style with Xcode-friendly adjustments
+# Based on LLVM style with Xcode-friendly adjustments for Swift 5.10 and Xcode 16
 BasedOnStyle: LLVM
 
-# Indentation and spacing
-IndentWidth: 4        # 4 spaces per indentation level (standard for Xcode)
+# Indentation and spacing (Adjusted for Swift)
+IndentWidth: 4        # 4 spaces per indentation level (standard for Xcode and Swift)
 TabWidth: 4           # Tabs are 4 spaces wide
-UseTab: Never         # Never use tabs, only spaces (Xcode default)
-ColumnLimit: 120      # Maximum line length (Xcode typically uses 120 for better readability)
-BreakBeforeBraces: Allman  # Place braces on a new line (common in C++ and readable in Xcode)
-IndentCaseLabels: true     # Indent case labels for better clarity
-AccessModifierOffset: -4   # Offset for access modifiers (e.g., public/private) to align properly
+UseTab: Never         # Never use tabs, only spaces (Xcode and Swift default)
+ColumnLimit: 120      # Maximum line length (Xcode typically uses 120 for readability)
+BreakBeforeBraces: Allman  # Place braces on a new line (readable in Swift, especially for closures)
+IndentCaseLabels: true     # Indent case labels for clarity (useful in Swift switch statements)
+AccessModifierOffset: -4   # Offset for access modifiers (e.g., public/private) to align with Swift style
 
-# Statement formatting
-AllowShortIfStatementsOnASingleLine: false  # Keep if statements multiline for clarity
+# Statement formatting (Adjusted for Swift)
+AllowShortIfStatementsOnASingleLine: false  # Keep if statements multiline for clarity (Swift prefers explicitness)
 AllowShortLoopsOnASingleLine: false        # Keep loops multiline for consistency
 AllowShortFunctionsOnASingleLine: false    # Avoid single-line functions for better readability
-AllowShortBlocksOnASingleLine: false       # Keep blocks multiline
+AllowShortBlocksOnASingleLine: false       # Keep blocks (closures) multiline for clarity
 
-# Pointer and reference alignment
-PointerAlignment: Right  # Align pointers like "Type* ptr" (common in C++ and Xcode)
+# Pointer and reference alignment (Less relevant for Swift, but kept for mixed projects)
+PointerAlignment: Right  # Align pointers like "Type* ptr" (for C++/Obj-C interoperability)
 ReferenceAlignment: Right  # Align references similarly
 
-# Space settings
+# Space settings (Adjusted for Swift conventions)
 SpaceBeforeParens: ControlStatements  # Add space before parentheses in control statements (if, for, while)
-SpaceAfterCStyleCast: true           # Add space after C-style casts for clarity
-SpaceBeforeAssignmentOperators: true # Add space around assignment operators
-SpaceInEmptyParentheses: false       # No space in empty parentheses
+SpaceAfterCStyleCast: true           # Add space after C-style casts (for mixed projects)
+SpaceBeforeAssignmentOperators: true # Add space around assignment operators (Swift standard)
+SpaceInEmptyParentheses: false       # No space in empty parentheses (Swift style)
 
-# Function and parameter formatting
-AlignAfterOpenBracket: Align  # Align parameters after open bracket
-AlignConsecutiveAssignments: true  # Align consecutive assignments
-AlignConsecutiveDeclarations: true # Align consecutive variable declarations
+# Function and parameter formatting (Enhanced for Swift)
+AlignAfterOpenBracket: Align  # Align parameters after open bracket (useful for Swift function calls)
+AlignConsecutiveAssignments: true  # Align consecutive assignments (improves readability in Swift)
+AlignConsecutiveDeclarations: true # Align consecutive variable declarations (Swift best practice)
 
-# Miscellaneous
-BinPackParameters: false  # Break parameters into new lines for better readability
-BinPackArguments: false   # Break arguments into new lines
-PenaltyReturnTypeOnItsOwnLine: 100  # Encourage return type on the same line as function name
-SortIncludes: true       # Sort include directives alphabetically
+# Miscellaneous (Adjusted for Swift)
+BinPackParameters: false  # Break parameters into new lines for better readability (Swift prefers this)
+BinPackArguments: false   # Break arguments into new lines (Swift readability)
+PenaltyReturnTypeOnItsOwnLine: 100  # Encourage return type on the same line as function name (Swift style)
+SortIncludes: true       # Sort include/import directives alphabetically (useful for mixed projects)
 IncludeCategories:
-  - Regex: '.*'          # Place all includes in a single category
+  - Regex: '.*'          # Place all includes/imports in a single category
     Priority: 0
 
-# C++ specific settings
-Cpp11BracedListStyle: true  # Use modern C++11 braced initialization
-Standard: Cpp20           # Target C++20 (adjust based on your project's needs)
+# Swift-specific adjustments (since .clang-format isn’t native to Swift)
+Language: Cpp            # Default to C++ (for mixed projects), but note Swift uses different tools
+Standard: Cpp20          # Target C++20 (adjust if targeting older C++ or Swift interop)
 
 # Objective-C/Swift interoperability (useful in Xcode mixed projects)
-ObjCSpaceAfterProperty: true  # Add space after @property
-ObjCBlockIndentWidth: 4       # Indent Objective-C blocks by 4 spaces
+ObjCSpaceAfterProperty: true  # Add space after @property (for Objective-C in mixed projects)
+ObjCBlockIndentWidth: 4       # Indent Objective-C blocks by 4 spaces (aligns with Swift)
 
-# Penalty settings to control formatting behavior
+# New Rules for Swift 5.10 and Xcode 16
+# (Note: Some of these may require custom scripts or SwiftLint/SwiftFormat)
+
+# Enforce modern Swift formatting
+BreakBeforeBinaryOperators: All  # Break before binary operators for clarity (Swift style)
+SpaceBeforeSquareBrackets: false  # No space before square brackets (Swift arrays, dictionaries)
+SpaceWithinEmptyBraces: false     # No space in empty braces (Swift closures, structs)
+
+# Concurrency and Modern Features
+PenaltyBreakAssignment: 50        # Encourage breaking long assignments (useful for async/await chains)
+MaxEmptyLinesToKeep: 1           # Limit empty lines to 1 (Swift readability)
+KeepEmptyLinesAtTheStartOfBlocks: false  # No empty lines at block start (Swift style)
+
+# SwiftUI and Closure Formatting
+AllowAllParametersOfDeclarationOnNextLine: true  # Allow all parameters on next line for long function signatures
+IndentWrappedFunctionNames: true  # Indent wrapped function names for clarity
+
+# Penalty settings to control formatting behavior (Enhanced)
 PenaltyBreakBeforeFirstCallParameter: 100  # Discourage breaking before first parameter
 PenaltyExcessCharacter: 1000              # Strongly enforce column limit
 PenaltyReturnTypeOnItsOwnLine: 200        # Slightly prefer return type on same line
+PenaltyBreakComment: 300                  # Discourage breaking comments unnecessarily
+
+# Custom Settings for Xcode 16
+XcodeFormatting: true                  # Hypothetical flag to align with Xcode 16 defaults
+SwiftVersion: 5.10                    # Indicate target Swift version (if supported)
