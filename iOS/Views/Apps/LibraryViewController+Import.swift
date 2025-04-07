@@ -175,57 +175,109 @@ extension LibraryViewController {
 }
 
 extension LibraryViewController {
+    @objc func startInstallProcess(app: NSManagedObject, filePath: String) {
+        guard !filePath.isEmpty else {
+            Debug.shared.log(message: "Empty file path provided for installation", type: .error)
+            return
+        }
+        
+        UIApplication.shared.isIdleTimerDisabled = true
+
+        let name = app.value(forKey: "name") as? String ?? "Unknown App"
+        let bundleID = app.value(forKey: "bundleidentifier") as? String ?? "com.unknown.app"
+        let version = app.value(forKey: "version") as? String ?? "1.0"
+
+        presentTransferPreview(
+            with: filePath, 
+            id: bundleID, 
+            version: version, 
+            name: name
+        )
+    }
+
+    @objc func shareFile(app: NSManagedObject, filePath: String) {
+        guard !filePath.isEmpty else {
+            Debug.shared.log(message: "Empty file path provided for sharing", type: .error)
+            return
+        }
+        
+        UIApplication.shared.isIdleTimerDisabled = true
+
+        let name = app.value(forKey: "name") as? String ?? "Unknown App"
+        let bundleID = app.value(forKey: "bundleidentifier") as? String ?? "com.unknown.app"
+        let version = app.value(forKey: "version") as? String ?? "1.0"
+
+        presentTransferPreview(
+            with: filePath, 
+            isSharing: true, 
+            id: bundleID, 
+            version: version, 
+            name: name
+        )
+    }
+    
+    // MARK: - Legacy methods for backward compatibility
+    
     @objc func startInstallProcess(meow: NSManagedObject, filePath: String) {
-        UIApplication.shared.isIdleTimerDisabled = true
-
-        let name = (meow.value(forKey: "name") as? String) ?? "UnknownApp"
-        let id = (meow.value(forKey: "bundleidentifier") as? String) ?? "stupidfucking.shit"
-        let version = (meow.value(forKey: "version") as? String) ?? "1.0"
-
-        self.presentTransferPreview(with: filePath, id: id, version: version, name: name)
+        startInstallProcess(app: meow, filePath: filePath)
     }
-
+    
     @objc func shareFile(meow: NSManagedObject, filePath: String) {
-        UIApplication.shared.isIdleTimerDisabled = true
-
-        let name = (meow.value(forKey: "name") as? String) ?? "UnknownApp"
-        let id = (meow.value(forKey: "bundleidentifier") as? String) ?? "stupidfucking.shit"
-        let version = (meow.value(forKey: "version") as? String) ?? "1.0"
-
-        self.presentTransferPreview(with: filePath, isSharing: true, id: id, version: version, name: name)
+        shareFile(app: meow, filePath: filePath)
     }
 
-    func presentTransferPreview(with appPath: String, isSharing: Bool? = false, id: String, version: String, name: String) {
+    func presentTransferPreview(
+        with appPath: String,
+        isSharing: Bool = false,
+        id: String,
+        version: String,
+        name: String
+    ) {
         do {
-            self.installer = try Installer(
+            guard let versionNumber = Int(version) ?? Int("1") else {
+                Debug.shared.log(message: "Failed to parse version number", type: .error)
+                return
+            }
+            
+            let installer = try Installer(
                 path: nil,
-                metadata: AppData(id: id, version: Int(version) ?? Int(1.0), name: name)
+                metadata: AppData(id: id, version: versionNumber, name: name)
             )
+            
+            self.installer = installer
 
-            let transferPreview = TransferPreview(installer: self.installer!, appPath: appPath, appName: name, isSharing: isSharing ?? false)
-                .onDisappear {
-                    self.installer?.shutdownServer()
-                    self.installer = nil
-                    UIApplication.shared.isIdleTimerDisabled = true
-                }
+            let transferPreview = TransferPreview(
+                installer: installer,
+                appPath: appPath,
+                appName: name,
+                isSharing: isSharing
+            )
+            .onDisappear { [weak self] in
+                self?.installer?.shutdownServer()
+                self?.installer = nil
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
 
             let hostingController = UIHostingController(rootView: transferPreview)
             hostingController.modalPresentationStyle = .pageSheet
 
             if let presentationController = hostingController.presentationController as? UISheetPresentationController {
-                let detent2: UISheetPresentationController.Detent = ._detent(withIdentifier: "Test2", constant: 200.0)
-                presentationController.detents = [detent2]
+                let detent = UISheetPresentationController.Detent._detent(
+                    withIdentifier: "TransferPreviewDetent",
+                    constant: 200.0
+                )
+                presentationController.detents = [detent]
                 presentationController.prefersGrabberVisible = true
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.present(hostingController, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.present(hostingController, animated: true)
             }
 
         } catch {
             Debug.shared.log(message: "Error creating installer: \(error)", type: .error)
-            self.installer?.shutdownServer()
-            self.installer = nil
+            installer?.shutdownServer()
+            installer = nil
         }
     }
 }

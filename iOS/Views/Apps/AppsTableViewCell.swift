@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except
 // as expressly permitted under the terms of the Proprietary Software License.
 
 import CoreData
@@ -73,30 +73,26 @@ class AppsTableViewCell: UITableViewCell {
             pillsStackView.leadingAnchor.constraint(equalTo: imageView!.trailingAnchor, constant: 15),
             pillsStackView.topAnchor.constraint(equalTo: versionLabel.bottomAnchor, constant: 10),
             pillsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            pillsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            pillsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
     func configure(with app: NSManagedObject, filePath: URL) {
-        var appname = ""
+        var appName = ""
         if let name = app.value(forKey: "name") as? String {
-            appname += name
+            appName += name
         }
 
-        var desc = ""
+        var description = ""
         if let version = app.value(forKey: "version") as? String {
-            desc += version
+            description += version
         }
-        desc += " • "
+        description += " • "
         if let bundleIdentifier = app.value(forKey: "bundleidentifier") as? String {
-            desc += bundleIdentifier
+            description += bundleIdentifier
 
             if bundleIdentifier.hasSuffix("Beta") {
-                appname += " (Beta)"
+                appName += " (Beta)"
             }
         }
 
@@ -112,8 +108,8 @@ class AppsTableViewCell: UITableViewCell {
                 let expirationText = daysLeft < 0 ? "Expired" : "\(daysLeft) days left"
 
                 let expirationPill = PillView(
-                    text: expirationText, 
-                    backgroundColor: daysLeft < 0 ? .systemRed : .systemGreen, 
+                    text: expirationText,
+                    backgroundColor: daysLeft < 0 ? .systemRed : .systemGreen,
                     iconName: daysLeft < 0 ? "xmark" : "timer"
                 )
                 pillsStackView.addArrangedSubview(expirationPill)
@@ -123,27 +119,44 @@ class AppsTableViewCell: UITableViewCell {
                let hasUpdate = app.value(forKey: "hasUpdate") as? Bool,
                hasUpdate,
                let currentVersion = app.value(forKey: "version") as? String,
-               let updateVersion = app.value(forKey: "updateVersion") as? String
-            {
+               let updateVersion = app.value(forKey: "updateVersion") as? String {
+                
                 let updateText = "\(currentVersion) → \(updateVersion)"
-                let updatePill = PillView(text: updateText, backgroundColor: .systemPurple, iconName: "arrow.up.circle")
+                let updatePill = PillView(
+                    text: updateText,
+                    backgroundColor: .systemPurple,
+                    iconName: "arrow.up.circle"
+                )
                 pillsStackView.addArrangedSubview(updatePill)
-            } else if let name: String = getValue(forKey: "teamName", from: app) {
-                let teamPill = PillView(text: name, backgroundColor: .systemGray, iconName: "person")
+                
+            } else if let teamName: String = getValue(forKey: "teamName", from: app) {
+                let teamPill = PillView(
+                    text: teamName,
+                    backgroundColor: .systemGray,
+                    iconName: "person"
+                )
                 pillsStackView.addArrangedSubview(teamPill)
             }
         } else {
-            let deletedPill = PillView(text: "File Has Been Deleted", backgroundColor: .systemRed, iconName: "trash")
+            let deletedPill = PillView(
+                text: "File Has Been Deleted",
+                backgroundColor: .systemRed,
+                iconName: "trash"
+            )
             pillsStackView.addArrangedSubview(deletedPill)
         }
 
-        if let osu: String = getValue(forKey: "oSU", from: app) {
-            let osuPill = PillView(text: osu, backgroundColor: .systemGray, iconName: "questionmark.app.dashed")
+        if let osuValue: String = getValue(forKey: "oSU", from: app) {
+            let osuPill = PillView(
+                text: osuValue,
+                backgroundColor: .systemGray,
+                iconName: "questionmark.app.dashed"
+            )
             pillsStackView.addArrangedSubview(osuPill)
         }
 
-        nameLabel.text = appname
-        versionLabel.text = desc
+        nameLabel.text = appName
+        versionLabel.text = description
     }
 }
 
@@ -153,12 +166,12 @@ func getValue<T>(forKey key: String, from app: NSManagedObject) -> T? {
     }
 
     switch attributeType {
-    case .stringAttributeType:
-        return app.value(forKey: key) as? T
-    case .dateAttributeType:
-        return app.value(forKey: key) as? T
-    default:
-        return nil
+        case .stringAttributeType:
+            return app.value(forKey: key) as? T
+        case .dateAttributeType:
+            return app.value(forKey: key) as? T
+        default:
+            return nil
     }
 }
 
@@ -189,7 +202,7 @@ class BadgeView: UIView {
             badgeLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             badgeLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             badgeLabel.widthAnchor.constraint(equalToConstant: 50),
-            badgeLabel.heightAnchor.constraint(equalToConstant: 20),
+            badgeLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
 
         badgeLabel.layer.cornerRadius = 10
