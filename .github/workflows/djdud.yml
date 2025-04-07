@@ -101,79 +101,9 @@ jobs:
             swiftformat_errors.txt
           if-no-files-found: ignore
 
-  analyze_infer:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Java and Infer
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y build-essential
-        # Installs g++, gcc, make, and other tools needed for compiling C/C++ code
-
-      - name: Install Infer
-        run: |
-          # Use Infer version 1.2.0 with the correct file name (infer-linux-x86_64-v1.2.0.tar.xz)
-          # Check https://github.com/facebook/infer/releases for the latest version and update the URL if needed
-          INFER_VERSION="1.2.0"
-          INFER_URL="https://github.com/facebook/infer/releases/download/v${INFER_VERSION}/infer-linux-x86_64-v${INFER_VERSION}.tar.xz"
-          INFER_FILE="infer-linux-x86_64-v${INFER_VERSION}.tar.xz"
-          echo "Downloading Infer v${INFER_VERSION} from ${INFER_URL}"
-          wget -O "${INFER_FILE}" "${INFER_URL}"
-          if [ $? -ne 0 ]; then
-            echo "Error: Failed to download Infer from ${INFER_URL}. Please check the URL and version."
-            exit 1
-          fi
-          tar -xf "${INFER_FILE}"
-          sudo mv "infer-linux-x86_64-v${INFER_VERSION}" /opt/infer
-          sudo ln -s /opt/infer/bin/infer /usr/local/bin/infer
-          # Verify Infer installation
-          infer --version || { echo "Error: Infer installation failed"; exit 1; }
-
-      - name: Debug Makefile
-        run: |
-          # Print the Makefile contents for debugging (optional)
-          cat Makefile || echo "Makefile not found"
-          env | grep -i java || echo "No Java environment variables found"
-
-      - name: Run Infer
-        continue-on-error: true
-        run: |
-          # Determine the number of CPUs in a cross-platform way
-          if command -v nproc &> /dev/null; then
-            JOBS=$(nproc)
-          else
-            JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 4)  # Fallback to 4 if sysctl fails
-          fi
-          echo "Using $JOBS jobs for make"
-          # Run Infer with make, passing the number of jobs explicitly
-          infer run --keep-going -- make -j$JOBS || echo "Make failed, skipping Infer analysis"
-          infer analyze \
-            --keep-going \
-            --jobs 4 \
-            > infer_errors.txt 2>&1 || true
-          cat infer_errors.txt || true
-
-      - name: Upload Infer results
-        uses: actions/upload-artifact@v4
-        with:
-          name: infer-results
-          path: infer_errors.txt
-          if-no-files-found: ignore
-
   create_pull_request:
     runs-on: ubuntu-latest
-    needs: [analyze_cpp, analyze_swift, analyze_infer]
+    needs: [analyze_cpp, analyze_swift]
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -218,9 +148,8 @@ jobs:
           branch: results  # Updated to match the new branch name
           title: "Code Analysis Results - $(date '+%Y-%m-%d')"
           body: |
-            This pull request contains the results of code analysis for C++, Swift, and Infer.
+            This pull request contains the results of code analysis for C++ and Swift.
             - Cppcheck results: cppcheck_errors.txt
             - SwiftLint results: swiftlint_errors.json
             - SwiftFormat results: swiftformat_errors.txt
-            - Infer results: infer_errors.txt
           labels: "code-quality, automated-pr"
