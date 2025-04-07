@@ -14,7 +14,7 @@ bool GetCertSubjectCN(const string &strCertData, string &strSubjectCN);
 bool GetCMSInfo(uint8_t *pCMSData, uint32_t uCMSLength, JValue &jvOutput);
 bool GetCMSContent(const string &strCMSDataInput, string &strContentOutput);
 bool GenerateCMS(const string &strSignerCertData, const string &strSignerPKeyData, const string &strCDHashData,
-                 const string &strCDHashPlist, string &strCMSOutput);
+                 const string &strCDHashesPlist, string &strCMSOutput);
 
 class ZSignAsset {
 public:

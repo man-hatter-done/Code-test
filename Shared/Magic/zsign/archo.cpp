@@ -224,7 +224,7 @@ bool ZArchO::IsExecute() {
     return false;
 }
 
-void ZArchO::PrintInfo() {
+void ZArchO::PrintInfo() const {
     if (NULL == m_pHeader) {
         return;
     }

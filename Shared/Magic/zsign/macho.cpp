@@ -67,7 +67,7 @@ bool ZMachO::OpenFile(const char *szPath) {
 
     m_sSize = 0;
     m_pBase = (uint8_t *)MapFile(szPath, 0, 0, &m_sSize, false);
-    if (NULL != m_pBase) {
+    if (NULL != m_pBase && m_sSize > 0) {
         uint32_t magic = *((uint32_t *)m_pBase);
         if (FAT_CIGAM == magic || FAT_MAGIC == magic) {
             fat_header *pFatHeader = reinterpret_cast<fat_header *>(m_pBase);
@@ -163,7 +163,7 @@ bool ZMachO::ReallocCodeSignSpace() {
         string strNewArchOFile;
         StringFormat(strNewArchOFile, "%s.archo.%d", m_strFile.c_str(), i);
         uint32_t uNewLength = m_arrArchOes[i]->ReallocCodeSignSpace(strNewArchOFile);
-        if (uNewLength <= 0) {
+        if (uNewLength == 0) {
             ZLog::Error(">>> Failed!\n");
             return false;
         }
@@ -198,7 +198,7 @@ bool ZMachO::ReallocCodeSignSpace() {
         uint32_t uOffset = uFatHeaderSize + uPadding1;
         for (size_t i = 0; i < arrArches.size(); i++) {
             fat_arch &arch = arrArches[i];
-            uint32_t &uMachOSize = arrMachOesSizes[i];
+            uint32_t uMachOSize = arrMachOesSizes[i];
 
             arch.align = (FAT_MAGIC == fath.magic) ? 14 : BE((uint32_t)14);
             arch.offset = (FAT_MAGIC == fath.magic) ? uOffset : BE(uOffset);
