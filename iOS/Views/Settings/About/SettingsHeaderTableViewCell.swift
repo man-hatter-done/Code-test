@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-class HeaderTableViewCell: UITableViewCell {
+class SettingsHeaderTableViewCell: UITableViewCell {
     let titleLabel = UILabel()
     let versionLabel = UILabel()
 
