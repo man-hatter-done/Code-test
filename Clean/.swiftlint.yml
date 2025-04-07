@@ -1,8 +1,9 @@
-# You can reference documentation on rules here https://realm.github.io/SwiftLint/rule-directory.html
-disabled_rules: # rule identifiers to exclude from running
+# Rule Directory
+# You can reference documentation on rules here: https://realm.github.io/SwiftLint/rule-directory.html
+
+disabled_rules:
   - attributes
   - closure_end_indentation
-  - cyclomatic_complexity
   - discouraged_object_literal
   - discouraged_optional_collection
   - explicit_acl
@@ -10,21 +11,15 @@ disabled_rules: # rule identifiers to exclude from running
   - explicit_top_level_acl
   - explicit_type_interface
   - extension_access_modifier
-  - file_length
-  - function_body_length
-  - function_parameter_count
-  - generic_type_name
-  - identifier_name
+  - identifier_name # Allow custom naming if needed
   - implicit_return
   - large_tuple
   - let_var_whitespace
-  - line_length
   - literal_expression_end_indentation
   - multiline_arguments
   - multiline_arguments_brackets
   - multiline_literal_brackets
   - multiline_parameters_brackets
-  - nesting
   - nimble_operator
   - no_extension_access_modifier
   - no_grouping_extension
@@ -45,10 +40,7 @@ disabled_rules: # rule identifiers to exclude from running
   - strict_fileprivate
   - switch_case_on_newline
   - trailing_closure
-  - trailing_whitespace
-  - type_body_length
   - type_contents_order
-  - type_name
   - unneeded_parentheses_in_closure_argument
   - todo
   - vertical_whitespace_opening_braces
@@ -56,8 +48,8 @@ disabled_rules: # rule identifiers to exclude from running
   - xct_specific_matcher
   - nslocalizedstring_require_bundle
   - file_types_order
-  
-opt_in_rules: # some rules are only opt-in
+
+opt_in_rules:
   - accessibility_label_for_image
   - accessibility_trait_for_button
   - array_init
@@ -180,20 +172,26 @@ opt_in_rules: # some rules are only opt-in
   - weak_delegate
   - xctfail_message
   - yoda_condition
+  - concurrent_access # Hypothetical rule for concurrency safety
+  - swiftui_property_wrapper # Hypothetical rule for SwiftUI state management
+  - deprecated_api_usage # Ensure no deprecated Swift 5.10 APIs are used
 
-excluded: # paths to ignore during linting. Takes precedence over `included`.
+excluded:
   - Carthage
   - Pods
+  - DerivedData # Exclude build artifacts
 
 file_header:
   required_pattern: |
-                    \/\/
-                    \/\/  .*?
-                    \/\/  .*?
-                    \/\/
-                    \/\/  Created by .*? on \d{1,2}\/\d{1,2}\/(\d{2}|\d{4})\.
-                    \/\/  Copyright (©|\(c\)) \d{4} .*?\. All rights reserved\.
-                    \/\/
+                    //
+                    //  .*
+                    //  .*
+                    //
+                    //  Created by .*? on \d{1,2}/\d{1,2}/(\d{2}|\d{4}).
+                    //  Copyright (©|\(c\)) \d{4} .*?. All rights reserved.
+                    //  Swift Version: 5.10
+                    //  Xcode Version: 16
+                    //
 
 custom_rules:
   force_https:
@@ -208,3 +206,27 @@ custom_rules:
     match_kinds: comment
     message: "TODOs must include a link to the issue."
     severity: warning
+  async_await_usage:
+    name: "Prefer Async/Await"
+    regex: "completionHandler|callback"
+    match_kinds: identifier
+    message: "Use async/await instead of completion handlers where possible"
+    severity: warning
+  swiftui_preference:
+    name: "SwiftUI Preference Key Usage"
+    regex: "PreferenceKey.*?(?!properly)"
+    match_kinds: identifier
+    message: "Ensure PreferenceKey is used correctly in SwiftUI"
+    severity: warning
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+
+function_body_length:
+  warning: 50
+  error: 100
+
+file_length:
+  warning: 500
+  error: 1000
