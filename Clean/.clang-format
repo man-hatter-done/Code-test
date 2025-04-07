@@ -1,9 +1,54 @@
+# Based on LLVM style with Xcode-friendly adjustments
 BasedOnStyle: LLVM
-IndentWidth: 4
-TabWidth: 4
-UseTab: Never
-ColumnLimit: 120
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
-IndentCaseLabels: true
-AccessModifierOffset: -4
+
+# Indentation and spacing
+IndentWidth: 4        # 4 spaces per indentation level (standard for Xcode)
+TabWidth: 4           # Tabs are 4 spaces wide
+UseTab: Never         # Never use tabs, only spaces (Xcode default)
+ColumnLimit: 120      # Maximum line length (Xcode typically uses 120 for better readability)
+BreakBeforeBraces: Allman  # Place braces on a new line (common in C++ and readable in Xcode)
+IndentCaseLabels: true     # Indent case labels for better clarity
+AccessModifierOffset: -4   # Offset for access modifiers (e.g., public/private) to align properly
+
+# Statement formatting
+AllowShortIfStatementsOnASingleLine: false  # Keep if statements multiline for clarity
+AllowShortLoopsOnASingleLine: false        # Keep loops multiline for consistency
+AllowShortFunctionsOnASingleLine: false    # Avoid single-line functions for better readability
+AllowShortBlocksOnASingleLine: false       # Keep blocks multiline
+
+# Pointer and reference alignment
+PointerAlignment: Right  # Align pointers like "Type* ptr" (common in C++ and Xcode)
+ReferenceAlignment: Right  # Align references similarly
+
+# Space settings
+SpaceBeforeParens: ControlStatements  # Add space before parentheses in control statements (if, for, while)
+SpaceAfterCStyleCast: true           # Add space after C-style casts for clarity
+SpaceBeforeAssignmentOperators: true # Add space around assignment operators
+SpaceInEmptyParentheses: false       # No space in empty parentheses
+
+# Function and parameter formatting
+AlignAfterOpenBracket: Align  # Align parameters after open bracket
+AlignConsecutiveAssignments: true  # Align consecutive assignments
+AlignConsecutiveDeclarations: true # Align consecutive variable declarations
+
+# Miscellaneous
+BinPackParameters: false  # Break parameters into new lines for better readability
+BinPackArguments: false   # Break arguments into new lines
+PenaltyReturnTypeOnItsOwnLine: 100  # Encourage return type on the same line as function name
+SortIncludes: true       # Sort include directives alphabetically
+IncludeCategories:
+  - Regex: '.*'          # Place all includes in a single category
+    Priority: 0
+
+# C++ specific settings
+Cpp11BracedListStyle: true  # Use modern C++11 braced initialization
+Standard: Cpp20           # Target C++20 (adjust based on your project's needs)
+
+# Objective-C/Swift interoperability (useful in Xcode mixed projects)
+ObjCSpaceAfterProperty: true  # Add space after @property
+ObjCBlockIndentWidth: 4       # Indent Objective-C blocks by 4 spaces
+
+# Penalty settings to control formatting behavior
+PenaltyBreakBeforeFirstCallParameter: 100  # Discourage breaking before first parameter
+PenaltyExcessCharacter: 1000              # Strongly enforce column limit
+PenaltyReturnTypeOnItsOwnLine: 200        # Slightly prefer return type on same line
