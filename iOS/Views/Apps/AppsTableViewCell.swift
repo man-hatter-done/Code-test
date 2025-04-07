@@ -2,7 +2,8 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// as expressly permitted under the terms of the Proprietary Software License.
 
 import CoreData
 import Foundation
@@ -110,8 +111,12 @@ class AppsTableViewCell: UITableViewCell {
                 let daysLeft = components.day ?? 0
                 let expirationText = daysLeft < 0 ? "Expired" : "\(daysLeft) days left"
 
-                let p1 = PillView(text: expirationText, backgroundColor: daysLeft < 0 ? .systemRed : .systemGreen, iconName: daysLeft < 0 ? "xmark" : "timer")
-                pillsStackView.addArrangedSubview(p1)
+                let expirationPill = PillView(
+                    text: expirationText, 
+                    backgroundColor: daysLeft < 0 ? .systemRed : .systemGreen, 
+                    iconName: daysLeft < 0 ? "xmark" : "timer"
+                )
+                pillsStackView.addArrangedSubview(expirationPill)
             }
 
             if app.entity.name == "SignedApps",
@@ -124,17 +129,17 @@ class AppsTableViewCell: UITableViewCell {
                 let updatePill = PillView(text: updateText, backgroundColor: .systemPurple, iconName: "arrow.up.circle")
                 pillsStackView.addArrangedSubview(updatePill)
             } else if let name: String = getValue(forKey: "teamName", from: app) {
-                let p = PillView(text: name, backgroundColor: .systemGray, iconName: "person")
-                pillsStackView.addArrangedSubview(p)
+                let teamPill = PillView(text: name, backgroundColor: .systemGray, iconName: "person")
+                pillsStackView.addArrangedSubview(teamPill)
             }
         } else {
-            let p = PillView(text: "File Has Been Deleted", backgroundColor: .systemRed, iconName: "trash")
-            pillsStackView.addArrangedSubview(p)
+            let deletedPill = PillView(text: "File Has Been Deleted", backgroundColor: .systemRed, iconName: "trash")
+            pillsStackView.addArrangedSubview(deletedPill)
         }
 
         if let osu: String = getValue(forKey: "oSU", from: app) {
-            let p = PillView(text: osu, backgroundColor: .systemGray, iconName: "questionmark.app.dashed")
-            pillsStackView.addArrangedSubview(p)
+            let osuPill = PillView(text: osu, backgroundColor: .systemGray, iconName: "questionmark.app.dashed")
+            pillsStackView.addArrangedSubview(osuPill)
         }
 
         nameLabel.text = appname
@@ -148,12 +153,12 @@ func getValue<T>(forKey key: String, from app: NSManagedObject) -> T? {
     }
 
     switch attributeType {
-        case .stringAttributeType:
-            return app.value(forKey: key) as? T
-        case .dateAttributeType:
-            return app.value(forKey: key) as? T
-        default:
-            return nil
+    case .stringAttributeType:
+        return app.value(forKey: key) as? T
+    case .dateAttributeType:
+        return app.value(forKey: key) as? T
+    default:
+        return nil
     }
 }
 

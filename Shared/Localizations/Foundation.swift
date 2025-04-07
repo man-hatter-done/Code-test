@@ -2,15 +2,15 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// as expressly permitted under the terms of the Proprietary Software License.
 
 import Foundation
 
 extension Bundle {
     static func makeLocalizationBundle(preferredLanguageCode: String? = Preferences.preferredLanguageCode) -> Bundle {
         if let preferredLangCode = preferredLanguageCode,
-           let bundle = Bundle(path: Bundle.main.path(forResource: preferredLangCode, ofType: "lproj")!)
-        {
+           let bundle = Bundle(path: Bundle.main.path(forResource: preferredLangCode, ofType: "lproj")!) {
             return bundle
         }
 

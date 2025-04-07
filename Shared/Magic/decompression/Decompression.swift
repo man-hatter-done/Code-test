@@ -2,7 +2,8 @@
 //
 // Copyright (C) 2025 BDG
 //
-// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except as expressly permitted under the terms of the Proprietary Software License.
+// Backdoor App Signer is proprietary software. You may not use, modify, or distribute it except 
+// as expressly permitted under the terms of the Proprietary Software License.
 
 import Compression
 import Foundation
@@ -50,22 +51,22 @@ func processFile(at packagesFile: inout URL) throws {
     }
 
     switch succeededExtension {
-        case "xz":
-            try handleCompressedFile(extension: succeededExtension, decompressor: XZArchive.unarchive)
+    case "xz":
+        try handleCompressedFile(extension: succeededExtension, decompressor: XZArchive.unarchive)
 
-        case "lzma":
-            try handleCompressedFile(extension: succeededExtension, decompressor: LZMA.decompress)
+    case "lzma":
+        try handleCompressedFile(extension: succeededExtension, decompressor: LZMA.decompress)
 
-        case "bz2":
-            try handleCompressedFile(extension: succeededExtension, decompressor: BZip2.decompress)
+    case "bz2":
+        try handleCompressedFile(extension: succeededExtension, decompressor: BZip2.decompress)
 
-        case "gz":
-            try handleCompressedFile(extension: succeededExtension, decompressor: GzipArchive.unarchive)
+    case "gz":
+        try handleCompressedFile(extension: succeededExtension, decompressor: GzipArchive.unarchive)
 
-        case "tar":
-            try handleTarFile()
+    case "tar":
+        try handleTarFile()
 
-        default:
-            throw FileProcessingError.unsupportedFileExtension(succeededExtension)
+    default:
+        throw FileProcessingError.unsupportedFileExtension(succeededExtension)
     }
 }
