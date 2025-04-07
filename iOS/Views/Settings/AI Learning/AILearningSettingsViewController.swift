@@ -377,4 +377,3 @@ class AILearningSettingsViewController: UITableViewController {
     }
 }
 
-// Implementation moved to shared SwitchTableViewCell.swift

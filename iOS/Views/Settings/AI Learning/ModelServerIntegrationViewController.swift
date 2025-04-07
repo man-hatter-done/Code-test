@@ -206,21 +206,8 @@ class ModelServerIntegrationViewController: UIViewController {
             // Server status
             serverStatusLabel.text = "Checking server status..."
             
-            // Check server status
-            Task {
-                do {
-                    let modelInfo = try await BackdoorAIClient.shared.getLatestModelInfo()
-                    DispatchQueue.main.async { [weak self] in
-                        self?.serverStatusLabel.text = "Server status: Online\nLatest model: \(modelInfo.latestModelVersion)"
-                        self?.serverStatusLabel.textColor = .systemGreen
-                    }
-                } catch {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.serverStatusLabel.text = "Server status: Error - \(error.localizedDescription)"
-                        self?.serverStatusLabel.textColor = .systemRed
-                    }
-                }
-            }
+            // Check server status using safe wrapper
+            checkServerStatusSafely()
         } else {
             // Server sync disabled
             uploadModelButton.isEnabled = false
@@ -248,49 +235,47 @@ class ModelServerIntegrationViewController: UIViewController {
         statusLabel.text = "Uploading model to server..."
         statusLabel.textColor = .systemOrange
         
-        // Upload the model
-        Task {
-            let result = await AILearningManager.shared.uploadTrainedModelToServer()
+        // Upload the model using safe wrapper
+        uploadModelSafely { [weak self] success, message in
+            guard let self = self else { return }
             
-            DispatchQueue.main.async { [weak self] in
-                self?.activityIndicator.stopAnimating()
+            self.activityIndicator.stopAnimating()
+            
+            if success {
+                self.statusLabel.text = "Upload successful: \(message)"
+                self.statusLabel.textColor = .systemGreen
                 
-                if result.success {
-                    self?.statusLabel.text = "Upload successful: \(result.message)"
-                    self?.statusLabel.textColor = .systemGreen
-                    
-                    // Save upload date
-                    UserDefaults.standard.set(Date(), forKey: "lastModelUploadDate")
-                    
-                    // Show success alert
-                    let alert = UIAlertController(
-                        title: "Upload Successful",
-                        message: result.message,
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self?.present(alert, animated: true)
-                } else {
-                    self?.statusLabel.text = "Upload failed: \(result.message)"
-                    self?.statusLabel.textColor = .systemRed
-                    self?.uploadModelButton.isEnabled = true
-                    
-                    // Show error alert
-                    let alert = UIAlertController(
-                        title: "Upload Failed",
-                        message: result.message,
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "Try Again", style: .default) { _ in
-                        self?.uploadModelButtonTapped()
-                    })
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                    self?.present(alert, animated: true)
-                }
+                // Save upload date
+                UserDefaults.standard.set(Date(), forKey: "lastModelUploadDate")
                 
-                // Update UI
-                self?.updateStatus()
+                // Show success alert
+                let alert = UIAlertController(
+                    title: "Upload Successful",
+                    message: message,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
+            } else {
+                self.statusLabel.text = "Upload failed: \(message)"
+                self.statusLabel.textColor = .systemRed
+                self.uploadModelButton.isEnabled = true
+                
+                // Show error alert
+                let alert = UIAlertController(
+                    title: "Upload Failed",
+                    message: message,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "Try Again", style: .default) { _ in
+                    self.uploadModelButtonTapped()
+                })
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                self.present(alert, animated: true)
             }
+            
+            // Update UI
+            self.updateStatus()
         }
     }
 }
