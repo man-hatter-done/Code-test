@@ -446,4 +446,3 @@ class SearchSettingsViewController: UITableViewController {
     }
 }
 
-// Implementation moved to shared SwitchTableViewCell.swift
