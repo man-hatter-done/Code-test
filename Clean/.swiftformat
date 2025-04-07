@@ -5,3 +5,45 @@
 --semicolons never
 --header strip
 --disable redundantSelf
+
+# Additional Rules for Xcode 16 and Swift 5.10
+
+# Ensure consistent line breaks and spacing
+--linebreaks lf
+--blanklines aroundProperties
+--blanklines afterImports 1
+--blanklines beforeComments 1
+
+# Enforce modern Swift formatting
+--wraparguments beforeFirst
+--wrapparameters beforeFirst
+--maxwidth 120
+--insertblanklines true
+--switchcaseindent true
+
+# Handle closures and trailing closures consistently
+--closurearguments sameLine
+--closureparameters sameLine
+--trailingclosures always
+
+# Improve type and function formatting
+--typeSugar false  # Disable implicit type sugar (e.g., prefer explicit types for clarity)
+--allman true      # Use Allman style for braces (opening brace on new line) for better readability
+--spacearoundoperators true
+
+# Enforce strict formatting for collections and literals
+--arrayliterals multiline
+--dictionaryliterals multiline
+
+# Handle comments and documentation
+--comments indent
+--doccomments insideBraces
+
+# Enable rules for modern Swift features (e.g., concurrency, result builders)
+--enable explicitSelf
+--enable explicitAcl
+--enable redundantFileprivate
+
+# Disable rules that might conflict with Swift 5.10 or Xcode 16 preferences
+--disable redundantPattern
+--disable redundantLet
