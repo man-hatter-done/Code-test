@@ -637,7 +637,7 @@ class WebSearchManager {
                     content: extractedText,
                     keywords: keywords,
                     sentiment: sentiment,
-                    entities: entities.reduce(into: [String: String]()) { dict, entity in dict[entity] = "entity" },
+                    entities: entities.reduce(into: [String: String]()) { dict, entity in dict[entity as String] = "entity" },
                     links: links,
                     imageURLs: imageURLs,
                     extractedDate: date
@@ -1110,11 +1110,8 @@ class WebSearchManager {
         for i in 0..<deepResults.count {
             // Add query entities
             for entity in queryEntities {
-                if deepResults[i].entities == nil {
-                    deepResults[i].entities = [String: String]()
-                }
-                // Ensure we're accessing a mutable dictionary that exists
-                deepResults[i].entities?[entity] = "query_entity"
+                // entities is a non-optional field in DeepSearchResult
+                deepResults[i].entities[entity as String] = "query_entity"
             }
             
             // Simple relevance scoring for basic results

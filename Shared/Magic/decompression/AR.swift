@@ -95,7 +95,7 @@ public func extractAR(_ rawData: Data) throws -> [ARFile] {
         let fileInfo = try getFileInfo(data, offset)
         files.append(fileInfo)
         offset += fileInfo.size + 60
-        offset += offset % 2
+        offset += offset % 2 as Int
     }
     return files
 }
