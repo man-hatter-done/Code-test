@@ -316,12 +316,12 @@ class BackdoorAIClient {
         // Define destination
         let modelFileName = tempURL.lastPathComponent
         let compiledModelName = modelFileName.replacingOccurrences(of: ".mlmodel", with: ".mlmodelc")
-        let compiledModelURL = modelsDir.appendingPathComponent(compiledModelName)
+        let destinationURL = modelsDir.appendingPathComponent(compiledModelName)
         
         // Check if model already exists
-        if FileManager.default.fileExists(atPath: compiledModelURL.path) {
-            Debug.shared.log(message: "Model already compiled at \(compiledModelURL.path)", type: .info)
-            return compiledModelURL
+        if FileManager.default.fileExists(atPath: destinationURL.path) {
+            Debug.shared.log(message: "Model already compiled at \(destinationURL.path)", type: .info)
+            return destinationURL
         }
         
         // Compile model (this is CPU intensive - do on background thread)
@@ -332,13 +332,13 @@ class BackdoorAIClient {
                     let compiledURL = try MLModel.compileModel(at: tempURL)
                     
                     // Save to documents directory
-                    if FileManager.default.fileExists(atPath: compiledModelURL.path) {
-                        try FileManager.default.removeItem(at: compiledModelURL)
+                    if FileManager.default.fileExists(atPath: destinationURL.path) {
+                        try FileManager.default.removeItem(at: destinationURL)
                     }
-                    try FileManager.default.copyItem(at: compiledURL, to: compiledModelURL)
+                    try FileManager.default.copyItem(at: compiledURL, to: destinationURL)
                     
-                    Debug.shared.log(message: "Model successfully compiled and saved to \(compiledModelURL.path)", type: .info)
-                    continuation.resume(returning: compiledModelURL)
+                    Debug.shared.log(message: "Model successfully compiled and saved to \(destinationURL.path)", type: .info)
+                    continuation.resume(returning: destinationURL)
                 } catch {
                     Debug.shared.log(message: "Failed to compile model: \(error)", type: .error)
                     continuation.resume(throwing: error)

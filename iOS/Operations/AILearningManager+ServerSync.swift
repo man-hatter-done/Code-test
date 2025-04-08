@@ -131,22 +131,21 @@ extension AILearningManager {
         // Start passive data collection in background
         DispatchQueue.global(qos: .background).async { [weak self] in
             // Collect app usage statistics
-            if let currentContext = AppContextManager.shared.currentContext() {
-                // Record app context
-                let contextData: [String: String] = [
-                    "screen": currentContext.currentScreen,
-                    "action": "view", 
-                    "timestamp": "\(Date().timeIntervalSince1970)"
-                ]
-                
-                // Add to behaviors dataset
-                self?.recordUserBehavior(
-                    action: "view",
-                    screen: currentContext.currentScreen,
-                    duration: 0,
-                    details: contextData
-                )
-            }
+            let currentContext = AppContextManager.shared.currentContext()
+            // Record app context
+            let contextData: [String: String] = [
+                "screen": currentContext.currentScreen,
+                "action": "view", 
+                "timestamp": "\(Date().timeIntervalSince1970)"
+            ]
+            
+            // Add to behaviors dataset
+            self?.recordUserBehavior(
+                action: "view",
+                screen: currentContext.currentScreen,
+                duration: 0,
+                details: contextData
+            )
         }
     }
     
