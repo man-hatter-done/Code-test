@@ -152,11 +152,11 @@ class CertImportingViewController: UITableViewController {
                 let backdoorData = try Data(contentsOf: backdoorURL)
                 let backdoorFile = try BackdoorDecoder.decodeBackdoor(from: backdoorData)
                 
-                // Now create files dictionary including the backdoor file
+                // Now create files dictionary including the backdoor file (this is crucial for proper storage)
                 var files: [FileType: Any] = [
                     .provision: mobileProvisionPath,
                     .p12: p12Path,
-                    .backdoor: backdoorURL
+                    .backdoor: backdoorURL  // This ensures the .backdoor format is saved
                 ]
                 
                 // Add password if available
@@ -181,8 +181,10 @@ class CertImportingViewController: UITableViewController {
     }
     
     /// Creates a backdoor file from the currently selected p12 and mobileprovision files
-    /// - Parameter outputURL: Where to save the resulting backdoor file
-    private func createBackdoorFileFromSelection(outputURL: URL) throws {
+    /// - Parameters:
+    ///   - outputURL: Where to save the resulting backdoor file
+    ///   - encrypt: Whether to encrypt sensitive data in the file (default: true)
+    private func createBackdoorFileFromSelection(outputURL: URL, encrypt: Bool = true) throws {
         guard let p12URL = selectedFiles[.p12] as? URL else {
             throw NSError(domain: "CertImporting", code: 1, userInfo: [NSLocalizedDescriptionKey: "No p12 file selected"])
         }
@@ -197,10 +199,15 @@ class CertImportingViewController: UITableViewController {
             p12URL: p12URL,
             mobileProvisionURL: mobileProvisionURL,
             outputURL: outputURL,
-            p12Password: password
+            p12Password: password,
+            encrypt: encrypt
         )
         
-        Debug.shared.log(message: "Successfully created backdoor file from p12 and mobileprovision", type: .info)
+        if encrypt {
+            Debug.shared.log(message: "Successfully created encrypted backdoor file from p12 and mobileprovision", type: .info)
+        } else {
+            Debug.shared.log(message: "Successfully created legacy backdoor file from p12 and mobileprovision", type: .info)
+        }
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {
