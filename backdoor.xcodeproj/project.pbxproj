@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33FD1011 /* AILearningSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1001 /* AILearningSettingsViewController.swift */; };
-		33FD1012 /* ImprovedLearningSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1002 /* ImprovedLearningSettingsCell.swift */; };
-		33FD1013 /* ImprovedLearningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1003 /* ImprovedLearningViewController.swift */; };
-		33FD1014 /* ModelServerIntegrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1004 /* ModelServerIntegrationViewController.swift */; };
-		33FD1015 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */; };
-		33FD1016 /* SettingsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1006 /* SettingsHeaderTableViewCell.swift */; };
 		331616952C78D55100894427 /* Asspp.md in Resources */ = {isa = PBXBuildFile; fileRef = 331616942C78D55100894427 /* Asspp.md */; };
 		3322FF4F2BFEE5B9001768D8 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 3322FF4E2BFEE5B9001768D8 /* Nuke */; };
 		3322FF512BFEE5B9001768D8 /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 3322FF502BFEE5B9001768D8 /* NukeExtensions */; };
@@ -38,12 +32,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-33FD1001 /* AILearningSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/AILearningSettingsViewController.swift"; sourceTree = "<group>"; };
-33FD1002 /* ImprovedLearningSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningSettingsCell.swift"; sourceTree = "<group>"; };
-33FD1003 /* ImprovedLearningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningViewController.swift"; sourceTree = "<group>"; };
-33FD1004 /* ModelServerIntegrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController.swift"; sourceTree = "<group>"; };
-33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController+SafeAsync.swift"; sourceTree = "<group>"; };
-33FD1006 /* SettingsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "About/SettingsHeaderTableViewCell.swift"; sourceTree = "<group>"; };
 		331616942C78D55100894427 /* Asspp.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Asspp.md; sourceTree = "<group>"; };
 		338B0F0C2D0C0E8200C5EA11 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		33BA378B2BF8159F00FF530A /* backdoor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = backdoor.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +52,22 @@
 		AA280D942C76AB7400CAC838 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3382319E2D7A77CA00999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 33BA378A2BF8159F00FF530A /* backdoor */;
+		};
+		338232182D7A77E800999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ellekit.deb,
+			);
+			target = 33BA378A2BF8159F00FF530A /* backdoor */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 		338232192D7A77E800999AD3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
@@ -111,12 +115,6 @@
 		339CE2802C584C7C00B58502 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				33FD1001 /* AILearningSettingsViewController.swift */,
-				33FD1002 /* ImprovedLearningSettingsCell.swift */,
-				33FD1003 /* ImprovedLearningViewController.swift */,
-				33FD1004 /* ModelServerIntegrationViewController.swift */,
-				33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */,
-				33FD1006 /* SettingsHeaderTableViewCell.swift */,
 				33BF31542C7C033C0087F3D2 /* Localizations */,
 				338231CC2D7A77E700999AD3 /* Design */,
 				338231AE2D7A77E700999AD3 /* Data */,
@@ -299,12 +297,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33FD1011 /* AILearningSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1001 /* AILearningSettingsViewController.swift */; };
-				33FD1012 /* ImprovedLearningSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1002 /* ImprovedLearningSettingsCell.swift */; };
-				33FD1013 /* ImprovedLearningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1003 /* ImprovedLearningViewController.swift */; };
-				33FD1014 /* ModelServerIntegrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1004 /* ModelServerIntegrationViewController.swift */; };
-				33FD1015 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */; };
-				33FD1016 /* SettingsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1006 /* SettingsHeaderTableViewCell.swift */; };
 				33BF31672C7C05840087F3D2 /* Foundation.swift in Sources */,
 				33E5A59B2CC858FE00532930 /* Language.swift in Sources */,
 			);
@@ -445,7 +437,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -458,7 +450,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -481,7 +473,7 @@
 					"$(PROJECT_DIR)/Shared/Magic",
 					"$(PROJECT_DIR)/Shared/Resources",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = (
 					"$(OTHER_CFLAGS)",
 					"-w",
@@ -511,7 +503,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -534,7 +526,7 @@
 					"$(PROJECT_DIR)/Shared/Magic",
 					"$(PROJECT_DIR)/Shared/Resources",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = (
 					"$(OTHER_CFLAGS)",
 					"-w",
