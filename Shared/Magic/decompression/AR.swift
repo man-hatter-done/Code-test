@@ -82,7 +82,8 @@ func getFileInfo(_ data: Data, _ offset: Int) throws -> ARFile {
 }
 
 public func extractAR(_ rawData: Data) throws -> [ARFile] {
-    let magicBytes = [0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A]
+    // Explicitly type magicBytes as [UInt8] to match the headerBytes type
+    let magicBytes: [UInt8] = [0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A]
     let headerData = rawData.subdata(in: 0..<8)
     // Create a more explicit [UInt8] array conversion for unambiguous type checking
     let headerBytes = Array<UInt8>(headerData)
