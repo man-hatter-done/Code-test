@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Core app identification -->
+    <key>application-identifier</key>
+    <string>$(AppIdentifierPrefix)com.bdg.backdoor</string>
+    
+    <!-- Keychain access for certificate storage and management -->
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.bdg.backdoor</string>
+    </array>
+    
+    <!-- Background processing for app refresh and certificate handling -->
+    <key>com.apple.developer.background-modes</key>
+    <array>
+        <string>fetch</string>
+        <string>processing</string>
+    </array>
+    
+    <!-- Additional memory allocation for app signing processes -->
+    <key>com.apple.developer.kernel.increased-memory-limit</key>
+    <true/>
+    
+    <!-- File and networking capabilities -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    
+    <key>com.apple.security.network.client</key>
+    <true/>
+    
+    <key>com.apple.security.network.server</key>
+    <true/>
+    
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+    
+    <key>com.apple.security.assets.pictures.read-write</key>
+    <true/>
+    
+    <!-- Support for file sharing and document browser -->
+    <key>com.apple.security.files.bookmarks.app-scope</key>
+    <true/>
+    
+    <!-- URL scheme handling -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:backdoor.app</string>
+    </array>
+    
+    <!-- Support for application installation -->
+    <key>com.apple.developer.team-identifier</key>
+    <string>$(TeamIdentifier)</string>
+    
+    <!-- Data protection for certificates and sensitive files -->
+    <key>com.apple.developer.default-data-protection</key>
+    <string>NSFileProtectionComplete</string>
+</dict>
+</plist>
