@@ -147,15 +147,15 @@ class CertImportingViewController: UITableViewController {
     }
     
     private func processBackdoorFile(at url: URL) {
+        // First check if the file has a .backdoor extension or appears to be in backdoor format
+        if !BackdoorDecoder.isBackdoorFile(at: url) {
+            Debug.shared.log(message: "Selected file is not a valid .backdoor file", type: .error)
+            showAlert(title: "Invalid Format", message: "The selected file is not a valid .backdoor certificate file.")
+            return
+        }
+        
         do {
             let backdoorData = try Data(contentsOf: url)
-            
-            // Check if the file is in backdoor format
-            guard BackdoorDecoder.isBackdoorFormat(data: backdoorData) else {
-                Debug.shared.log(message: "Selected file is not a valid backdoor format", type: .error)
-                showAlert(title: "Invalid Format", message: "The selected file is not a valid backdoor certificate file.")
-                return
-            }
             
             // Decode the backdoor file
             let backdoorFile = try BackdoorDecoder.decodeBackdoor(from: backdoorData)
@@ -170,10 +170,10 @@ class CertImportingViewController: UITableViewController {
             // Update UI to show this file was selected
             tableView.reloadData()
             
-            Debug.shared.log(message: "Successfully processed backdoor file: \(backdoorFile.certificateName)", type: .info)
+            Debug.shared.log(message: "Successfully processed .backdoor file: \(backdoorFile.certificateName)", type: .info)
         } catch {
-            Debug.shared.log(message: "Error processing backdoor file: \(error)", type: .error)
-            showAlert(title: "Processing Error", message: "Failed to process backdoor file: \(error.localizedDescription)")
+            Debug.shared.log(message: "Error processing .backdoor file: \(error)", type: .error)
+            showAlert(title: "Processing Error", message: "Failed to process .backdoor file: \(error.localizedDescription)")
         }
     }
     
@@ -204,7 +204,7 @@ extension CertImportingViewController {
         switch sectionData[indexPath.section] {
             case "backdoor":
                 cell.textLabel?.text = "Import Backdoor Certificate"
-                cell.detailTextLabel?.text = "Custom certificate format with verification"
+                cell.detailTextLabel?.text = ".backdoor file (secured certificate format)"
                 fileType = .backdoor
                 
                 if selectedFiles[.backdoor] != nil {
@@ -293,7 +293,7 @@ extension CertImportingViewController {
     override func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
         switch sectionData[section] {
             case "backdoor":
-                return "Import an all-in-one certificate file that contains certificate, p12, and mobileprovision with signature verification."
+                return "Import a .backdoor file - an all-in-one certificate format that contains certificate, p12, and mobileprovision with signature verification."
             case "provision":
                 return String.localized("CERT_IMPORTING_VIEWCONTROLLER_FOOTER_PROV")
             case "certs":
@@ -355,8 +355,16 @@ extension CertImportingViewController {
 
         switch sectionData[indexPath.section] {
             case "backdoor":
-                // Accept any file type since backdoor files might have custom extensions
-                let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.data], asCopy: true)
+                // Create a custom UTType for .backdoor files
+                let backdoorUTType: UTType
+                if let customType = UTType(filenameExtension: "backdoor") {
+                    backdoorUTType = customType
+                } else {
+                    // Fallback to data type if the system doesn't recognize .backdoor
+                    backdoorUTType = .data
+                }
+                
+                let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [backdoorUTType], asCopy: true)
                 documentPicker.delegate = self
                 documentPicker.allowsMultipleSelection = false
                 present(documentPicker, animated: true, completion: nil)
@@ -385,13 +393,18 @@ extension CertImportingViewController: UIDocumentPickerDelegate {
 
         let fileType: FileType?
 
-        switch selectedFileURL.pathExtension {
+        switch selectedFileURL.pathExtension.lowercased() {
             case "mobileprovision":
                 fileType = .provision
             case "p12":
                 fileType = .p12
+            case "backdoor":
+                // Process .backdoor file explicitly by extension
+                processBackdoorFile(at: selectedFileURL)
+                return
             default:
-                // Try to process as backdoor file
+                // For other files, try to detect if it's a backdoor file by content
+                Debug.shared.log(message: "Processing unknown file extension as potential backdoor file", type: .info)
                 processBackdoorFile(at: selectedFileURL)
                 return
         }
