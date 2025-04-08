@@ -62,16 +62,6 @@ AILearningSettingsViewController.swift,
 ImprovedLearningSettingsCell.swift,
 ImprovedLearningViewController.swift,
 ModelServerIntegrationViewController.swift,
-SettingsHeaderTableViewCell.swift,
-AILearningSettingsViewController.swift,
-ImprovedLearningSettingsCell.swift,
-ImprovedLearningViewController.swift,
-ModelServerIntegrationViewController.swift,
-SettingsHeaderTableViewCell.swift,
-AILearningSettingsViewController.swift,
-ImprovedLearningSettingsCell.swift,
-ImprovedLearningViewController.swift,
-ModelServerIntegrationViewController.swift,
 			);
 			target = 33BA378A2BF8159F00FF530A /* backdoor */;
 		};
