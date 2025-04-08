@@ -17,7 +17,7 @@ jobs:
     
     - name: Fix project file
       run: |
-        chmod +x scripts/ci/fix-project.sh
+        chmod +x fix-project.sh
         ./fix-project.sh
     
     - name: Check if changes were made
