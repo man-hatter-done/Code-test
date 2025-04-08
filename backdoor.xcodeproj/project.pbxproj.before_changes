@@ -32,12 +32,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-33FD1001 /* AILearningSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/AILearningSettingsViewController.swift"; sourceTree = "<group>"; };
-33FD1002 /* ImprovedLearningSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningSettingsCell.swift"; sourceTree = "<group>"; };
-33FD1003 /* ImprovedLearningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningViewController.swift"; sourceTree = "<group>"; };
-33FD1004 /* ModelServerIntegrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController.swift"; sourceTree = "<group>"; };
-33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController+SafeAsync.swift"; sourceTree = "<group>"; };
-33FD1006 /* SettingsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "About/SettingsHeaderTableViewCell.swift"; sourceTree = "<group>"; };
+		33FD1001 /* AILearningSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/AILearningSettingsViewController.swift"; sourceTree = "<group>"; };
+		33FD1002 /* ImprovedLearningSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningSettingsCell.swift"; sourceTree = "<group>"; };
+		33FD1003 /* ImprovedLearningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningViewController.swift"; sourceTree = "<group>"; };
+		33FD1004 /* ModelServerIntegrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController.swift"; sourceTree = "<group>"; };
+		33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController+SafeAsync.swift"; sourceTree = "<group>"; };
+		33FD1006 /* SettingsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "About/SettingsHeaderTableViewCell.swift"; sourceTree = "<group>"; };
 		331616942C78D55100894427 /* Asspp.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Asspp.md; sourceTree = "<group>"; };
 		338B0F0C2D0C0E8200C5EA11 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		33BA378B2BF8159F00FF530A /* backdoor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = backdoor.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,12 +287,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-33FD1001 /* AILearningSettingsViewController.swift in Sources */,
-33FD1002 /* ImprovedLearningSettingsCell.swift in Sources */,
-33FD1003 /* ImprovedLearningViewController.swift in Sources */,
-33FD1004 /* ModelServerIntegrationViewController.swift in Sources */,
-33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */,
-33FD1006 /* SettingsHeaderTableViewCell.swift in Sources */,
+				33FD1001 /* AILearningSettingsViewController.swift in Sources */,
+				33FD1002 /* ImprovedLearningSettingsCell.swift in Sources */,
+				33FD1003 /* ImprovedLearningViewController.swift in Sources */,
+				33FD1004 /* ModelServerIntegrationViewController.swift in Sources */,
+				33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */,
+				33FD1006 /* SettingsHeaderTableViewCell.swift in Sources */,
 				33BF31672C7C05840087F3D2 /* Foundation.swift in Sources */,
 				33E5A59B2CC858FE00532930 /* Language.swift in Sources */,
 			);
