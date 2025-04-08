@@ -29,7 +29,7 @@ final class CoreMLManager {
     // Private initializer for singleton
     private init() {
         // First try looking in the app bundle
-        if let modelPath = Bundle.main.path(forResource: "coreml_model", ofType: "mlmodel", inDirectory: "model") {
+        if let modelPath = Bundle.main.path(forResource: "model_1.0.0", ofType: "mlmodel", inDirectory: "model") {
             modelURL = URL(fileURLWithPath: modelPath)
             Debug.shared.log(message: "CoreML model found in bundle at path: \(modelPath)", type: .info)
         } 
@@ -38,7 +38,7 @@ final class CoreMLManager {
             // Check for the model in the project root
             let fileManager = FileManager.default
             let modelDirectoryPath = getModelDirectoryPath()
-            let modelFilePath = modelDirectoryPath.appendingPathComponent("coreml_model.mlmodel").path
+            let modelFilePath = modelDirectoryPath.appendingPathComponent("model_1.0.0.mlmodel").path
             
             if fileManager.fileExists(atPath: modelFilePath) {
                 modelURL = URL(fileURLWithPath: modelFilePath)

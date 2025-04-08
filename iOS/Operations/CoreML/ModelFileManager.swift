@@ -14,7 +14,7 @@ final class ModelFileManager {
     private init() {}
     
     // Model file name and extension
-    private let modelFileName = "coreml_model"
+    private let modelFileName = "model_1.0.0"
     private let modelExtension = "mlmodel"
     
     /// Copy the model from project directory to Documents directory
