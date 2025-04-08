@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33FD1011 /* AILearningSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1001 /* AILearningSettingsViewController.swift */; };
-		33FD1012 /* ImprovedLearningSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1002 /* ImprovedLearningSettingsCell.swift */; };
-		33FD1013 /* ImprovedLearningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1003 /* ImprovedLearningViewController.swift */; };
-		33FD1014 /* ModelServerIntegrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1004 /* ModelServerIntegrationViewController.swift */; };
-		33FD1015 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */; };
-		33FD1016 /* SettingsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1006 /* SettingsHeaderTableViewCell.swift */; };
 		331616952C78D55100894427 /* Asspp.md in Resources */ = {isa = PBXBuildFile; fileRef = 331616942C78D55100894427 /* Asspp.md */; };
 		3322FF4F2BFEE5B9001768D8 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 3322FF4E2BFEE5B9001768D8 /* Nuke */; };
 		3322FF512BFEE5B9001768D8 /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 3322FF502BFEE5B9001768D8 /* NukeExtensions */; };
@@ -111,12 +105,6 @@
 		339CE2802C584C7C00B58502 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				33FD1001 /* AILearningSettingsViewController.swift */,
-				33FD1002 /* ImprovedLearningSettingsCell.swift */,
-				33FD1003 /* ImprovedLearningViewController.swift */,
-				33FD1004 /* ModelServerIntegrationViewController.swift */,
-				33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */,
-				33FD1006 /* SettingsHeaderTableViewCell.swift */,
 				33BF31542C7C033C0087F3D2 /* Localizations */,
 				338231CC2D7A77E700999AD3 /* Design */,
 				338231AE2D7A77E700999AD3 /* Data */,
@@ -299,12 +287,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33FD1011 /* AILearningSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1001 /* AILearningSettingsViewController.swift */; };
-				33FD1012 /* ImprovedLearningSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1002 /* ImprovedLearningSettingsCell.swift */; };
-				33FD1013 /* ImprovedLearningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1003 /* ImprovedLearningViewController.swift */; };
-				33FD1014 /* ModelServerIntegrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1004 /* ModelServerIntegrationViewController.swift */; };
-				33FD1015 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */; };
-				33FD1016 /* SettingsHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FD1006 /* SettingsHeaderTableViewCell.swift */; };
+33FD1001 /* AILearningSettingsViewController.swift in Sources */,
+33FD1002 /* ImprovedLearningSettingsCell.swift in Sources */,
+33FD1003 /* ImprovedLearningViewController.swift in Sources */,
+33FD1004 /* ModelServerIntegrationViewController.swift in Sources */,
+33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */,
+33FD1006 /* SettingsHeaderTableViewCell.swift in Sources */,
 				33BF31672C7C05840087F3D2 /* Foundation.swift in Sources */,
 				33E5A59B2CC858FE00532930 /* Language.swift in Sources */,
 			);
