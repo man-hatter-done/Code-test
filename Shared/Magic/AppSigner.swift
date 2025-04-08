@@ -123,22 +123,16 @@ func signInitialApp(
             try removeWatchPlaceholderExtension(options: signingOptions, app: tmpDirApp)
             try updateMobileProvision(app: tmpDirApp)
 
-            // Prepare certificate paths
-            let certPath = try CoreDataManager.shared.getCertifcatePath(
+            // Prepare certificate paths - handle backdoor files automatically
+            let certPaths = try CoreDataManager.shared.getCertificateFilePaths(
                 source: mainOptions.mainOptions.certificate
             )
-            let provisionPath = certPath.appendingPathComponent(
-                mainOptions.mainOptions.certificate?.provisionPath ?? ""
-            ).path
-            let p12Path = certPath.appendingPathComponent(
-                mainOptions.mainOptions.certificate?.p12Path ?? ""
-            ).path
-
+            
             // Sign the app
             Debug.shared.log(message: "🦋 Start Signing 🦋")
             try signAppWithZSign(
                 tmpDirApp: tmpDirApp,
-                certPaths: (provisionPath, p12Path),
+                certPaths: (certPaths.provisionPath.path, certPaths.p12Path.path),
                 password: mainOptions.mainOptions.certificate?.password ?? "",
                 main: mainOptions,
                 options: signingOptions
@@ -212,10 +206,8 @@ func resignApp(certificate: Certificate, appPath: URL, completion: @escaping (Bo
     
     DispatchQueue(label: "Resigning").async {
         do {
-            // Prepare certificate paths
-            let certPath = try CoreDataManager.shared.getCertifcatePath(source: certificate)
-            let provisionPath = certPath.appendingPathComponent(certificate.provisionPath ?? "").path
-            let p12Path = certPath.appendingPathComponent(certificate.p12Path ?? "").path
+            // Prepare certificate paths - handle backdoor files automatically
+            let certPaths = try CoreDataManager.shared.getCertificateFilePaths(source: certificate)
 
             Debug.shared.log(message: "============================================")
             Debug.shared.log(message: "🦋 Start Resigning 🦋")
@@ -223,7 +215,7 @@ func resignApp(certificate: Certificate, appPath: URL, completion: @escaping (Bo
             // Sign the app
             try signAppWithZSign(
                 tmpDirApp: appPath,
-                certPaths: (provisionPath, p12Path),
+                certPaths: (certPaths.provisionPath.path, certPaths.p12Path.path),
                 password: certificate.password ?? ""
             )
 
