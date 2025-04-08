@@ -2,11 +2,12 @@
 // BackdoorFileHandler.swift
 //
 // Implementation for .backdoor file format - a secure certificate format that bundles 
-// certificate, p12, and mobileprovision files with signature verification
+// certificate, p12, and mobileprovision files with signature verification and optional encryption
 //
 
 import Foundation
 import Security
+import CryptoKit
 
 /// A representation of a .backdoor file which contains all components needed for signing
 struct BackdoorFile {
@@ -19,26 +20,89 @@ struct BackdoorFile {
 /// Provides encoding and decoding capabilities for .backdoor files
 class BackdoorDecoder {
     
+    /// Format version constant - used to identify the encrypted format
+    private static let ENCRYPTED_FORMAT_VERSION: UInt8 = 1
+    
     /// Decodes a .backdoor file from raw data
     /// - Parameter data: The raw content of a .backdoor file
     /// - Returns: A structured BackdoorFile object with verified components
     static func decodeBackdoor(from data: Data) throws -> BackdoorFile {
-        var offset = 0
+        // Check format version - first byte 0x01 indicates encrypted format
+        if data.count > 1 && data[0] == ENCRYPTED_FORMAT_VERSION {
+            return try decodeEncryptedBackdoor(from: data)
+        } else {
+            // Legacy format (unencrypted)
+            return try decodeLegacyBackdoor(from: data)
+        }
+    }
+    
+    /// Decodes an encrypted .backdoor file
+    /// - Parameter data: The encrypted .backdoor file data
+    /// - Returns: A structured BackdoorFile object
+    private static func decodeEncryptedBackdoor(from data: Data) throws -> BackdoorFile {
+        // Skip the version byte
+        var offset = 1
         
-        // Helper to read a length-prefixed chunk
-        func readChunk(from data: Data, offset: inout Int) throws -> Data {
+        // Helper to read a length-prefixed chunk with encrypted data
+        func readEncryptedChunk(from data: Data, offset: inout Int) throws -> Data {
+            // Read original length (before encryption)
             guard offset + 4 <= data.count else {
                 throw DecodingError.invalidFormat("Not enough data for length prefix")
             }
-            let length = Int(data[offset..<offset+4].withUnsafeBytes { $0.load(as: UInt32.self).bigEndian })
+            let originalLength = Int(data[offset..<offset+4].withUnsafeBytes { $0.load(as: UInt32.self).bigEndian })
             offset += 4
-            guard offset + length <= data.count else {
-                throw DecodingError.invalidFormat("Not enough data for chunk of length \(length)")
+            
+            // Read encrypted length
+            guard offset + 4 <= data.count else {
+                throw DecodingError.invalidFormat("Not enough data for encrypted length prefix")
             }
-            let chunk = data[offset..<offset+length]
-            offset += length
-            return chunk
+            let encryptedLength = Int(data[offset..<offset+4].withUnsafeBytes { $0.load(as: UInt32.self).bigEndian })
+            offset += 4
+            
+            // Ensure we have enough data
+            guard offset + encryptedLength <= data.count else {
+                throw DecodingError.invalidFormat("Not enough data for encrypted chunk of length \(encryptedLength)")
+            }
+            
+            // Get encrypted data
+            let encryptedData = data[offset..<offset+encryptedLength]
+            offset += encryptedLength
+            
+            // Decrypt data
+            return BackdoorEncryption.decryptData(encryptedData, originalLength: originalLength)
         }
+        
+        // Read first chunk as certificate (DER format)
+        let certData = try readChunk(from: data, offset: &offset)
+        guard let certificate = SecCertificateCreateWithData(nil, certData as CFData) else {
+            throw DecodingError.invalidCertificate("Failed to load certificate")
+        }
+        
+        // Read encrypted p12 data
+        let p12Data = try readEncryptedChunk(from: data, offset: &offset)
+        
+        // Read encrypted mobileprovision data
+        let mobileProvisionData = try readEncryptedChunk(from: data, offset: &offset)
+        
+        // Read signature (not encrypted)
+        let signature = try readChunk(from: data, offset: &offset)
+        
+        // Verify signature
+        try verifySignature(certificate: certificate, data: mobileProvisionData, signature: signature)
+        
+        return BackdoorFile(
+            certificate: certificate,
+            p12Data: p12Data,
+            mobileProvisionData: mobileProvisionData,
+            signature: signature
+        )
+    }
+    
+    /// Decodes a legacy (unencrypted) .backdoor file
+    /// - Parameter data: The unencrypted .backdoor file data
+    /// - Returns: A structured BackdoorFile object
+    private static func decodeLegacyBackdoor(from data: Data) throws -> BackdoorFile {
+        var offset = 0
         
         // Parse certificate
         let certData = try readChunk(from: data, offset: &offset)
@@ -108,7 +172,7 @@ class BackdoorDecoder {
         }
     }
     
-    /// Creates a new .backdoor file from individual components
+    /// Creates a new .backdoor file from individual components (legacy unencrypted format)
     /// - Parameters:
     ///   - certificateData: Raw DER-encoded certificate data
     ///   - p12Data: Raw p12 data
@@ -135,6 +199,28 @@ class BackdoorDecoder {
             p12Data: p12Data,
             mobileProvisionData: mobileProvisionData,
             signature: signature
+        )
+    }
+    
+    /// Creates a new encrypted .backdoor file from individual components
+    /// - Parameters:
+    ///   - certificateData: Raw DER-encoded certificate data
+    ///   - p12Data: Raw p12 data
+    ///   - mobileProvisionData: Raw mobileprovision data
+    ///   - privateKey: The private key used to sign the mobileprovision data
+    /// - Returns: A complete BackdoorFile instance
+    static func createEncryptedBackdoorFile(
+        certificateData: Data,
+        p12Data: Data,
+        mobileProvisionData: Data,
+        privateKey: SecKey
+    ) throws -> BackdoorFile {
+        // Same as unencrypted, but will be encrypted during encoding
+        return try createBackdoorFile(
+            certificateData: certificateData,
+            p12Data: p12Data,
+            mobileProvisionData: mobileProvisionData,
+            privateKey: privateKey
         )
     }
     
@@ -166,7 +252,7 @@ class BackdoorDecoder {
         return signature
     }
     
-    /// Encodes a BackdoorFile into raw data
+    /// Encodes a BackdoorFile into raw data (legacy unencrypted format)
     /// - Parameter backdoorFile: The structured BackdoorFile to encode
     /// - Returns: Raw data representing the .backdoor file format
     static func encodeBackdoor(backdoorFile: BackdoorFile) -> Data {
@@ -196,6 +282,58 @@ class BackdoorDecoder {
         return data
     }
     
+    /// Encodes a BackdoorFile into raw data with encryption (new format)
+    /// - Parameter backdoorFile: The structured BackdoorFile to encode
+    /// - Returns: Raw data representing the encrypted .backdoor file format
+    static func encodeEncryptedBackdoor(backdoorFile: BackdoorFile) -> Data {
+        var data = Data()
+        
+        // Add format version byte
+        data.append(ENCRYPTED_FORMAT_VERSION)
+        
+        // Helper to write a length-prefixed chunk
+        func writeChunk(_ chunkData: Data, to data: inout Data) {
+            let length = UInt32(chunkData.count).bigEndian
+            let lengthBytes = withUnsafeBytes(of: length) { Data($0) }
+            data.append(lengthBytes)
+            data.append(chunkData)
+        }
+        
+        // Helper to write an encrypted chunk
+        func writeEncryptedChunk(_ chunkData: Data, to data: inout Data) {
+            // Store original length
+            let originalLength = UInt32(chunkData.count).bigEndian
+            let originalLengthBytes = withUnsafeBytes(of: originalLength) { Data($0) }
+            data.append(originalLengthBytes)
+            
+            // Encrypt the data
+            let encryptedData = BackdoorEncryption.encryptData(chunkData)
+            
+            // Store encrypted length
+            let encryptedLength = UInt32(encryptedData.count).bigEndian
+            let encryptedLengthBytes = withUnsafeBytes(of: encryptedLength) { Data($0) }
+            data.append(encryptedLengthBytes)
+            
+            // Store encrypted data
+            data.append(encryptedData)
+        }
+        
+        // Write certificate (not encrypted for verification purposes)
+        let certData = SecCertificateCopyData(backdoorFile.certificate) as Data
+        writeChunk(certData, to: &data)
+        
+        // Write p12 data (encrypted)
+        writeEncryptedChunk(backdoorFile.p12Data, to: &data)
+        
+        // Write mobileprovision data (encrypted)
+        writeEncryptedChunk(backdoorFile.mobileProvisionData, to: &data)
+        
+        // Write signature (not encrypted for verification)
+        writeChunk(backdoorFile.signature, to: &data)
+        
+        return data
+    }
+    
     /// Checks if a file URL points to a .backdoor file
     /// - Parameter url: The file URL to check
     /// - Returns: True if the file is likely a backdoor file
@@ -218,10 +356,30 @@ class BackdoorDecoder {
     /// - Parameter data: The data to check
     /// - Returns: True if the data appears to be in backdoor format
     static func isBackdoorFormat(data: Data) -> Bool {
-        // Basic heuristic: Check if the file starts with a 4-byte length field
-        // followed by what appears to be a DER-encoded certificate
-        guard data.count >= 8 else { return false }
+        // Check for encrypted format
+        if data.count > 1 && data[0] == ENCRYPTED_FORMAT_VERSION {
+            // Look for certificate data after the version byte
+            guard data.count >= 8 else { return false }
+            do {
+                var offset = 1
+                // Try to read the first chunk as certificate data
+                let certData = try readChunk(from: data, offset: &offset)
+                
+                // Simple verification that this might be a certificate:
+                // DER-encoded certificates typically start with 0x30 (SEQUENCE)
+                if certData.count > 0 && certData[0] == 0x30 {
+                    // Try to create a certificate object from the data
+                    if SecCertificateCreateWithData(nil, certData as CFData) != nil {
+                        return true
+                    }
+                }
+            } catch {
+                return false
+            }
+        }
         
+        // Check for legacy format
+        guard data.count >= 8 else { return false }
         do {
             var offset = 0
             // Try to read the first chunk as certificate data
@@ -264,6 +422,7 @@ enum DecodingError: Error {
     case invalidCertificate(String)
     case unsupportedAlgorithm(String)
     case signatureVerificationFailed(String)
+    case decryptionFailed(String)
 }
 
 // Add utility extensions for BackdoorFile
@@ -310,10 +469,12 @@ extension BackdoorFile {
     }
     
     /// Save this backdoor file to disk with .backdoor extension
-    /// - Parameter url: Base URL (without extension)
+    /// - Parameters:
+    ///   - url: Base URL (without extension)
+    ///   - encrypt: Whether to use the encrypted format (default: true)
     /// - Returns: URL to the saved file
     @discardableResult
-    func saveBackdoorFile(to baseURL: URL) throws -> URL {
+    func saveBackdoorFile(to baseURL: URL, encrypt: Bool = true) throws -> URL {
         // Ensure the URL has the .backdoor extension
         let fileURL: URL
         if baseURL.pathExtension.lowercased() != "backdoor" {
@@ -323,7 +484,13 @@ extension BackdoorFile {
         }
         
         // Create the encoded data and write to disk
-        let encodedData = BackdoorDecoder.encodeBackdoor(backdoorFile: self)
+        let encodedData: Data
+        if encrypt {
+            encodedData = BackdoorDecoder.encodeEncryptedBackdoor(backdoorFile: self)
+        } else {
+            encodedData = BackdoorDecoder.encodeBackdoor(backdoorFile: self)
+        }
+        
         try encodedData.write(to: fileURL)
         
         return fileURL
