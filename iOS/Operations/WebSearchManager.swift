@@ -607,7 +607,7 @@ class WebSearchManager {
                     content: extractedText,
                     keywords: keywords,
                     sentiment: sentiment,
-                    entities: entities.reduce(into: [:]) { $0[$1] = "entity" },
+                    entities: entities.reduce(into: [:]) { dict, entity in dict[entity] = "entity" },
                     links: links,
                     imageURLs: imageURLs,
                     extractedDate: date

