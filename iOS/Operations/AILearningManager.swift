@@ -271,12 +271,13 @@ class AILearningManager {
             
             // If server sync is enabled, queue for sync
             if isServerSyncEnabled {
-                triggerServerSync() // Use public method instead of private one
+                queueForLocalProcessing() // Use existing public method instead
             } else {
                 // Otherwise, consider training if this is highly-rated feedback
                 if rating >= 4 {
                     DispatchQueue.global(qos: .background).async { [weak self] in
-                        self?.trainModelWithAllInteractions()
+                        // Explicitly discard result to address unused result warning
+                        _ = self?.trainModelWithAllInteractions()
                     }
                 }
             }
@@ -408,7 +409,7 @@ class AILearningManager {
     }
     
     /// Train a new model using all collected data
-    private func trainNewModel() -> (success: Bool, version: String, errorMessage: String?) {
+    internal func trainNewModel() -> (success: Bool, version: String, errorMessage: String?) {
         Debug.shared.log(message: "Starting comprehensive AI model training", type: .info)
         
         do {

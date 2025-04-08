@@ -87,18 +87,9 @@ extension AILearningManager {
         Debug.shared.log(message: "Processed web search data for learning: \(query)", type: .debug)
     }
     
-    /// Collect user data in background for learning
-    /// This is a replacement for the server data collection
-    /// Replaced with a delegating call to the internal implementation
-    internal func internalCollectUserDataInBackground() {
-        // Implementation code here
+    /// Log data collection events - safe replacement to avoid redeclarations
+    private func logDataCollectionEvents() {
         Debug.shared.log(message: "Internal background user data collection triggered", type: .debug)
-    }
-    
-    /// Public API for collecting user data
-    func collectUserDataInBackground() {
-        // Delegate to internal implementation
-        internalCollectUserDataInBackground()
         Debug.shared.log(message: "Background user data collection triggered", type: .debug)
     }
     
