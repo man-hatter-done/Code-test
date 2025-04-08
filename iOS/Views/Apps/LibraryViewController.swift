@@ -1,4 +1,4 @@
-import Shared.Logging
+// Import standard logging
 // Proprietary Software License Version 1.0
 //
 // Copyright (C) 2025 BDG
@@ -882,12 +882,6 @@ extension LibraryViewController {
 
 extension LibraryViewController {
     @objc func afetch() { self.fetchSources() }
-
-        default:
-            Debug.shared.log(message: "Invalid section index: \(section)", type: LogType.error)
-            return nil
-        }
-    }
 }
 
 extension LibraryViewController: UISearchResultsUpdating {
