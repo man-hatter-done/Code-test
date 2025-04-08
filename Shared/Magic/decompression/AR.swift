@@ -24,7 +24,7 @@ func removePadding(_ paddedString: String) -> String {
         return paddedString
     }
 
-    let actualData = data[..<firstNonSpaceIndex]
+    let actualData = data[..<firstNonSpaceIndex] as Data
     return String(data: actualData, encoding: .utf8)!
 }
 

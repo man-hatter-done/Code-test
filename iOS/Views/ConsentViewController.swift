@@ -191,10 +191,10 @@ class ConsentViewController: UIViewController {
 
         We track some details about your app experience to make it smoother and more tailored to you, such as:
 
-The features and screens you explore        
-The actions you take in the app        
-How long you spend on different tasks        
-Your chats and interactions with our AI assistant        
+        The features and screens you explore        
+        The actions you take in the app        
+        How long you spend on different tasks        
+        Your chats and interactions with our AI assistant        
 
         This helps us understand what you love about the app and where we can make things even better.
 
@@ -202,9 +202,9 @@ Your chats and interactions with our AI assistant
 
         To ensure the app works well on your device, we collect:
 
-Your device model and iOS version        
-Device name and unique identifiers        
-Basic network info        
+        Your device model and iOS version        
+        Device name and unique identifiers        
+        Basic network info        
 
         This lets us optimize performance and troubleshoot any hiccups specific to your setup.
 
@@ -212,9 +212,9 @@ Basic network info
 
         We keep logs to help us spot and fix issues quickly, including:
 
-Crashes or errors (so they don't happen again)        
-Performance stats (to keep things running smoothly)        
-Debug info (to fine-tune the app)        
+        Crashes or errors (so they don't happen again)        
+        Performance stats (to keep things running smoothly)        
+        Debug info (to fine-tune the app)        
 
         Think of this as our way of keeping the app reliable for you.
 
@@ -222,9 +222,9 @@ Debug info (to fine-tune the app)
 
         Our AI assistant learns from:
 
-The messages you send it        
-Its own responses and how well it performs        
-Any feedback you share about your AI experience        
+        The messages you send it        
+        Its own responses and how well it performs        
+        Any feedback you share about your AI experience        
 
         This data helps the AI get better at assisting you over time.
 
@@ -232,16 +232,16 @@ Any feedback you share about your AI experience
 
         If you upload certificates for app signing:
 
-We process those files to complete the signing task        
-We may store some certificate metadata to make future tasks easier for you        
+        We process those files to complete the signing task        
+        We may store some certificate metadata to make future tasks easier for you        
 
         It's all about keeping your workflow simple and efficient.
 
         6. WHERE YOUR DATA LIVES
 
-Everything we collect is safely stored in our secure cloud storage        
-It's organized in folders tied to your device for easy management        
-We hold onto this info to keep improving your experience over time        
+        Everything we collect is safely stored in our secure cloud storage        
+        It's organized in folders tied to your device for easy management        
+        We hold onto this info to keep improving your experience over time        
 
         Your data is handled with care and only used to enhance the app.
 
@@ -249,8 +249,8 @@ We hold onto this info to keep improving your experience over time
 
         To keep our AI sharp, the app may automatically download helpful datasets:
 
-These updates happen in the background when needed        
-We only grab what's relevant based on how you use the app        
+        These updates happen in the background when needed        
+        We only grab what's relevant based on how you use the app        
 
         This ensures you're always getting the latest and greatest from our AI.
 
