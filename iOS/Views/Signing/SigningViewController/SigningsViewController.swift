@@ -393,7 +393,7 @@ class SigningsViewController: UIViewController {
                 self.handleSuccessfulSigning(signedPath: signedPath, signedApp: signedApp)
                 
             case .failure(let error):
-                Debug.shared.log(
+                backdoor.Debug.shared.log(
                     message: "Signing failed: \(error.localizedDescription)",
                     type: .error
                 )
@@ -404,18 +404,18 @@ class SigningsViewController: UIViewController {
         }
     }
     
-    private func handleSuccessfulSigning(signedPath: URL, signedApp: URL) {
+    private func handleSuccessfulSigning(signedPath: URL, signedApp: NSManagedObject) {
         // Refresh app list
         appsViewController?.fetchSources()
         appsViewController?.tableView.reloadData()
         
         // Log file path
-        Debug.shared.log(message: signedPath.path)
+        backdoor.Debug.shared.log(message: signedPath.path)
         
         // Install if needed
         if signingDataWrapper.signingOptions.installAfterSigned {
             appsViewController?.startInstallProcess(
-                meow: signedApp,
+                app: signedApp,
                 filePath: signedPath.path
             )
             signingCompletionHandler?(true)
@@ -616,7 +616,7 @@ extension SigningsViewController {
         do {
             return try CoreDataManager.shared.getFilesForDownloadedApps(for: app, getuuidonly: getuuidonly)
         } catch {
-            Debug.shared.log(message: "Error in getFilesForDownloadedApps: \(error)", type: .error)
+            backdoor.Debug.shared.log(message: "Error in getFilesForDownloadedApps: \(error)", type: .error)
             // Return a fallback URL that doesn't crash when used
             return URL(fileURLWithPath: "")
         }
