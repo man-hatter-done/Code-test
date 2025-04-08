@@ -637,7 +637,7 @@ class WebSearchManager {
                     content: extractedText,
                     keywords: keywords,
                     sentiment: sentiment,
-                    entities: entities.reduce(into: [String: String]()) { dict, entity in dict[entity as String] = "entity" },
+                    entities: entities.reduce(into: [String: String]()) { dict, entity in dict[String(describing: entity)] = "entity" },
                     links: links,
                     imageURLs: imageURLs,
                     extractedDate: date
@@ -981,7 +981,7 @@ class WebSearchManager {
         let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
         
         tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lemma, options: options) { tag, tokenRange in
-            if let tag = tag {
+            if tag != nil {
                 let word = String(text[tokenRange]).lowercased()
                 if word.count > 3 && !self.isStopWord(word) {
                     keywords.append(word)
@@ -1111,7 +1111,7 @@ class WebSearchManager {
             // Add query entities
             for entity in queryEntities {
                 // entities is a non-optional field in DeepSearchResult
-                deepResults[i].entities[entity as String] = "query_entity"
+                deepResults[i].entities[String(describing: entity)] = "query_entity"
             }
             
             // Simple relevance scoring for basic results

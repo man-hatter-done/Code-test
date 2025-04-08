@@ -70,18 +70,17 @@ class SettingsViewController: FRSTableViewController {
         // Set the title immediately for better user experience
         self.title = String.localized("TAB_SETTINGS")
 
-        // Safety check against crashes during initialization
-        do {
-            initializeTableData()
-            setupNavigation()
+        // Initialize settings without try-catch since these methods don't throw
+        initializeTableData()
+        setupNavigation()
 
-            // Mark as initialized
-            isInitialized = true
+        // Mark as initialized
+        isInitialized = true
 
-            backdoor.Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
-        } catch {
-            backdoor.Debug.shared.log(message: "Error initializing SettingsViewController: \(error.localizedDescription)", type: .error)
+        backdoor.Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
 
+        // Error handling moved to specific methods that can throw
+        if !isInitialized {
             // Show an error dialog if initialization fails
             let alert = UIAlertController(
                 title: "Settings Error",

