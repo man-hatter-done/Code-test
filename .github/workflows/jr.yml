@@ -4,7 +4,7 @@ name: Ping Webhook Data Viewer
 on:
   schedule:
     # Runs every 2 minutes
-    - cron: '*/2 * * * *'
+    - cron: '*/8 * * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
