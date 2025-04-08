@@ -152,11 +152,11 @@ class CertImportingViewController: UITableViewController {
                 let backdoorData = try Data(contentsOf: backdoorURL)
                 let backdoorFile = try BackdoorDecoder.decodeBackdoor(from: backdoorData)
                 
-                // Now create files dictionary including the backdoor file
+                // Now create files dictionary including the backdoor file (this is crucial for proper storage)
                 var files: [FileType: Any] = [
                     .provision: mobileProvisionPath,
                     .p12: p12Path,
-                    .backdoor: backdoorURL
+                    .backdoor: backdoorURL  // This ensures the .backdoor format is saved
                 ]
                 
                 // Add password if available
