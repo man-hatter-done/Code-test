@@ -70,52 +70,34 @@ extension AILearningManager {
     func performEnhancedLocalTraining() {
         Debug.shared.log(message: "Starting enhanced local model training", type: .info)
         
-        // Train model using only local data
-        let result = trainNewModel()
+        // Delegate to internal implementation
+        enhancedLocalTraining()
         
-        if result.success {
-            Debug.shared.log(message: "Enhanced local training succeeded: model \(result.version)", type: .info)
-        } else {
-            Debug.shared.log(message: "Enhanced local training failed: \(result.errorMessage ?? "unknown error")", type: .error)
-        }
+        Debug.shared.log(message: "Enhanced local training requested", type: .info)
     }
     
     /// Process web search data for learning
     /// Used to improve AI responses based on search queries
+    /// Public API method - delegates to internal implementation
     func processWebSearchData(query: String, results: [String]) {
-        guard isLearningEnabled else { return }
+        // Delegate to the internal implementation in ModelUpload
+        handleWebSearchData(query: query, results: results)
         
-        // Create behavior record for the search
-        let searchDetails: [String: String] = [
-            "query": query,
-            "resultCount": "\(results.count)",
-            "topResult": results.first ?? ""
-        ]
-        
-        // Record as a user behavior
-        recordUserBehavior(
-            action: "web_search",
-            screen: "AI Assistant",
-            duration: 0,
-            details: searchDetails
-        )
-        
+        // Additional logging specific to this context
         Debug.shared.log(message: "Processed web search data for learning: \(query)", type: .debug)
     }
     
     /// Collect user data in background for learning
     /// This is a replacement for the server data collection
+    /// Replaced with a delegating call to the internal implementation
     func collectUserDataInBackground() {
-        // This is handled by local storage now
-        // Just log that it was requested
+        // Delegate to internal implementation
+        internalCollectUserDataInBackground()
         Debug.shared.log(message: "Background user data collection triggered", type: .debug)
     }
     
-    /// Queue interactions for local processing
-    private func queueForLocalProcessing() {
-        // Local processing is handled directly in the recordInteraction method
-        // This method exists for backward compatibility
-    }
+    // Note: The queueForLocalProcessing method has been moved to AILearningManager+ServerSync.swift
+    // to resolve duplicate method declarations
     
     /// Queue interactions for server sync
     /// This method exists for backward compatibility but does nothing

