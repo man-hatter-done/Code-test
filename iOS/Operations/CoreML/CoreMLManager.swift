@@ -28,37 +28,124 @@ final class CoreMLManager {
     
     // Private initializer for singleton
     private init() {
-        // First try looking in the app bundle
-        if let modelPath = Bundle.main.path(forResource: "coreml_model", ofType: "mlmodel", inDirectory: "model") {
-            modelURL = URL(fileURLWithPath: modelPath)
-            Debug.shared.log(message: "CoreML model found in bundle at path: \(modelPath)", type: .info)
-        } 
-        // If not found in bundle, try looking in project's model directory
-        else {
-            // Check for the model in the project root
-            let fileManager = FileManager.default
-            let modelDirectoryPath = getModelDirectoryPath()
-            let modelFilePath = modelDirectoryPath.appendingPathComponent("coreml_model.mlmodel").path
+        // Attempt to find the model in multiple locations
+        if let url = findModelInMultipleLocations() {
+            modelURL = url
+        } else {
+            Debug.shared.log(message: "CoreML model not found in any expected location - will try ModelFileManager as fallback", type: .warning)
+        }
+    }
+    
+    /// Find the model in multiple possible locations
+    private func findModelInMultipleLocations() -> URL? {
+        let bundle = Bundle.main
+        let fileManager = FileManager.default
+        let modelName = "model_1.0.0"
+        
+        // 1. First try looking in the app bundle (highest priority)
+        if let modelPath = bundle.path(forResource: modelName, ofType: "mlmodel", inDirectory: "model") {
+            let url = URL(fileURLWithPath: modelPath)
+            Debug.shared.log(message: "CoreML model found in bundle (model directory) at path: \(modelPath)", type: .info)
+            return url
+        }
+        
+        // 2. Look for model directly in bundle resources
+        if let modelPath = bundle.path(forResource: modelName, ofType: "mlmodel") {
+            let url = URL(fileURLWithPath: modelPath)
+            Debug.shared.log(message: "CoreML model found directly in bundle resources at path: \(modelPath)", type: .info)
+            return url
+        }
+        
+        // 3. Check in iOS/Resources/model directory
+        let resourcesModelPath = bundle.bundleURL
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("model")
+            .appendingPathComponent("\(modelName).mlmodel")
+        
+        if fileManager.fileExists(atPath: resourcesModelPath.path) {
+            Debug.shared.log(message: "CoreML model found in Resources/model directory at: \(resourcesModelPath.path)", type: .info)
+            return resourcesModelPath
+        }
+        
+        // 4. Check multiple project directory paths
+        let possibleModelPaths = [
+            // Project root model directory
+            getModelDirectoryPath().appendingPathComponent("\(modelName).mlmodel"),
             
-            if fileManager.fileExists(atPath: modelFilePath) {
-                modelURL = URL(fileURLWithPath: modelFilePath)
-                Debug.shared.log(message: "CoreML model found in project directory at: \(modelFilePath)", type: .info)
-            } else {
-                Debug.shared.log(message: "CoreML model not found in bundle or project directory", type: .error)
+            // Repository root
+            URL(fileURLWithPath: "./model/\(modelName).mlmodel"),
+            
+            // Absolute path from repository root
+            URL(fileURLWithPath: "/model/\(modelName).mlmodel"),
+            
+            // Workspace paths for various environments
+            URL(fileURLWithPath: "/workspace/model/\(modelName).mlmodel"),
+            URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model/\(modelName).mlmodel"),
+            
+            // iOS Resources path (for build systems)
+            bundle.bundleURL
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("iOS")
+                .appendingPathComponent("Resources")
+                .appendingPathComponent("model")
+                .appendingPathComponent("\(modelName).mlmodel")
+        ]
+        
+        // Check each path
+        for path in possibleModelPaths {
+            if fileManager.fileExists(atPath: path.path) {
+                Debug.shared.log(message: "CoreML model found at: \(path.path)", type: .info)
+                return path
             }
         }
+        
+        // If still not found, try using the enhanced search in ModelFileManager
+        return nil
     }
     
     /// Get path to model directory
     private func getModelDirectoryPath() -> URL {
-        // Try to find the model directory relative to the app's bundle
-        let bundleURL = Bundle.main.bundleURL
+        let bundle = Bundle.main
+        let bundleURL = bundle.bundleURL
         
-        // First check if we're in a development environment
-        let projectRootURL = bundleURL.deletingLastPathComponent().deletingLastPathComponent()
-        let modelDir = projectRootURL.appendingPathComponent("model")
+        // Check multiple possible model directory locations in order of likelihood
+        let possibleModelDirs = [
+            // 1. iOS/Resources/model directory (most likely in build system)
+            bundleURL
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("iOS")
+                .appendingPathComponent("Resources")
+                .appendingPathComponent("model"),
+            
+            // 2. model directory in bundle
+            bundleURL.appendingPathComponent("model"),
+            
+            // 3. model directory in Resources folder
+            bundleURL.appendingPathComponent("Resources").appendingPathComponent("model"),
+            
+            // 4. Repository root model directory
+            bundleURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("model"),
+            
+            // 5. Direct model directory in repository root
+            URL(fileURLWithPath: "./model"),
+            
+            // 6. Absolute paths for different environments
+            URL(fileURLWithPath: "/model"),
+            URL(fileURLWithPath: "/workspace/model"),
+            URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model")
+        ]
         
-        return modelDir
+        // Check if each directory exists
+        for dir in possibleModelDirs {
+            if FileManager.default.fileExists(atPath: dir.path) {
+                return dir
+            }
+        }
+        
+        // Default to repository root if none found
+        return bundleURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("model")
     }
     
     // Model loading state tracking

@@ -14,7 +14,7 @@ final class ModelFileManager {
     private init() {}
     
     // Model file name and extension
-    private let modelFileName = "coreml_model"
+    private let modelFileName = "model_1.0.0"
     private let modelExtension = "mlmodel"
     
     /// Copy the model from project directory to Documents directory
@@ -96,28 +96,119 @@ final class ModelFileManager {
     
     /// Find the model file in various possible locations in the project
     private func findModelInProjectDirectory() -> URL? {
-        // Possible locations to check
-        let possibleLocations = [
-            // Root model directory
-            URL(fileURLWithPath: "./model/\(modelFileName).\(modelExtension)"),
-            
-            // Absolute path from project root
-            URL(fileURLWithPath: "/workspace/im-a-test-bdg_Backdoor-v1/model/\(modelFileName).\(modelExtension)"),
-            
-            // Try to find relative to bundle path
-            Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent()
-                .appendingPathComponent("model").appendingPathComponent("\(modelFileName).\(modelExtension)")
-        ]
+        // Get current bundle and file manager
+        let bundle = Bundle.main
+        let fileManager = FileManager.default
+        
+        // Define a comprehensive set of possible locations to check
+        var possibleLocations: [URL] = []
+        
+        // 1. Check app bundle resources first (highest priority)
+        if let bundlePath = bundle.path(forResource: modelFileName, ofType: modelExtension, inDirectory: "model") {
+            possibleLocations.append(URL(fileURLWithPath: bundlePath))
+        }
+        
+        // 2. Check app bundle resources without directory
+        if let bundlePath = bundle.path(forResource: modelFileName, ofType: modelExtension) {
+            possibleLocations.append(URL(fileURLWithPath: bundlePath))
+        }
+        
+        // 3. Check iOS/Resources/model directory
+        possibleLocations.append(bundle.bundleURL
+            .appendingPathComponent("model")
+            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
+        
+        // 4. Check root model directory
+        possibleLocations.append(URL(fileURLWithPath: "./model/\(modelFileName).\(modelExtension)"))
+        
+        // 5. Try the repository root model folder
+        possibleLocations.append(URL(fileURLWithPath: "/model/\(modelFileName).\(modelExtension)"))
+        
+        // 6. Look for the model relative to the bundle in various ways
+        let bundleURL = bundle.bundleURL
+        
+        // 6.1 One level up
+        possibleLocations.append(bundleURL
+            .deletingLastPathComponent()
+            .appendingPathComponent("model")
+            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
+        
+        // 6.2 Two levels up (often project root)
+        possibleLocations.append(bundleURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("model")
+            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
+        
+        // 6.3 Check in iOS/Resources/model
+        possibleLocations.append(bundleURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("iOS")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("model")
+            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
+        
+        // 7. Common workspace paths
+        possibleLocations.append(URL(fileURLWithPath: "/workspace/model/\(modelFileName).\(modelExtension)"))
+        possibleLocations.append(URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model/\(modelFileName).\(modelExtension)"))
+        possibleLocations.append(URL(fileURLWithPath: "/workspace/im-a-test-bdg_Backdoor-v1/model/\(modelFileName).\(modelExtension)"))
         
         // Check each location
         for url in possibleLocations {
-            if FileManager.default.fileExists(atPath: url.path) {
+            if fileManager.fileExists(atPath: url.path) {
                 Debug.shared.log(message: "Found ML model at: \(url.path)", type: .info)
                 return url
             }
         }
         
+        // Last resort: recursive search from app bundle parent directory (limited depth)
+        if let url = searchRecursivelyForModel(startingFrom: bundleURL.deletingLastPathComponent(), maxDepth: 4) {
+            return url
+        }
+        
         Debug.shared.log(message: "ML model not found in any expected location", type: .error)
+        return nil
+    }
+    
+    /// Search recursively for the model file (with depth limit)
+    private func searchRecursivelyForModel(startingFrom directory: URL, maxDepth: Int) -> URL? {
+        guard maxDepth > 0 else { return nil }
+        
+        let fileManager = FileManager.default
+        let targetFileName = "\(modelFileName).\(modelExtension)"
+        
+        do {
+            // Get contents of the directory
+            let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            
+            // Check for the model file
+            for url in contents {
+                if url.lastPathComponent == targetFileName {
+                    Debug.shared.log(message: "Found ML model through recursive search: \(url.path)", type: .info)
+                    return url
+                }
+            }
+            
+            // Look for a "model" directory
+            if let modelDir = contents.first(where: { $0.lastPathComponent == "model" && $0.hasDirectoryPath }) {
+                let modelFileURL = modelDir.appendingPathComponent(targetFileName)
+                if fileManager.fileExists(atPath: modelFileURL.path) {
+                    Debug.shared.log(message: "Found ML model in model directory: \(modelFileURL.path)", type: .info)
+                    return modelFileURL
+                }
+            }
+            
+            // Recursively search subdirectories (with limited depth)
+            for url in contents where url.hasDirectoryPath {
+                if let found = searchRecursivelyForModel(startingFrom: url, maxDepth: maxDepth - 1) {
+                    return found
+                }
+            }
+        } catch {
+            // Silently ignore directory access errors during recursive search
+        }
+        
         return nil
     }
 }
