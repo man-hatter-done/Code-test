@@ -102,7 +102,7 @@ extension NetworkManager {
             }
             
             // Cache the response if needed
-            if useCache, let url = request.url {
+            if useCache, request.url != nil {
                 self.cacheResponse(data: data, for: request)
             }
 

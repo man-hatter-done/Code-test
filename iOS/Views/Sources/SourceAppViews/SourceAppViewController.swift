@@ -269,7 +269,17 @@ class SourceAppViewController: UITableViewController {
         // Fetch data from each URL
         for uri in urls {
             dispatchGroup.enter()
-            fetchDataFromURL(uri, into: &allApps, newsData: &newsData, website: &website, tintColor: &tintColor) {
+            fetchDataFromURL(uri) { apps, news, site, color in
+                // Update our local variables with the fetched data
+                allApps.append(contentsOf: apps)
+                newsData.append(contentsOf: news)
+                // Only update if we got meaningful values
+                if !site.isEmpty {
+                    website = site
+                }
+                if !color.isEmpty {
+                    tintColor = color
+                }
                 dispatchGroup.leave()
             }
         }
@@ -287,19 +297,21 @@ class SourceAppViewController: UITableViewController {
     
     private func fetchDataFromURL(
         _ uri: URL,
-        into allApps: inout [StoreAppsData],
-        newsData: inout [NewsData],
-        website: inout String,
-        tintColor: inout String,
-        completion: @escaping () -> Void
+        completion: @escaping ([StoreAppsData], [NewsData], String, String) -> Void
     ) {
         sourceGET.downloadURL(from: uri) { [weak self] result in
+            // Default empty values
+            var apps: [StoreAppsData] = []
+            var news: [NewsData] = []
+            var website = ""
+            var tintColor = ""
+            
             switch result {
             case let .success((data, _)):
                 if let parseResult = self?.sourceGET.parse(data: data),
                    case let .success(sourceData) = parseResult {
-                    allApps.append(contentsOf: sourceData.apps)
-                    newsData.append(contentsOf: sourceData.news ?? [])
+                    apps = sourceData.apps
+                    news = sourceData.news ?? []
                     tintColor = sourceData.tintColor ?? ""
                     website = sourceData.website ?? ""
                 }
@@ -307,7 +319,8 @@ class SourceAppViewController: UITableViewController {
                 Debug.shared.log(message: "Error fetching data from \(uri): \(error.localizedDescription)")
             }
             
-            completion()
+            // Return the fetched data through the completion handler
+            completion(apps, news, website, tintColor)
         }
     }
     
