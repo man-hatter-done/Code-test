@@ -32,15 +32,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-33FD1001 /* AILearningSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/AILearningSettingsViewController.swift"; sourceTree = "<group>"; };
-33FD1002 /* ImprovedLearningSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningSettingsCell.swift"; sourceTree = "<group>"; };
-33FD1003 /* ImprovedLearningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ImprovedLearningViewController.swift"; sourceTree = "<group>"; };
-33FD1004 /* ModelServerIntegrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController.swift"; sourceTree = "<group>"; };
-33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AI Learning/ModelServerIntegrationViewController+SafeAsync.swift"; sourceTree = "<group>"; };
-33FD1006 /* SettingsHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "About/SettingsHeaderTableViewCell.swift"; sourceTree = "<group>"; };
 		331616942C78D55100894427 /* Asspp.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Asspp.md; sourceTree = "<group>"; };
 		338B0F0C2D0C0E8200C5EA11 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		33BA378B2BF8159F00FF530A /* backdoor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = backdoor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33BA378B2BF8159F00FF530A /* feather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = feather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33BDD09F2C76D06900AF6169 /* UIOnboarding.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = UIOnboarding.md; sourceTree = "<group>"; };
 		33BDD0A12C76D0FB00AF6169 /* Ellekit.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Ellekit.md; sourceTree = "<group>"; };
 		33BE87A62C72F5720044D245 /* SWCompression.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = SWCompression.md; sourceTree = "<group>"; };
@@ -58,6 +52,22 @@
 		AA280D942C76AB7400CAC838 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3382319E2D7A77CA00999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 33BA378A2BF8159F00FF530A /* feather */;
+		};
+		338232182D7A77E800999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ellekit.deb,
+			);
+			target = 33BA378A2BF8159F00FF530A /* feather */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 		338232192D7A77E800999AD3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
@@ -139,7 +149,7 @@
 		33BA378C2BF8159F00FF530A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33BA378B2BF8159F00FF530A /* backdoor.app */,
+				33BA378B2BF8159F00FF530A /* feather.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,9 +182,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		33BA378A2BF8159F00FF530A /* backdoor */ = {
+		33BA378A2BF8159F00FF530A /* feather */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 33BA379F2BF815A100FF530A /* Build configuration list for PBXNativeTarget "backdoor" */;
+			buildConfigurationList = 33BA379F2BF815A100FF530A /* Build configuration list for PBXNativeTarget "feather" */;
 			buildPhases = (
 				33BA37872BF8159F00FF530A /* Sources */,
 				33BA37882BF8159F00FF530A /* Frameworks */,
@@ -194,7 +204,7 @@
 				338232032D7A77E700999AD3 /* Magic */,
 				338232162D7A77E700999AD3 /* Logging */,
 			);
-			name = backdoor;
+			name = feather;
 			packageProductDependencies = (
 				3322FF4E2BFEE5B9001768D8 /* Nuke */,
 				3322FF502BFEE5B9001768D8 /* NukeExtensions */,
@@ -207,8 +217,8 @@
 				33BDD0A52C76EA4200AF6169 /* UIOnboarding */,
 				33BDD0BF2C7866FE00AF6169 /* Vapor */,
 			);
-			productName = backdoor;
-			productReference = 33BA378B2BF8159F00FF530A /* backdoor.app */;
+			productName = feather;
+			productReference = 33BA378B2BF8159F00FF530A /* feather.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -227,7 +237,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 33BA37862BF8159F00FF530A /* Build configuration list for PBXProject "backdoor" */;
+			buildConfigurationList = 33BA37862BF8159F00FF530A /* Build configuration list for PBXProject "feather" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -258,7 +268,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				33BA378A2BF8159F00FF530A /* backdoor */,
+				33BA378A2BF8159F00FF530A /* feather */,
 			);
 		};
 /* End PBXProject section */
@@ -287,12 +297,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-33FD1001 /* AILearningSettingsViewController.swift in Sources */,
-33FD1002 /* ImprovedLearningSettingsCell.swift in Sources */,
-33FD1003 /* ImprovedLearningViewController.swift in Sources */,
-33FD1004 /* ModelServerIntegrationViewController.swift in Sources */,
-33FD1005 /* ModelServerIntegrationViewController+SafeAsync.swift in Sources */,
-33FD1006 /* SettingsHeaderTableViewCell.swift in Sources */,
 				33BF31672C7C05840087F3D2 /* Foundation.swift in Sources */,
 				33E5A59B2CC858FE00532930 /* Language.swift in Sources */,
 			);
@@ -433,7 +437,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -446,11 +450,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = backdoor;
+				INFOPLIST_KEY_CFBundleDisplayName = Feather;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2024 Samara M (khcrysalis)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -469,13 +473,13 @@
 					"$(PROJECT_DIR)/Shared/Magic",
 					"$(PROJECT_DIR)/Shared/Resources",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = (
 					"$(OTHER_CFLAGS)",
 					"-w",
 					"-Wno-everything",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bdg.backdoor;
+				PRODUCT_BUNDLE_IDENTIFIER = kh.crysalis.feather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -484,7 +488,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Shared/Magic/backdoor-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Shared/Magic/feather-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -499,11 +503,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = backdoor;
+				INFOPLIST_KEY_CFBundleDisplayName = Feather;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2024 Samara M (khcrysalis)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -522,13 +526,13 @@
 					"$(PROJECT_DIR)/Shared/Magic",
 					"$(PROJECT_DIR)/Shared/Resources",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = (
 					"$(OTHER_CFLAGS)",
 					"-w",
 					"-Wno-everything",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bdg.backdoor;
+				PRODUCT_BUNDLE_IDENTIFIER = kh.crysalis.feather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -536,7 +540,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Shared/Magic/backdoor-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Shared/Magic/feather-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -545,7 +549,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		33BA37862BF8159F00FF530A /* Build configuration list for PBXProject "backdoor" */ = {
+		33BA37862BF8159F00FF530A /* Build configuration list for PBXProject "feather" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				33BA379D2BF815A100FF530A /* Debug */,
@@ -554,7 +558,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		33BA379F2BF815A100FF530A /* Build configuration list for PBXNativeTarget "backdoor" */ = {
+		33BA379F2BF815A100FF530A /* Build configuration list for PBXNativeTarget "feather" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				33BA37A02BF815A100FF530A /* Debug */,
