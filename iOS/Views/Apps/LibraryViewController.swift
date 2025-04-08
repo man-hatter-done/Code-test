@@ -204,7 +204,8 @@ class LibraryViewController: UITableViewController {
         for version in versions where version.version == updateVersion {
             // Found the matching version
             backdoor.Debug.shared.log(message: "Found matching version: \(version.version)", type: LogType.info)
-            downloadAndProcessUpdate(version: version, originalApp: signedApp)
+            let sourceAppVersion = SourceAppVersion(from: version)
+            downloadAndProcessUpdate(version: sourceAppVersion, originalApp: signedApp)
             return
         }
 

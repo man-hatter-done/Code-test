@@ -103,7 +103,7 @@ class CryptoHelper {
         }
         
         // Create a buffer for the decrypted data
-        var bufferSize = dataToDecrypt.count + kCCBlockSizeAES128
+        let bufferSize = dataToDecrypt.count + kCCBlockSizeAES128
         var buffer = [UInt8](repeating: 0, count: bufferSize)
         
         // Perform the decryption

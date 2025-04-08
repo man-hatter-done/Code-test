@@ -53,7 +53,7 @@ extension AILearningManager {
                 UserDefaults.standard.set(false, forKey: "AINeedsLocalProcessing")
                 
                 // Perform local processing
-                self.evaluateTraining()
+                self.trainModelWithAllInteractions()
             }
         }
     }

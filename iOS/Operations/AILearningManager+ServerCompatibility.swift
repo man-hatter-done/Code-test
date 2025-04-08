@@ -90,6 +90,12 @@ extension AILearningManager {
     /// Collect user data in background for learning
     /// This is a replacement for the server data collection
     /// Replaced with a delegating call to the internal implementation
+    internal func internalCollectUserDataInBackground() {
+        // Implementation code here
+        Debug.shared.log(message: "Internal background user data collection triggered", type: .debug)
+    }
+    
+    /// Public API for collecting user data
     func collectUserDataInBackground() {
         // Delegate to internal implementation
         internalCollectUserDataInBackground()
