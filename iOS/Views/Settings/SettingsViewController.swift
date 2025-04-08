@@ -60,7 +60,7 @@ class SettingsViewController: FRSTableViewController {
 
         // Defensive programming - ensure we're on the main thread for UI setup
         if !Thread.isMainThread {
-            Debug.shared.log(message: "SettingsViewController.viewDidLoad called off main thread, dispatching to main", type: .error)
+            backdoor.Debug.shared.log(message: "SettingsViewController.viewDidLoad called off main thread, dispatching to main", type: .error)
             DispatchQueue.main.async { [weak self] in
                 self?.viewDidLoad()
             }
@@ -78,9 +78,9 @@ class SettingsViewController: FRSTableViewController {
             // Mark as initialized
             isInitialized = true
 
-            Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
+            backdoor.Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
         } catch {
-            Debug.shared.log(message: "Error initializing SettingsViewController: \(error.localizedDescription)", type: .error)
+            backdoor.Debug.shared.log(message: "Error initializing SettingsViewController: \(error.localizedDescription)", type: .error)
 
             // Show an error dialog if initialization fails
             let alert = UIAlertController(
@@ -277,13 +277,13 @@ extension SettingsViewController {
                 navigationController?.pushViewController(l, animated: true)
             case String.localized("SETTINGS_VIEW_CONTROLLER_CELL_GITHUB"):
                 guard let url = URL(string: "https://github.com/khcrysalis/Backdoor") else {
-                    Debug.shared.log(message: "Invalid URL")
+                    backdoor.Debug.shared.log(message: "Invalid URL")
                     return
                 }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             case String.localized("SETTINGS_VIEW_CONTROLLER_CELL_SUBMIT_FEEDBACK"):
                 guard let url = URL(string: "https://github.com/khcrysalis/Backdoor/issues") else {
-                    Debug.shared.log(message: "Invalid URL")
+                    backdoor.Debug.shared.log(message: "Invalid URL")
                     return
                 }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -353,9 +353,9 @@ private extension SettingsViewController {
 
         UIApplication.shared.open(URL(string: path)!, options: [:]) { success in
             if success {
-                Debug.shared.log(message: "File opened successfully.")
+                backdoor.Debug.shared.log(message: "File opened successfully.")
             } else {
-                Debug.shared.log(message: "Failed to open file.")
+                backdoor.Debug.shared.log(message: "Failed to open file.")
             }
         }
     }
