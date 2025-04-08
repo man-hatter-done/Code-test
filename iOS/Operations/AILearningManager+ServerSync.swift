@@ -10,8 +10,8 @@ import Foundation
 
 extension AILearningManager {
     
-    /// Queue data for local processing
-    func queueForLocalProcessing() {
+    /// Queue data for local processing - internal implementation
+    internal func internalQueueForLocalProcessing() {
         // Don't queue if learning is disabled
         guard isLearningEnabled else {
             return
@@ -22,6 +22,12 @@ extension AILearningManager {
         
         // Schedule processing if needed
         scheduleLocalProcessing()
+    }
+    
+    /// Public API for queueing data - keeps original method name for compatibility
+    /// This is added to resolve duplication issues across extension files
+    func queueForLocalProcessing() {
+        internalQueueForLocalProcessing()
     }
     
     /// Schedule local data processing
@@ -53,7 +59,8 @@ extension AILearningManager {
     }
     
     /// Perform enhanced local training to improve personalization
-    func performEnhancedLocalTraining() {
+    /// Internal implementation to avoid duplicate method declaration
+    internal func enhancedLocalTraining() {
         // Don't process if disabled
         guard isLearningEnabled else {
             Debug.shared.log(message: "Enhanced local training skipped - learning disabled", type: .info)
@@ -76,7 +83,9 @@ extension AILearningManager {
         
         // Process data - this triggers the training algorithm
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.trainNewModel()
+            if let self = self {
+                _ = self.trainModelNow { _, _ in }
+            }
         }
     }
     
@@ -112,7 +121,8 @@ extension AILearningManager {
     }
     
     /// Initiates background data collection for AI improvement
-    func collectUserDataInBackground() {
+    /// Internal implementation to avoid duplication in extensions
+    internal func internalCollectUserDataInBackground() {
         // Only collect if learning is enabled
         guard isLearningEnabled else {
             return
@@ -138,5 +148,10 @@ extension AILearningManager {
                 )
             }
         }
+    }
+    
+    /// Public API for background data collection
+    func collectUserDataInBackground() {
+        internalCollectUserDataInBackground()
     }
 }

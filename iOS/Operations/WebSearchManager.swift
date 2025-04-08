@@ -407,8 +407,9 @@ class WebSearchManager {
             
             // Add key entities if available
             if !result.entities.isEmpty {
-                let topEntities = Array(result.entities.prefix(3))
-                formattedResults += "   Key topics: \(topEntities.map { $0.key }.joined(separator: ", "))\n"
+                // Fixed: Properly extract keys from dictionary
+                let topEntityKeys = Array(result.entities.keys.prefix(3))
+                formattedResults += "   Key topics: \(topEntityKeys.joined(separator: ", "))\n"
             }
             
             // Add date if available
@@ -417,6 +418,35 @@ class WebSearchManager {
                 formatter.dateStyle = .medium
                 formattedResults += "   Date: \(formatter.string(from: date))\n"
             }
+            
+            formattedResults += "\n"
+        }
+        
+        if results.count > 5 {
+            formattedResults += "...and \(results.count - 5) more results."
+        }
+        
+        return formattedResults
+    }
+    
+    /// Format standard search results as a readable string
+    /// This method is needed by CustomAIService+DeepSearch
+    func formatSearchResults(_ results: [WebSearchResult]) -> String {
+        var formattedResults = ""
+        
+        for (index, result) in results.prefix(5).enumerated() {
+            formattedResults += "\(index + 1). \(result.title)\n"
+            
+            // Add description
+            if !result.description.isEmpty {
+                formattedResults += "   \(result.description)\n"
+            }
+            
+            // Add URL
+            formattedResults += "   Source: \(result.url.absoluteString)\n"
+            
+            // Add source type
+            formattedResults += "   Type: \(result.sourceType)\n"
             
             formattedResults += "\n"
         }
