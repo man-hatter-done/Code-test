@@ -193,6 +193,12 @@ public:
     operator const char *() const;
 
     JValue &operator=(const JValue &other);
+    JValue &operator=(int val);
+    JValue &operator=(bool val);
+    JValue &operator=(double val);
+    JValue &operator=(int64_t val);
+    JValue &operator=(const char *val);
+    JValue &operator=(const string &val);
 
     JValue &operator[](int index);
     const JValue &operator[](int index) const;

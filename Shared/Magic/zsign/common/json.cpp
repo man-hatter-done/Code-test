@@ -196,6 +196,48 @@ JValue &JValue::operator=(const JValue &other) {
     return (*this);
 }
 
+JValue &JValue::operator=(int val) {
+    Free();
+    m_eType = E_INT;
+    m_Value.vInt64 = val;
+    return (*this);
+}
+
+JValue &JValue::operator=(bool val) {
+    Free();
+    m_eType = E_BOOL;
+    m_Value.vBool = val;
+    return (*this);
+}
+
+JValue &JValue::operator=(double val) {
+    Free();
+    m_eType = E_FLOAT;
+    m_Value.vFloat = val;
+    return (*this);
+}
+
+JValue &JValue::operator=(int64_t val) {
+    Free();
+    m_eType = E_INT;
+    m_Value.vInt64 = val;
+    return (*this);
+}
+
+JValue &JValue::operator=(const char *val) {
+    Free();
+    m_eType = E_STRING;
+    m_Value.vString = NewString(val);
+    return (*this);
+}
+
+JValue &JValue::operator=(const string &val) {
+    Free();
+    m_eType = E_STRING;
+    m_Value.vString = NewString(val.c_str());
+    return (*this);
+}
+
 JValue::TYPE JValue::type() const { return m_eType; }
 
 int JValue::asInt() const { return (int)asInt64(); }
