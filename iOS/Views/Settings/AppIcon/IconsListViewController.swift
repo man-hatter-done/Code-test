@@ -8,8 +8,39 @@ import UIKit
 
 class IconsListViewController: UITableViewController {
     public class func altImage(_ name: String) -> UIImage {
-        let path = Bundle.main.bundleURL.appendingPathComponent(name + "@2x.png")
-        return UIImage(contentsOfFile: path.path) ?? UIImage()
+        // Try multiple locations for the icon image (root first for backward compatibility)
+        let possiblePaths: [URL] = [
+            // Check root of bundle (original implementation)
+            Bundle.main.bundleURL.appendingPathComponent(name + "@2x.png"),
+            
+            // Check Main folder for Main icons
+            Bundle.main.bundleURL.appendingPathComponent("Icons/Main/\(name)@2x.png"),
+            
+            // Check Wing folder for Wing icon
+            Bundle.main.bundleURL.appendingPathComponent("Icons/Wing/\(name)@2x.png"),
+            
+            // Check Resources folder paths
+            Bundle.main.resourceURL?.appendingPathComponent("Icons/Main/\(name)@2x.png") ?? URL(fileURLWithPath: ""),
+            Bundle.main.resourceURL?.appendingPathComponent("Icons/Wing/\(name)@2x.png") ?? URL(fileURLWithPath: ""),
+            
+            // Check path relative to bundle resources
+            Bundle.main.url(forResource: name, withExtension: "png") ?? URL(fileURLWithPath: ""),
+            Bundle.main.url(forResource: name + "@2x", withExtension: "png") ?? URL(fileURLWithPath: ""),
+            Bundle.main.url(forResource: "Icons/Main/\(name)@2x", withExtension: "png") ?? URL(fileURLWithPath: ""),
+            Bundle.main.url(forResource: "Icons/Wing/\(name)@2x", withExtension: "png") ?? URL(fileURLWithPath: "")
+        ]
+        
+        // Try each path until we find a valid image
+        for path in possiblePaths {
+            if let image = UIImage(contentsOfFile: path.path), !image.isEmpty {
+                Debug.shared.log(message: "Found icon at: \(path.path)", type: .info)
+                return image
+            }
+        }
+        
+        // Fallback to system icon if none found
+        Debug.shared.log(message: "Failed to load icon: \(name)", type: .warning)
+        return UIImage(systemName: "app.dashed") ?? UIImage()
     }
 
     var sections: [String: [AltIcon]] = [
@@ -125,6 +156,13 @@ extension IconsListViewController {
                 generator.impactOccurred()
             }
         }
+    }
+}
+
+extension UIImage {
+    // Helper to check if an image is empty
+    var isEmpty: Bool {
+        return size.width <= 1 || size.height <= 1
     }
 }
 
