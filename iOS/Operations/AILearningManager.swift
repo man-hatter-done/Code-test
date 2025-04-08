@@ -271,12 +271,12 @@ class AILearningManager {
             
             // If server sync is enabled, queue for sync
             if isServerSyncEnabled {
-                queueForServerSync()
+                triggerServerSync() // Use public method instead of private one
             } else {
                 // Otherwise, consider training if this is highly-rated feedback
                 if rating >= 4 {
                     DispatchQueue.global(qos: .background).async { [weak self] in
-                        self?.evaluateTraining()
+                        self?.trainModelWithAllInteractions()
                     }
                 }
             }

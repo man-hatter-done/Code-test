@@ -83,7 +83,7 @@ func getFileInfo(_ data: Data, _ offset: Int) throws -> ARFile {
 
 public func extractAR(_ rawData: Data) throws -> [ARFile] {
     let magicBytes = [0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A]
-    if [UInt8](rawData.subdata(in: Range(0 ... 7))) != magicBytes {
+    if [UInt8](rawData.subdata(in: 0..<8)) != magicBytes {
         throw ARError.badArchive("Invalid magic")
     }
 

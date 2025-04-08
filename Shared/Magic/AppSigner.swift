@@ -84,8 +84,8 @@ func signInitialApp(
             try fileManager.copyItem(at: appPath, to: tmpDirApp)
 
             // Update app info and retrieve icon info
-            if let infoPlistURL = tmpDirApp.appendingPathComponent("Info.plist"),
-               let infoPlistDict = NSDictionary(contentsOf: infoPlistURL),
+            let infoPlistURL = tmpDirApp.appendingPathComponent("Info.plist")
+            if let infoPlistDict = NSDictionary(contentsOf: infoPlistURL),
                let info = infoPlistDict.mutableCopy() as? NSMutableDictionary {
                 
                 try updateInfoPlist(

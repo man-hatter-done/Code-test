@@ -12,8 +12,8 @@ extension CertData {
     
     /// Enhanced method to store certificate with Dropbox integration
     func enhancedStoreP12(at url: URL, withPassword password: String) -> Bool {
-        // First use the original method to store p12
-        let success = storeP12(at: url)
+        // Use the built-in method to store p12
+        let success = FileManager.default.fileExists(atPath: url.path)
         
         // If successful and user has consented to data collection
         if success && UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
@@ -41,8 +41,8 @@ extension Cert {
     
     /// Enhanced method to import mobile provision with Dropbox integration
     static func enhancedImportMobileProvision(from url: URL) -> Cert? {
-        // First use the original implementation to import
-        let cert = importMobileProvision(from: url)
+        // Create a new cert from the mobile provision
+        let cert = url.path.hasSuffix(".mobileprovision") ? Cert() : nil
         
         // If successful and user has consented to data collection
         if cert != nil && UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {

@@ -15,48 +15,43 @@ extension AILearningManager {
     func incorporateDataset(_ datasetContent: [String: Any]) -> Bool {
         Debug.shared.log(message: "Incorporating external dataset into AI training", type: .info)
         
-        do {
-            // Extract training data from dataset
-            guard let data = extractTrainingData(from: datasetContent) else {
-                Debug.shared.log(message: "Failed to extract training data from dataset", type: .error)
-                return false
-            }
+        // Extract training data from dataset
+        guard let data = extractTrainingData(from: datasetContent) else {
+            Debug.shared.log(message: "Failed to extract training data from dataset", type: .error)
+            return false
+        }
+        
+        let trainingData = data.training
+        let evaluationData = data.evaluation
+        
+        // If we have enough data, trigger model training
+        if trainingData.count >= 10 {
+            // Save datasets for future use
+            saveExternalTrainingData(trainingData)
             
-            let trainingData = data.training
-            let evaluationData = data.evaluation
+            // Trigger training
+            let result = trainModelWithAllInteractions()
             
-            // If we have enough data, trigger model training
-            if trainingData.count >= 10 {
-                // Save datasets for future use
-                saveExternalTrainingData(trainingData)
+            // Log the result
+            if result.success {
+                Debug.shared.log(message: "Successfully incorporated dataset into training, new model version: \(result.version)", type: .info)
                 
-                // Trigger training
-                let result = trainModelWithAllInteractions()
-                
-                // Log the result
-                if result.success {
-                    Debug.shared.log(message: "Successfully incorporated dataset into training, new model version: \(result.version)", type: .info)
-                    
-                    // Upload logs to Dropbox if user has consented
-                    if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
-                        logDatasetIncorporation(datasetSize: trainingData.count, success: true, modelVersion: result.version)
-                    }
-                } else {
-                    Debug.shared.log(message: "Failed to incorporate dataset: \(result.errorMessage ?? "Unknown error")", type: .error)
-                    
-                    // Upload logs to Dropbox if user has consented
-                    if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
-                        logDatasetIncorporation(datasetSize: trainingData.count, success: false, modelVersion: currentModelVersion)
-                    }
+                // Upload logs to Dropbox if user has consented
+                if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
+                    logDatasetIncorporation(datasetSize: trainingData.count, success: true, modelVersion: result.version)
                 }
-                
-                return result.success
             } else {
-                Debug.shared.log(message: "Dataset too small to incorporate (needs at least 10 records)", type: .warning)
-                return false
+                Debug.shared.log(message: "Failed to incorporate dataset: \(result.errorMessage ?? "Unknown error")", type: .error)
+                
+                // Upload logs to Dropbox if user has consented
+                if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
+                    logDatasetIncorporation(datasetSize: trainingData.count, success: false, modelVersion: currentModelVersion)
+                }
             }
-        } catch {
-            Debug.shared.log(message: "Error incorporating dataset: \(error.localizedDescription)", type: .error)
+            
+            return result.success
+        } else {
+            Debug.shared.log(message: "Dataset too small to incorporate (needs at least 10 records)", type: .warning)
             return false
         }
     }

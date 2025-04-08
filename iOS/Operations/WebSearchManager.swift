@@ -637,7 +637,7 @@ class WebSearchManager {
                     content: extractedText,
                     keywords: keywords,
                     sentiment: sentiment,
-                    entities: entities.reduce(into: [:]) { dict, entity in dict[entity] = "entity" },
+                    entities: entities.reduce(into: [String: String]()) { dict, entity in dict[entity] = "entity" },
                     links: links,
                     imageURLs: imageURLs,
                     extractedDate: date
@@ -953,7 +953,9 @@ class WebSearchManager {
                         ]
                         
                         for formatter in dateFormatters {
-                            if let date = formatter.date(from: dateStr) {
+                            // Explicitly cast to DateFormatter to access date method
+                            if let dateFormatter = formatter as? DateFormatter, 
+                               let date = dateFormatter.date(from: dateStr) {
                                 return date
                             }
                         }
@@ -1108,7 +1110,11 @@ class WebSearchManager {
         for i in 0..<deepResults.count {
             // Add query entities
             for entity in queryEntities {
-                deepResults[i].entities[entity] = "query_entity"
+                if deepResults[i].entities == nil {
+                    deepResults[i].entities = [String: String]()
+                }
+                // Ensure we're accessing a mutable dictionary that exists
+                deepResults[i].entities?[entity] = "query_entity"
             }
             
             // Simple relevance scoring for basic results
