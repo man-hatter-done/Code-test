@@ -359,7 +359,7 @@ class BackdoorAIClient {
                 
                 // Download and update
                 let tempModelURL = try await downloadModel(version: modelInfo.latestModelVersion)
-                let compiledModelURL = try await compileAndSaveModel(at: tempModelURL)
+                _ = try await compileAndSaveModel(at: tempModelURL)
                 
                 // Update current version
                 UserDefaults.standard.set(modelInfo.latestModelVersion, forKey: currentModelVersionKey)
