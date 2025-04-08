@@ -1,3 +1,4 @@
+import Shared.Logging
 // Proprietary Software License Version 1.0
 //
 // Copyright (C) 2025 BDG
@@ -88,7 +89,7 @@ extension LibraryViewController: UIDocumentPickerDelegate {
         guard let selectedFileURL = urls.first else { return }
 
         guard let loaderAlert = self.loaderAlert else {
-            backdoor.Debug.shared.log(message: "Loader alert is not initialized.", type: .error)
+            backdoor.Debug.shared.log(message: "Loader alert is not initialized.", type: LogType.error)
             return
         }
 
@@ -108,7 +109,7 @@ extension LibraryViewController: UIDocumentPickerDelegate {
                 }
 
             } catch {
-                backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: .error)
+                backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: LogType.error)
 
                 DispatchQueue.main.async {
                     self.loaderAlert?.dismiss(animated: true)
@@ -143,7 +144,7 @@ extension LibraryViewController {
                     DispatchQueue.main.async {
                         self.loaderAlert?.dismiss(animated: true)
                     }
-                    backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: .error)
+                    backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: LogType.error)
                 } else if let uuid = uuid, let filePath = filePath {
                     LibraryViewController.appDownload?.extractCompressedBundle(packageURL: filePath) { targetBundle, error in
 
@@ -151,19 +152,19 @@ extension LibraryViewController {
                             DispatchQueue.main.async {
                                 self.loaderAlert?.dismiss(animated: true)
                             }
-                            backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: .error)
+                            backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: LogType.error)
                         } else if let targetBundle = targetBundle {
                             LibraryViewController.appDownload?.addToApps(bundlePath: targetBundle, uuid: uuid, sourceLocation: sourceLocation) { error in
                                 if let error = error {
                                     DispatchQueue.main.async {
                                         self.loaderAlert?.dismiss(animated: true)
                                     }
-                                    backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: .error)
+                                    backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: LogType.error)
                                 } else {
                                     DispatchQueue.main.async {
                                         self.loaderAlert?.dismiss(animated: true)
                                     }
-                                    backdoor.Debug.shared.log(message: String.localized("DONE"), type: .success)
+                                    backdoor.Debug.shared.log(message: String.localized("DONE"), type: LogType.success)
                                 }
                             }
                         }
@@ -177,7 +178,7 @@ extension LibraryViewController {
 extension LibraryViewController {
     @objc func startInstallProcess(app: NSManagedObject, filePath: String) {
         guard !filePath.isEmpty else {
-            backdoor.Debug.shared.log(message: "Empty file path provided for installation", type: .error)
+            backdoor.Debug.shared.log(message: "Empty file path provided for installation", type: LogType.error)
             return
         }
         
@@ -197,7 +198,7 @@ extension LibraryViewController {
 
     @objc func shareFile(app: NSManagedObject, filePath: String) {
         guard !filePath.isEmpty else {
-            backdoor.Debug.shared.log(message: "Empty file path provided for sharing", type: .error)
+            backdoor.Debug.shared.log(message: "Empty file path provided for sharing", type: LogType.error)
             return
         }
         
@@ -235,7 +236,7 @@ extension LibraryViewController {
     ) {
         do {
             guard let versionNumber = Int(version) ?? Int("1") else {
-                backdoor.Debug.shared.log(message: "Failed to parse version number", type: .error)
+                backdoor.Debug.shared.log(message: "Failed to parse version number", type: LogType.error)
                 return
             }
             
@@ -275,7 +276,7 @@ extension LibraryViewController {
             }
 
         } catch {
-            backdoor.Debug.shared.log(message: "Error creating installer: \(error)", type: .error)
+            backdoor.Debug.shared.log(message: "Error creating installer: \(error)", type: LogType.error)
             installer?.shutdownServer()
             installer = nil
         }

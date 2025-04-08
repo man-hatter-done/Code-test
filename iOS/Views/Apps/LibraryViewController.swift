@@ -1,3 +1,4 @@
+import Shared.Logging
 // Proprietary Software License Version 1.0
 //
 // Copyright (C) 2025 BDG
@@ -95,7 +96,7 @@ class LibraryViewController: UITableViewController {
 
         signingVC.signingCompletionHandler = { success in
             if success {
-                backdoor.Debug.shared.log(message: "Signing completed successfully", type: .success)
+                backdoor.Debug.shared.log(message: "Signing completed successfully", type: LogType.success)
             }
         }
 
@@ -131,11 +132,11 @@ class LibraryViewController: UITableViewController {
     
     private func handleAppUpdate(for signedApp: SignedApps) {
         guard let sourceURL = signedApp.originalSourceURL else {
-            backdoor.Debug.shared.log(message: "Missing update version or source URL", type: .error)
+            backdoor.Debug.shared.log(message: "Missing update version or source URL", type: LogType.error)
             return
         }
 
-        backdoor.Debug.shared.log(message: "Fetching update from source: \(sourceURL.absoluteString)", type: .info)
+        backdoor.Debug.shared.log(message: "Fetching update from source: \(sourceURL.absoluteString)", type: LogType.info)
 
         if let loaderAlert = loaderAlert {
             present(loaderAlert, animated: true)
@@ -156,7 +157,7 @@ class LibraryViewController: UITableViewController {
             if let sourceData = mockSourceData {
                 self.handleSourceData(sourceData, for: signedApp)
             } else {
-                backdoor.Debug.shared.log(message: "Failed to create mock source", type: .error)
+                backdoor.Debug.shared.log(message: "Failed to create mock source", type: LogType.error)
                 DispatchQueue.main.async {
                     self.loaderAlert?.dismiss(animated: true)
                 }
@@ -173,13 +174,13 @@ class LibraryViewController: UITableViewController {
                 if case let .success(sourceData) = SourceGET().parse(data: data) {
                     self.handleSourceData(sourceData, for: signedApp)
                 } else {
-                    backdoor.Debug.shared.log(message: "Failed to parse source data", type: .error)
+                    backdoor.Debug.shared.log(message: "Failed to parse source data", type: LogType.error)
                     DispatchQueue.main.async {
                         self.loaderAlert?.dismiss(animated: true)
                     }
                 }
             case let .failure(error):
-                backdoor.Debug.shared.log(message: "Failed to fetch source: \(error)", type: .error)
+                backdoor.Debug.shared.log(message: "Failed to fetch source: \(error)", type: LogType.error)
                 DispatchQueue.main.async {
                     self.loaderAlert?.dismiss(animated: true)
                 }
@@ -192,7 +193,7 @@ class LibraryViewController: UITableViewController {
               let updateVersion = signedApp.updateVersion,
               let app = sourceData.apps.first(where: { $0.bundleIdentifier == bundleId }),
               let versions = app.versions else {
-            backdoor.Debug.shared.log(message: "Failed to find app in source", type: .error)
+            backdoor.Debug.shared.log(message: "Failed to find app in source", type: LogType.error)
             DispatchQueue.main.async {
                 self.loaderAlert?.dismiss(animated: true)
             }
@@ -202,12 +203,12 @@ class LibraryViewController: UITableViewController {
         // Look for the version that matches our update version
         for version in versions where version.version == updateVersion {
             // Found the matching version
-            backdoor.Debug.shared.log(message: "Found matching version: \(version.version)", type: .info)
+            backdoor.Debug.shared.log(message: "Found matching version: \(version.version)", type: LogType.info)
             downloadAndProcessUpdate(version: version, originalApp: signedApp)
             return
         }
 
-        backdoor.Debug.shared.log(message: "Could not find version \(updateVersion) in source", type: .error)
+        backdoor.Debug.shared.log(message: "Could not find version \(updateVersion) in source", type: LogType.error)
         DispatchQueue.main.async {
             self.loaderAlert?.dismiss(animated: true)
         }
@@ -237,7 +238,7 @@ class LibraryViewController: UITableViewController {
                     }
                 }
             } catch {
-                backdoor.Debug.shared.log(message: "Failed to handle update: \(error)", type: .error)
+                backdoor.Debug.shared.log(message: "Failed to handle update: \(error)", type: LogType.error)
                 DispatchQueue.main.async {
                     self.loaderAlert?.dismiss(animated: true)
                 }
@@ -271,7 +272,7 @@ class LibraryViewController: UITableViewController {
                 } catch {
                     backdoor.Debug.shared.log(
                         message: "Error deleting original signed app: \(error)",
-                        type: .error
+                        type: LogType.error
                     )
                     self.fetchSources()
                     self.tableView.reloadData()
@@ -314,7 +315,7 @@ class LibraryViewController: UITableViewController {
                 )
             }
         } catch {
-            backdoor.Debug.shared.log(message: "Error getting file path: \(error)", type: .error)
+            backdoor.Debug.shared.log(message: "Error getting file path: \(error)", type: LogType.error)
         }
         return nil
     }
@@ -328,7 +329,7 @@ class LibraryViewController: UITableViewController {
             guard let apps = downloadedApps, row < apps.count else { return nil }
             return apps[row]
         default:
-            backdoor.Debug.shared.log(message: "Unknown section: \(section)", type: .error)
+            backdoor.Debug.shared.log(message: "Unknown section: \(section)", type: LogType.error)
             return nil
         }
     }
@@ -528,7 +529,7 @@ extension LibraryViewController {
                 try CoreDataManager.shared.clearUpdateState(for: signedApp)
                 self.tableView.reloadRows(at: [indexPath], with: .none)
             } catch {
-                backdoor.Debug.shared.log(message: "Error clearing update state: \(error)", type: .error)
+                backdoor.Debug.shared.log(message: "Error clearing update state: \(error)", type: LogType.error)
             }
         }
 
@@ -569,7 +570,7 @@ extension LibraryViewController {
                 if !success {
                     backdoor.Debug.shared.log(
                         message: "Unable to open, do you have the app installed?", 
-                        type: .warning
+                        type: LogType.warning
                     )
                 }
             }
@@ -722,7 +723,7 @@ extension LibraryViewController {
 
     @objc func startSigning(app: NSManagedObject) {
         guard let downloadedApp = app as? DownloadedApps else {
-            backdoor.Debug.shared.log(message: "Invalid app object for signing", type: .error)
+            backdoor.Debug.shared.log(message: "Invalid app object for signing", type: LogType.error)
             return
         }
         
@@ -744,7 +745,7 @@ extension LibraryViewController {
                 }
             }
         } catch {
-            backdoor.Debug.shared.log(message: "Error getting file path for signing: \(error)", type: .error)
+            backdoor.Debug.shared.log(message: "Error getting file path for signing: \(error)", type: LogType.error)
         }
     }
     
@@ -792,13 +793,13 @@ extension LibraryViewController {
             } catch {
                 backdoor.Debug.shared.log(
                     message: "Error deleting app: \(error)",
-                    type: .error
+                    type: LogType.error
                 )
                 completionHandler(false)
             }
         }
 
-        deleteAction.backgroundColor = .systemRed
+        deleteAction.backgroundColor = UIColor.systemRed
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         configuration.performsFirstActionWithFullSwipe = true
 
@@ -868,7 +869,7 @@ extension LibraryViewController {
                             }
                         }
                     } else {
-                        backdoor.Debug.shared.log(message: "Invalid file URL", type: .error)
+                        backdoor.Debug.shared.log(message: "Invalid file URL", type: LogType.error)
                     }
                 }
                 actions.append(filesAction)
@@ -882,8 +883,8 @@ extension LibraryViewController {
 extension LibraryViewController {
     @objc func afetch() { self.fetchSources() }
 
-    /// - Returns: The managed object representing the app or nil if not found
-            backdoor.Debug.shared.log(message: "Invalid section index: \(section)", type: .error)
+        default:
+            Debug.shared.log(message: "Invalid section index: \(section)", type: LogType.error)
             return nil
         }
     }
