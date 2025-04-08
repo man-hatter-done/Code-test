@@ -118,7 +118,7 @@ extension AboutViewController {
 
         switch indexPath.section {
             case 0:
-                let cell = HeaderTableViewCell()
+                let cell = SettingsHeaderTableViewCell()
                 let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? ""
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
                 let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""

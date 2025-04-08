@@ -174,7 +174,7 @@ class ModelServerIntegrationViewController: UIViewController {
                 uploadModelButton.isEnabled = true
                 
                 // Display model info
-                let modelInfo = AILearningManager.shared.getTrainedModelInfo()
+                let modelInfo = AILearningManager.shared.getTrainedModelInfo() as (version: String, date: Date?)
                 var modelInfoText = "Model version: \(modelInfo.version)"
                 if let trainDate = modelInfo.date {
                     let dateFormatter = DateFormatter()
