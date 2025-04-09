@@ -28,172 +28,109 @@ final class CoreMLManager {
     
     // Private initializer for singleton
     private init() {
-        // Attempt to find the model in multiple locations
-        if let url = findModelInMultipleLocations() {
-            modelURL = url
+        Debug.shared.log(message: "Initializing CoreML Manager for dynamic model loading", type: .info)
+        
+        // Set up model directories from the start
+        ModelFileManager.shared.setupModelDirectories()
+        
+        // Look for user-generated models first - highest priority
+        if let userGeneratedModel = ModelFileManager.shared.findUserGeneratedModel() {
+            modelURL = userGeneratedModel
+            Debug.shared.log(message: "Found user-generated model at: \(userGeneratedModel.path)", type: .info)
         } else {
-            Debug.shared.log(message: "CoreML model not found in any expected location - will try ModelFileManager as fallback", type: .warning)
-        }
-    }
-    
-    /// Find the model in multiple possible locations
-    private func findModelInMultipleLocations() -> URL? {
-        let bundle = Bundle.main
-        let fileManager = FileManager.default
-        let modelName = "model_1.0.0"
-        
-        // Log all search paths for debugging
-        Debug.shared.log(message: "Searching for CoreML model: \(modelName).mlmodel", type: .info)
-        
-        // First check the Shared/Resources directory - primary location
-        let sharedResourcesPath = bundle.bundleURL
-            .appendingPathComponent("Shared")
-            .appendingPathComponent("Resources")
-            .appendingPathComponent("\(modelName).mlmodel")
-        
-        if fileManager.fileExists(atPath: sharedResourcesPath.path) {
-            Debug.shared.log(message: "CoreML model found in Shared/Resources at: \(sharedResourcesPath.path)", type: .info)
-            return sharedResourcesPath
-        }
-        
-        // 1. Check in the app bundle (highest priority)
-        if let modelPath = bundle.path(forResource: modelName, ofType: "mlmodel", inDirectory: "model") {
-            let url = URL(fileURLWithPath: modelPath)
-            Debug.shared.log(message: "CoreML model found in bundle (model directory) at path: \(modelPath)", type: .info)
-            return url
-        }
-        
-        // 2. Look for model directly in bundle resources
-        if let modelPath = bundle.path(forResource: modelName, ofType: "mlmodel") {
-            let url = URL(fileURLWithPath: modelPath)
-            Debug.shared.log(message: "CoreML model found directly in bundle resources at path: \(modelPath)", type: .info)
-            return url
-        }
-        
-        // 3. Check in iOS/Resources/model directory
-        let resourcesModelPath = bundle.bundleURL
-            .appendingPathComponent("Resources")
-            .appendingPathComponent("model")
-            .appendingPathComponent("\(modelName).mlmodel")
-        
-        if fileManager.fileExists(atPath: resourcesModelPath.path) {
-            Debug.shared.log(message: "CoreML model found in Resources/model directory at: \(resourcesModelPath.path)", type: .info)
-            return resourcesModelPath
-        }
-        
-        // 4. Check for the model in the main bundle resources directly
-        if let resourceURL = bundle.resourceURL {
-            let directResourcePath = resourceURL.appendingPathComponent("\(modelName).mlmodel")
-            if fileManager.fileExists(atPath: directResourcePath.path) {
-                Debug.shared.log(message: "CoreML model found directly in bundle resources at: \(directResourcePath.path)", type: .info)
-                return directResourcePath
-            }
-        }
-        
-        // Log the bundle path to help with debugging
-        Debug.shared.log(message: "Bundle path: \(bundle.bundlePath)", type: .info)
-        Debug.shared.log(message: "Bundle URL: \(bundle.bundleURL.path)", type: .info)
-        if let resourceURL = bundle.resourceURL {
-            Debug.shared.log(message: "Resource URL: \(resourceURL.path)", type: .info)
-        }
-        
-        // 5. Check multiple project directory paths
-        let possibleModelPaths = [
-            // Project root model directory
-            getModelDirectoryPath().appendingPathComponent("\(modelName).mlmodel"),
+            Debug.shared.log(message: "No user-generated models found - will use pattern matching until one is created", type: .info)
             
-            // Look in the documents directory
-            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("\(modelName).mlmodel"),
-            
-            // Repository root
-            URL(fileURLWithPath: "./model/\(modelName).mlmodel"),
-            
-            // Absolute path from repository root
-            URL(fileURLWithPath: "/model/\(modelName).mlmodel"),
-            
-            // Workspace paths for various environments
-            URL(fileURLWithPath: "/workspace/model/\(modelName).mlmodel"),
-            URL(fileURLWithPath: "/workspace/Main-repo-bdg/Code-test/model/\(modelName).mlmodel"),
-            
-            // iOS Resources path (for build systems)
-            bundle.bundleURL
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .appendingPathComponent("iOS")
-                .appendingPathComponent("Resources")
-                .appendingPathComponent("model")
-                .appendingPathComponent("\(modelName).mlmodel"),
+            // Trigger AILearningManager to collect data for future model training
+            DispatchQueue.global(qos: .background).async {
+                // Enable learning by default to collect data for model creation
+                if !AILearningManager.shared.isLearningEnabled {
+                    AILearningManager.shared.setLearningEnabled(true)
+                    Debug.shared.log(message: "Enabled AI learning to collect data for model generation", type: .info)
+                }
                 
-            // Check in Shared directory
-            bundle.bundleURL
-                .appendingPathComponent("Shared")
-                .appendingPathComponent("\(modelName).mlmodel")
-        ]
-        
-        // Log all possible paths
-        Debug.shared.log(message: "Checking additional paths for CoreML model:", type: .info)
-        for (index, path) in possibleModelPaths.enumerated() {
-            Debug.shared.log(message: "  Path \(index+1): \(path.path)", type: .debug)
-        }
-        
-        // Check each path
-        for path in possibleModelPaths {
-            if fileManager.fileExists(atPath: path.path) {
-                Debug.shared.log(message: "CoreML model found at: \(path.path)", type: .info)
-                return path
+                // Check if we have enough data to train a model
+                let stats = AILearningManager.shared.getLearningStatistics()
+                if stats.totalDataPoints >= 5 {  // Lower threshold for initial model
+                    Debug.shared.log(message: "Found \(stats.totalDataPoints) data points, attempting to create initial model", type: .info)
+                    
+                    // Create initial model
+                    self.createInitialModel()
+                }
             }
         }
-        
-        // If still not found, log the error with detailed information
-        Debug.shared.log(message: "CoreML model not found in any expected location. Using ModelFileManager as fallback.", type: .warning)
-        
-        // If still not found, try using the enhanced search in ModelFileManager
-        return nil
     }
     
-    /// Get path to model directory
-    private func getModelDirectoryPath() -> URL {
-        let bundle = Bundle.main
-        let bundleURL = bundle.bundleURL
+    /// Create an initial model from existing data if possible
+    private func createInitialModel() {
+        Debug.shared.log(message: "Attempting to create initial AI model", type: .info)
         
-        // Check multiple possible model directory locations in order of likelihood
-        let possibleModelDirs = [
-            // 1. iOS/Resources/model directory (most likely in build system)
-            bundleURL
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .appendingPathComponent("iOS")
-                .appendingPathComponent("Resources")
-                .appendingPathComponent("model"),
-            
-            // 2. model directory in bundle
-            bundleURL.appendingPathComponent("model"),
-            
-            // 3. model directory in Resources folder
-            bundleURL.appendingPathComponent("Resources").appendingPathComponent("model"),
-            
-            // 4. Repository root model directory
-            bundleURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("model"),
-            
-            // 5. Direct model directory in repository root
-            URL(fileURLWithPath: "./model"),
-            
-            // 6. Absolute paths for different environments
-            URL(fileURLWithPath: "/model"),
-            URL(fileURLWithPath: "/workspace/model"),
-            URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model")
-        ]
-        
-        // Check if each directory exists
-        for dir in possibleModelDirs {
-            if FileManager.default.fileExists(atPath: dir.path) {
-                return dir
+        AILearningManager.shared.trainModelNow { success, message in
+            if success {
+                Debug.shared.log(message: "Successfully created initial model: \(message)", type: .info)
+                
+                // Notify the UI that a model is now available
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Notification.Name("AIModelUpdated"), 
+                        object: nil
+                    )
+                }
+                
+                // Reload the model
+                self.loadModel()
+            } else {
+                Debug.shared.log(message: "Could not create initial model: \(message)", type: .warning)
             }
         }
+    }
+    
+    /// Find the best available model with prioritized search logic
+    private func findBestAvailableModel() -> URL? {
+        Debug.shared.log(message: "Looking for best available AI model", type: .info)
         
-        // Default to repository root if none found
-        return bundleURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("model")
+        // 1. First priority: User-generated models from AILearningManager
+        if let userModel = AILearningManager.shared.getLatestModelURL() {
+            Debug.shared.log(message: "Found user-trained model via AILearningManager: \(userModel.path)", type: .info)
+            return userModel
+        }
+        
+        // 2. Second priority: Any user models in the model directories
+        if let userModelFromFileSystem = ModelFileManager.shared.findUserGeneratedModel() {
+            Debug.shared.log(message: "Found user-generated model via filesystem search: \(userModelFromFileSystem.path)", type: .info)
+            return userModelFromFileSystem
+        }
+        
+        // 3. Check documents directory for models
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let aiModelsDir = documentsDirectory.appendingPathComponent("AIModels", isDirectory: true)
+        let legacyModelsDir = documentsDirectory.appendingPathComponent("Models", isDirectory: true)
+        
+        do {
+            // Check AIModels directory
+            if FileManager.default.fileExists(atPath: aiModelsDir.path) {
+                let contents = try FileManager.default.contentsOfDirectory(at: aiModelsDir, includingPropertiesForKeys: nil)
+                let models = contents.filter { $0.pathExtension == "mlmodel" || $0.pathExtension == "mlmodelc" }
+                if let newestModel = models.first {
+                    Debug.shared.log(message: "Found model in AIModels directory: \(newestModel.path)", type: .info)
+                    return newestModel
+                }
+            }
+            
+            // Check legacy Models directory
+            if FileManager.default.fileExists(atPath: legacyModelsDir.path) {
+                let contents = try FileManager.default.contentsOfDirectory(at: legacyModelsDir, includingPropertiesForKeys: nil)
+                let models = contents.filter { $0.pathExtension == "mlmodel" || $0.pathExtension == "mlmodelc" }
+                if let newestModel = models.first {
+                    Debug.shared.log(message: "Found model in legacy Models directory: \(newestModel.path)", type: .info)
+                    return newestModel
+                }
+            }
+        } catch {
+            Debug.shared.log(message: "Error searching for models in documents directory: \(error.localizedDescription)", type: .error)
+        }
+        
+        Debug.shared.log(message: "No models found anywhere - a new one will be generated as the user interacts with the app", type: .info)
+        return nil
     }
     
     // Model loading state tracking
@@ -329,27 +266,72 @@ final class CoreMLManager {
         loadDefaultModel(completion: completion)
     }
     
-    /// Load the default CoreML model
+    /// Load the default CoreML model (now based on user-generated models)
     private func loadDefaultModel(completion: ((Bool) -> Void)? = nil) {
-        // First try with existing URL
+        // First try with existing URL if we have one
         if let modelURL = modelURL {
             loadModelFromURL(modelURL, completion: completion)
             return
         }
         
-        // If URL is not available, try to get the model from documents directory or copy it there
+        // Search for the best available model
+        if let bestModelURL = findBestAvailableModel() {
+            loadModelFromURL(bestModelURL, completion: completion)
+            return
+        }
+        
+        // If no models are available, inform system that we need to generate one
         ModelFileManager.shared.prepareMLModel { [weak self] result in
             switch result {
             case .success(let modelURL):
-                // Load the model from the copied location
-                self?.loadModelFromURL(modelURL, completion: completion)
+                if let url = modelURL {
+                    // A model was found, load it
+                    self?.loadModelFromURL(url, completion: completion)
+                } else {
+                    // No model available yet - that's expected with the new system
+                    Debug.shared.log(message: "No AI model available yet - will use pattern matching until one is created", type: .info)
+                    DispatchQueue.main.async {
+                        // Schedule creation of an initial model if we have enough data
+                        DispatchQueue.global(qos: .background).async {
+                            self?.tryGenerateInitialModel()
+                        }
+                        completion?(false)
+                    }
+                }
                 
             case .failure(let error):
-                Debug.shared.log(message: "Failed to prepare model file: \(error.localizedDescription)", type: .error)
+                Debug.shared.log(message: "Failed to prepare model system: \(error.localizedDescription)", type: .error)
                 DispatchQueue.main.async {
                     completion?(false)
                 }
             }
+        }
+    }
+    
+    /// Try to generate an initial model if possible with existing data
+    private func tryGenerateInitialModel() {
+        // Get statistics on available data
+        let stats = AILearningManager.shared.getLearningStatistics()
+        
+        // If we have enough data to attempt model creation
+        if stats.totalDataPoints >= 5 {
+            Debug.shared.log(message: "Found \(stats.totalDataPoints) data points - attempting to create initial AI model", type: .info)
+            
+            // Train with reduced requirements
+            AILearningManager.shared.trainModelNow { success, message in
+                if success {
+                    Debug.shared.log(message: "Successfully created initial model: \(message)", type: .info)
+                    
+                    // Reload the model
+                    DispatchQueue.global(qos: .background).async { [weak self] in
+                        self?.loadModel()
+                    }
+                } else {
+                    Debug.shared.log(message: "Could not create initial model: \(message)", type: .warning)
+                }
+            }
+        } else {
+            Debug.shared.log(message: "Not enough data to create initial model (\(stats.totalDataPoints) points). Need more user interactions.", type: .info)
         }
     }
     
