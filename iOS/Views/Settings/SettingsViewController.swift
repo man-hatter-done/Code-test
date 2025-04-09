@@ -168,18 +168,7 @@ class SettingsViewController: FRSTableViewController {
         return tableData.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Additional defensive check
-        guard isInitialized, 
-              indexPath.section < tableData.count,
-              indexPath.row < tableData[indexPath.section].count else {
-            // Return empty cell if invalid path
-            return UITableViewCell()
-        }
-        
-        // Continue with normal implementation
-        return super.tableView(tableView, cellForRowAt: indexPath)
-    }
+    // Note: tableView:cellForRowAt: implementation moved to the extension below
 }
 
 extension SettingsViewController {
