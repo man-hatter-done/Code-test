@@ -96,6 +96,18 @@ class ActivityIndicatorButton: UIButton {
         
         // Enable button
         isEnabled = true
+        
+        // Add flowing LED effect to sign button after a short delay
+        // (delay ensures the view has been laid out properly)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            guard let self = self else { return }
+            self.addFlowingLEDEffect(
+                color: self.normalBackgroundColor,
+                intensity: 0.6,
+                width: 2,
+                speed: 4.0
+            )
+        }
     }
     
     private func setupGradient() {

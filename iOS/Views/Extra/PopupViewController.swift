@@ -123,6 +123,41 @@ class PopupViewControllerButton: UIButton {
         } else {
             contentEdgeInsets = UIEdgeInsets(top: 16, left: 20, bottom: 16, right: 20)
         }
+        
+        // Add appropriate LED effects based on button type
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
+            
+            if color == UIColor(hex: "#FF6482") || 
+               self.colorIsCloseToAccent(color) ||
+               color == .tintColor {
+                // Primary action buttons get a flowing LED border effect
+                self.addFlowingLEDEffect(
+                    color: color,
+                    intensity: 0.6,
+                    width: 2.5,
+                    speed: 4.0
+                )
+            } else if color.isLight() {
+                // Light secondary buttons get a subtle glow
+                self.addLEDEffect(
+                    color: color.darker(by: 5),
+                    intensity: 0.4,
+                    spread: 8,
+                    animated: true,
+                    animationDuration: 3.0
+                )
+            } else {
+                // Dark buttons get a subtle pulsing glow
+                self.addLEDEffect(
+                    color: color.lighter(by: 30),
+                    intensity: 0.3,
+                    spread: 10,
+                    animated: true,
+                    animationDuration: 2.5
+                )
+            }
+        }
     }
     
     private func setupGradient(withBaseColor color: UIColor) {
