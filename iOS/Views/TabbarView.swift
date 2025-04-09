@@ -97,6 +97,21 @@ struct TabbarView: View {
         // Add subtle blur effect for a more modern look
         appearance.backgroundEffect = UIBlurEffect(style: .systemMaterial)
         
+        // Set up observer to add LED effects after tab bar is ready
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                // Apply flowing LED effect to all tab bars
+                UIApplication.shared.windows.compactMap { $0.rootViewController as? UITabBarController }.forEach { tabController in
+                    tabController.tabBar.addFlowingLEDEffect(
+                        color: UIColor(hex: "#FF6482") ?? .systemPink,
+                        intensity: 0.5,
+                        width: 2,
+                        speed: 5.0
+                    )
+                }
+            }
+        }
+        
         // Configure selected item appearance
         let itemAppearance = UITabBarItemAppearance()
         

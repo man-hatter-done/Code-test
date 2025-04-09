@@ -60,10 +60,28 @@ class AppsTableViewCell: UITableViewCell {
         contentView.addSubview(versionLabel)
         contentView.addSubview(pillsStackView)
         imageView?.translatesAutoresizingMaskIntoConstraints = true
+        
+        // Apply modern card styling to the cell
+        contentView.applyCardStyle(
+            backgroundColor: UIColor.systemBackground,
+            cornerRadius: 12,
+            shadowEnabled: true,
+            shadowIntensity: 0.1
+        )
+        
+        // Enhance the app name with better typography
+        nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        
+        // Add subtle styling to the image view
+        imageView?.layer.cornerRadius = 10
+        imageView?.layer.cornerCurve = .continuous
+        imageView?.clipsToBounds = true
+        imageView?.layer.borderWidth = 0.5
+        imageView?.layer.borderColor = UIColor.separator.cgColor
 
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: imageView!.trailingAnchor, constant: 15),
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
 
             versionLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             versionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
@@ -73,8 +91,44 @@ class AppsTableViewCell: UITableViewCell {
             pillsStackView.leadingAnchor.constraint(equalTo: imageView!.trailingAnchor, constant: 15),
             pillsStackView.topAnchor.constraint(equalTo: versionLabel.bottomAnchor, constant: 10),
             pillsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            pillsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            pillsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
         ])
+    }
+    
+    // Add touch feedback animations
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        
+        if animated {
+            UIView.animate(withDuration: 0.1, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
+                self.contentView.transform = highlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+                self.contentView.alpha = highlighted ? 0.9 : 1.0
+            })
+        } else {
+            contentView.transform = highlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+            contentView.alpha = highlighted ? 0.9 : 1.0
+        }
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        if animated {
+            UIView.animate(withDuration: 0.1, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
+                self.contentView.transform = selected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+            })
+        } else {
+            contentView.transform = selected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            // Update shadow for new appearance
+            contentView.layer.shadowColor = UIColor.black.cgColor
+        }
     }
 
     func configure(with app: NSManagedObject, filePath: URL) {

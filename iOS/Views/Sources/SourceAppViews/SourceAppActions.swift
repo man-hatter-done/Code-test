@@ -22,6 +22,20 @@ extension SourceAppViewController {
         guard let downloadURL = getDownloadURL(for: app) else { return }
         let appUUID = app.bundleIdentifier
         
+        // Add pulsing LED effect around button when tapped
+        sender.addLEDEffect(
+            color: UIColor(hex: "#FF6482") ?? .systemPink,
+            intensity: 0.7,
+            spread: 15,
+            animated: true,
+            animationDuration: 0.8
+        )
+        
+        // Remove the effect after a short delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            sender.removeLEDEffect()
+        }
+        
         handleDownloadAction(for: appUUID, at: indexPath, downloadURL: downloadURL)
     }
     
