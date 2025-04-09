@@ -13,11 +13,14 @@ class TerminalViewController: UIViewController {
     private let commandInputView = CommandInputView()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private let toolbar = UIToolbar()
+    private let connectionStatusView = UIView()
     
     // MARK: - Properties
     private let history = CommandHistory()
     private var isExecuting = false
     private let logger = Debug.shared
+    private var isWebSocketConnected = false
+    private var userPreferenceWebSockets = true
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -27,13 +30,79 @@ class TerminalViewController: UIViewController {
         setupKeyboardNotifications()
         setupActions()
         
+        // Load user preferences
+        loadUserPreferences()
+        
         // Load command history
         history.loadHistory()
         
-        // Welcome message
-        appendToTerminal("Terminal Ready\n$ ", isInput: false)
+        // Check WebSocket connection status
+        updateConnectionStatus()
+        
+        // Update title to reflect current connection mode
+        updateTitle()
+        
+        // Set up periodic connection status check
+        setupConnectionStatusTimer()
+        
+        // Welcome message with connection info
+        let connectionInfo = isWebSocketConnected ? "WebSocket Connected" : "HTTP Mode"
+        appendToTerminal("Terminal Ready [\(connectionInfo)]\n$ ", isInput: false)
         
         logger.log(message: "Terminal view controller loaded", type: .info)
+    }
+    
+    private func loadUserPreferences() {
+        // Load WebSocket preference from UserDefaults
+        if UserDefaults.standard.object(forKey: "terminal_websocket_enabled") != nil {
+            userPreferenceWebSockets = UserDefaults.standard.bool(forKey: "terminal_websocket_enabled")
+        } else {
+            // Default to true if not set previously
+            userPreferenceWebSockets = true
+            UserDefaults.standard.set(true, forKey: "terminal_websocket_enabled")
+        }
+        
+        logger.log(message: "Loaded WebSocket preference: \(userPreferenceWebSockets)", type: .debug)
+    }
+    
+    private func saveUserPreferences() {
+        // Save WebSocket preference to UserDefaults
+        UserDefaults.standard.set(userPreferenceWebSockets, forKey: "terminal_websocket_enabled")
+    }
+    
+    private func setupConnectionStatusTimer() {
+        // Update connection status every 3 seconds
+        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            
+            let wasConnected = self.isWebSocketConnected
+            self.updateConnectionStatus()
+            
+            // If connection status changed, inform the user
+            if wasConnected != self.isWebSocketConnected {
+                DispatchQueue.main.async {
+                    if self.isWebSocketConnected {
+                        self.appendToTerminal("\nWebSocket connection established\n$ ", isInput: false)
+                    } else if self.userPreferenceWebSockets {
+                        self.appendToTerminal("\nWebSocket disconnected, using HTTP fallback\n$ ", isInput: false)
+                    }
+                    
+                    // Update title to reflect current status
+                    self.updateTitle()
+                }
+            }
+        }
+    }
+    
+    private func updateTitle() {
+        // Update navigation title to include connection mode
+        if isWebSocketConnected {
+            self.title = "Terminal [WebSocket]"
+        } else if !userPreferenceWebSockets {
+            self.title = "Terminal [HTTP]"
+        } else {
+            self.title = "Terminal [HTTP - Reconnecting]"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,6 +167,11 @@ class TerminalViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.color = .systemBlue
         
+        // Connection status indicator setup
+        connectionStatusView.layer.cornerRadius = 5
+        connectionStatusView.layer.masksToBounds = true
+        updateConnectionStatus()
+        
         // Toolbar setup
         setupToolbar()
         
@@ -105,6 +179,48 @@ class TerminalViewController: UIViewController {
         view.addSubview(terminalOutputTextView)
         view.addSubview(commandInputView)
         view.addSubview(activityIndicator)
+        view.addSubview(connectionStatusView)
+    }
+    
+    private func updateConnectionStatus() {
+        // Check if WebSocket is connected, respecting user preference
+        isWebSocketConnected = userPreferenceWebSockets && TerminalService.shared.isWebSocketActive
+        
+        // Update connection status indicator
+        if isWebSocketConnected {
+            connectionStatusView.backgroundColor = .systemGreen
+        } else if !userPreferenceWebSockets {
+            // Red when user has disabled WebSockets
+            connectionStatusView.backgroundColor = .systemRed
+        } else {
+            // Gray when WebSockets are enabled but not connected
+            connectionStatusView.backgroundColor = .systemGray
+        }
+        
+        // Update toolbar buttons to reflect current status
+        updateToolbarButtons()
+    }
+    
+    @objc private func toggleWebSocketMode() {
+        // Toggle user preference for WebSockets
+        userPreferenceWebSockets = !userPreferenceWebSockets
+        
+        // Save the preference
+        saveUserPreferences()
+        
+        // Update connection status
+        updateConnectionStatus()
+        
+        // Update title to reflect new mode
+        updateTitle()
+        
+        // Inform the user about the change
+        let message = userPreferenceWebSockets 
+            ? "WebSocket mode enabled" 
+            : "WebSocket mode disabled, using HTTP fallback"
+        
+        logger.log(message: message, type: .info)
+        appendToTerminal("\n\(message)\n$ ", isInput: false)
     }
     
     private func setupToolbar() {
@@ -149,15 +265,36 @@ class TerminalViewController: UIViewController {
         )
         ctrlCButton.accessibilityLabel = "Interrupt Command"
         
-        toolbar.items = [clearButton, flexSpace, historyUpButton, historyDownButton, flexSpace, tabButton, flexSpace, ctrlCButton]
+        // WebSocket toggle button
+        let wsImage = UIImage(systemName: isWebSocketConnected ? "antenna.radiowaves.left.and.right" : "antenna.radiowaves.left.and.right.slash")
+        let wsButton = UIBarButtonItem(
+            image: wsImage,
+            style: .plain,
+            target: self,
+            action: #selector(toggleWebSocketMode)
+        )
+        wsButton.accessibilityLabel = isWebSocketConnected ? "Disable WebSocket" : "Enable WebSocket"
+        
+        toolbar.items = [clearButton, flexSpace, historyUpButton, historyDownButton, flexSpace, tabButton, flexSpace, ctrlCButton, flexSpace, wsButton]
         toolbar.sizeToFit()
         commandInputView.inputAccessoryView = toolbar
+    }
+    
+    private func updateToolbarButtons() {
+        guard let items = toolbar.items else { return }
+        
+        // Update WebSocket toggle button (last item)
+        if let wsButton = items.last {
+            wsButton.image = UIImage(systemName: isWebSocketConnected ? "antenna.radiowaves.left.and.right" : "antenna.radiowaves.left.and.right.slash")
+            wsButton.accessibilityLabel = isWebSocketConnected ? "Disable WebSocket" : "Enable WebSocket"
+        }
     }
     
     private func setupConstraints() {
         terminalOutputTextView.translatesAutoresizingMaskIntoConstraints = false
         commandInputView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        connectionStatusView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             // Terminal output
@@ -174,7 +311,13 @@ class TerminalViewController: UIViewController {
             
             // Activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            // Connection status indicator
+            connectionStatusView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            connectionStatusView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            connectionStatusView.widthAnchor.constraint(equalToConstant: 10),
+            connectionStatusView.heightAnchor.constraint(equalToConstant: 10)
         ])
     }
     
@@ -211,24 +354,95 @@ class TerminalViewController: UIViewController {
         isExecuting = true
         activityIndicator.startAnimating()
         
-        TerminalService.shared.executeCommand(command) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                
-                self.activityIndicator.stopAnimating()
-                self.isExecuting = false
-                
-                switch result {
-                case .success(let output):
-                    self.appendToTerminal(output, isInput: false)
-                case .failure(let error):
-                    self.appendToTerminal("Error: \(error.localizedDescription)", isInput: false)
+        // Use streaming if WebSocket is connected
+        if isWebSocketConnected {
+            // Create a stream handler to receive real-time updates
+            let streamHandler: (String) -> Void = { [weak self] outputChunk in
+                DispatchQueue.main.async {
+                    guard let self = self, self.isExecuting else { return }
+                    self.appendToTerminalStreaming(outputChunk)
                 }
-                
-                self.appendToTerminal("\n$ ", isInput: false)
-                self.scrollToBottom()
+            }
+            
+            logger.log(message: "Executing command with WebSocket streaming: \(command)", type: .info)
+            
+            // Execute with streaming support
+            TerminalService.shared.executeCommand(command, streamHandler: streamHandler) { [weak self] result in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    
+                    self.activityIndicator.stopAnimating()
+                    self.isExecuting = false
+                    
+                    switch result {
+                    case .success:
+                        // Terminal output already updated incrementally via streamHandler
+                        break
+                    case .failure(let error):
+                        self.appendToTerminal("\nError: \(error.localizedDescription)", isInput: false)
+                    }
+                    
+                    self.appendToTerminal("\n$ ", isInput: false)
+                    self.scrollToBottom()
+                }
+            }
+        } else {
+            // Legacy HTTP-based execution without streaming
+            logger.log(message: "Executing command via HTTP: \(command)", type: .info)
+            
+            TerminalService.shared.executeCommand(command) { [weak self] result in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    
+                    self.activityIndicator.stopAnimating()
+                    self.isExecuting = false
+                    
+                    switch result {
+                    case .success(let output):
+                        self.appendToTerminal(output, isInput: false)
+                    case .failure(let error):
+                        self.appendToTerminal("Error: \(error.localizedDescription)", isInput: false)
+                    }
+                    
+                    self.appendToTerminal("\n$ ", isInput: false)
+                    self.scrollToBottom()
+                }
             }
         }
+    }
+    
+    // Append streaming output to terminal
+    private func appendToTerminalStreaming(_ text: String) {
+        guard !text.isEmpty else { return }
+        
+        // Get the appropriate color based on text type and theme
+        let colorTheme = UserDefaults.standard.integer(forKey: "terminal_color_theme")
+        
+        let outputColor: UIColor
+        switch colorTheme {
+        case 1: // Light theme
+            outputColor = .systemGreen
+        case 2: // Dark theme
+            outputColor = .green
+        case 3: // Solarized
+            outputColor = UIColor(red: 0.52, green: 0.6, blue: 0.0, alpha: 1.0)
+        default: // Default theme
+            outputColor = traitCollection.userInterfaceStyle == .dark ? .green : .systemGreen
+        }
+        
+        // Create attributed string for the new chunk
+        let attributedString = NSMutableAttributedString(string: text)
+        attributedString.addAttribute(.foregroundColor, 
+                                     value: outputColor, 
+                                     range: NSRange(location: 0, length: text.count))
+        
+        // Append to existing text
+        let newAttributedText = NSMutableAttributedString(attributedString: terminalOutputTextView.attributedText ?? NSAttributedString())
+        newAttributedText.append(attributedString)
+        terminalOutputTextView.attributedText = newAttributedText
+        
+        // Scroll to bottom with each update for real-time feedback
+        scrollToBottom()
     }
     
     private func appendToTerminal(_ text: String, isInput: Bool) {
