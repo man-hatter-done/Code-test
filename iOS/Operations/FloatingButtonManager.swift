@@ -522,41 +522,94 @@ final class FloatingButtonManager {
             return
         }
 
+        // Use a background task ID to ensure we have time to complete the task
+        var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
+        backgroundTaskID = UIApplication.shared.beginBackgroundTask {
+            // End the task if we run out of time
+            if backgroundTaskID != .invalid {
+                UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                backgroundTaskID = .invalid
+            }
+        }
+
         // Prepare chat data on background queue
-        processingQueue.async { [weak self] in
-            guard let self = self else { return }
+        processingQueue.async { [weak self, weak topVC] in
+            guard let self = self else {
+                // End background task if we've been deallocated
+                if backgroundTaskID != .invalid {
+                    UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                }
+                return
+            }
 
             do {
+                // First verify the context exists with a try-catch
+                guard let topVCStillValid = topVC, !topVCStillValid.isBeingDismissed else {
+                    throw NSError(domain: "com.backdoor.floatingButton", code: 1, 
+                                 userInfo: [NSLocalizedDescriptionKey: "View controller no longer valid"])
+                }
+                
                 // Update AI context
-                AppContextManager.shared.updateContext(topVC)
+                AppContextManager.shared.updateContext(topVCStillValid)
                 CustomAIContextProvider.shared.refreshContext()
 
-                // Create a new chat session
+                // Create a new chat session with error handling
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
                 dateFormatter.timeStyle = .short
                 let timestamp = dateFormatter.string(from: Date())
                 let title = "Chat on \(timestamp)"
 
-                // Create the session
-                let session = try CoreDataManager.shared.createAIChatSession(title: title)
+                // Create the session with explicit error handling
+                guard let session = try? CoreDataManager.shared.createAIChatSession(title: title) else {
+                    throw NSError(domain: "com.backdoor.floatingButton", code: 2, 
+                                 userInfo: [NSLocalizedDescriptionKey: "Failed to create chat session"])
+                }
 
                 // Present the UI on the main thread
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.presentChatInterfaceSafely(with: session, from: topVC)
+                DispatchQueue.main.async { [weak self, weak topVCStillValid] in
+                    guard let self = self else {
+                        if backgroundTaskID != .invalid {
+                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        }
+                        return
+                    }
+                    
+                    // Verify view controller is still valid before presentation
+                    if let validTopVC = topVCStillValid, !validTopVC.isBeingDismissed {
+                        self.presentChatInterfaceSafely(with: session, from: validTopVC)
+                    } else {
+                        // Reset state if view controller is no longer valid
+                        self.isPresentingChat = false
+                        self.show()
+                        Debug.shared.log(message: "View controller no longer valid for chat presentation", type: .warning)
+                    }
+                    
+                    // End background task
+                    if backgroundTaskID != .invalid {
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        backgroundTaskID = .invalid
+                    }
                 }
             } catch {
                 Debug.shared.log(message: "Failed to create chat session: \(error.localizedDescription)", type: .error)
 
                 // Reset state and show UI feedback on main thread
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.async { [weak self, weak topVC] in
                     guard let self = self else { return }
                     self.isPresentingChat = false
                     self.show() // Show the button again
 
-                    // Show error alert
-                    self.showErrorAlert(message: "Chat initialization failed. Please try again later.", on: topVC)
+                    // Show error alert if view controller is still valid
+                    if let validTopVC = topVC, !validTopVC.isBeingDismissed {
+                        self.showErrorAlert(message: "Chat initialization failed. Please try again later.", on: validTopVC)
+                    }
+                    
+                    // End background task
+                    if backgroundTaskID != .invalid {
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        backgroundTaskID = .invalid
+                    }
                 }
             }
         }

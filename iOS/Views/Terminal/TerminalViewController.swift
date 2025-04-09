@@ -330,6 +330,13 @@ class TerminalViewController: UIViewController {
     }
     
     @objc private func dismissTerminal() {
+        // Post notification to restore floating terminal button before dismissing
+        NotificationCenter.default.post(name: .showTerminalButton, object: nil)
+        
+        // Log dismissal
+        logger.log(message: "Terminal dismissed, floating button restored", type: .info)
+        
+        // Dismiss the terminal view controller
         dismiss(animated: true)
     }
 }

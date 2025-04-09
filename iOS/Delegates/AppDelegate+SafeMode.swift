@@ -98,9 +98,15 @@ extension AppDelegate {
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "Restart Now", style: .destructive) { _ in
-            // Properly terminate the app instead of using exit(0)
-            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+        alert.addAction(UIAlertAction(title: "Restart Now", style: .destructive) { [weak self] _ in
+            // Store the safe mode disabled state before restarting
+            UserDefaults.standard.synchronize()
+            
+            // Use proper app termination technique
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                // Request app termination - will restart when the user opens it again
+                UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+            }
         })
         
         alert.addAction(UIAlertAction(title: "Later", style: .cancel))
@@ -110,11 +116,32 @@ extension AppDelegate {
     
     /// Continue in safe mode button handler
     @objc func continueSafeModePressed() {
-        // Set up minimal UI
-        setupWindow()
+        // First ensure we have valid UI state
+        guard window != nil else {
+            Debug.shared.log(message: "Window is nil in continueSafeModePressed", type: .error)
+            return
+        }
         
-        // Set up only essential components
-        setupLimitedFunctionality()
+        do {
+            // Set up minimal UI with error handling
+            setupWindow()
+            
+            // Set up only essential components
+            setupLimitedFunctionality()
+            
+            // Make window visible
+            window?.makeKeyAndVisible()
+            
+            Debug.shared.log(message: "Successfully continued in safe mode", type: .info)
+        } catch {
+            Debug.shared.log(message: "Failed to continue in safe mode: \(error)", type: .error)
+            
+            // Fallback to a simple UI if setup fails
+            let fallbackVC = UIViewController()
+            fallbackVC.view.backgroundColor = .systemBackground
+            window?.rootViewController = fallbackVC
+            window?.makeKeyAndVisible()
+        }
     }
     
     /// Set up limited functionality for safe mode
