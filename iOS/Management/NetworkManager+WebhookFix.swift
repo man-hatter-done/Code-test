@@ -62,7 +62,7 @@ extension NetworkManager {
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: data)
                 
-                NetworkManager.shared.performRequest(request) { (result: Result<Data, Error>) in
+                NetworkManager.shared.sendRequest(request) { (result: Result<Data, Error>) in
                     completion(result)
                 }
             } catch {

@@ -504,7 +504,7 @@ final class CoreMLManager {
         if !modelLoaded {
             loadModel { [weak self] success in
                 if success {
-                    self?.performSentimentAnalysis(text: text, completion: completion)
+                    self?.performSentimentAnalysisInternal(text: text, completion: completion)
                 } else {
                     // No model loaded, provide a neutral default sentiment
                     // This allows the app to keep functioning while we collect data
@@ -518,7 +518,7 @@ final class CoreMLManager {
                 }
             }
         } else {
-            performSentimentAnalysis(text: text, completion: completion)
+            performSentimentAnalysisInternal(text: text, completion: completion)
         }
     }
     
@@ -531,7 +531,7 @@ final class CoreMLManager {
     }
     
     /// Performs sentiment analysis with pattern matching fallback
-    private func performSentimentAnalysis(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
+    private func performSentimentAnalysisInternal(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
         // If model isn't loaded, provide a reasonable default based on text analysis
         guard modelLoaded, let model = mlModel else {
             // Simple pattern matching for sentiment
