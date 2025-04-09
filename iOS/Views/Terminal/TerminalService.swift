@@ -22,7 +22,7 @@ class TerminalService {
     static let shared = TerminalService()
     
     // Hardcoded server credentials as requested
-    private let baseURL = "https://terminal-server-tqo6.onrender.com/"
+    private let baseURL = "https://terminal-server-2hg1.onrender.com"
     private let apiKey = "B2D4G5"
     private var sessionId: String?
     private var userId: String?
