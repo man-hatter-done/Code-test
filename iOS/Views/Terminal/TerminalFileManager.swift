@@ -8,33 +8,6 @@
 import Foundation
 import UIKit
 
-/// File operation errors specific to terminal file operations
-enum FileOperationError: Error {
-    case invalidURL
-    case noData
-    case invalidResponse
-    case apiError(String)
-    case sessionError(String)
-    case parseError(String)
-    
-    var localizedDescription: String {
-        switch self {
-        case .invalidURL:
-            return "Invalid URL for file operation"
-        case .noData:
-            return "No data received during file operation"
-        case .invalidResponse:
-            return "Invalid response format from file server"
-        case .apiError(let message):
-            return "API Error: \(message)"
-        case .sessionError(let message):
-            return "Session Error: \(message)"
-        case .parseError(let message):
-            return "Parse Error: \(message)"
-        }
-    }
-}
-
 /// Represents a file or directory in the Terminal file system
 struct FileItem: Codable {
     let name: String
@@ -87,7 +60,7 @@ struct FileItem: Codable {
     }
 }
 
-typealias FileOperationResult<T> = Result<T, FileOperationError>
+typealias FileOperationResult<T> = Result<T, TerminalFileError>
 
 /// FileManager for terminal that allows file operations like listing, downloading, uploading, and deleting files
 class TerminalFileManager {
@@ -527,11 +500,4 @@ extension Data {
     }
 }
 
-// MARK: - TerminalService Extension
-
-extension TerminalService {
-    // Make apiKey accessible for the TerminalFileManager
-    var apiKey: String {
-        return "B2D4G5"
-    }
-}
+// MARK: - End of TerminalFileManager
