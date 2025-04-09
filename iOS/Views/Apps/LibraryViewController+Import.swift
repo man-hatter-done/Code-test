@@ -99,8 +99,22 @@ extension LibraryViewController: UIDocumentPickerDelegate {
         let dl = AppDownload()
         let uuid = UUID().uuidString
 
+        // Start security-scoped resource access
+        var didStartAccess = false
+        if selectedFileURL.startAccessingSecurityScopedResource() {
+            didStartAccess = true
+            backdoor.Debug.shared.log(message: "Successfully started accessing security-scoped resource", type: LogType.info)
+        } else {
+            backdoor.Debug.shared.log(message: "Failed to start accessing security-scoped resource", type: LogType.warning)
+        }
+
         DispatchQueue.global(qos: .background).async {
             do {
+                // Verify file exists and is valid
+                guard FileManager.default.fileExists(atPath: selectedFileURL.path) else {
+                    throw NSError(domain: "com.backdoor.import", code: 404, userInfo: [NSLocalizedDescriptionKey: "File does not exist at path"])
+                }
+                
                 try handleIPAFile(destinationURL: selectedFileURL, uuid: uuid, dl: dl)
 
                 DispatchQueue.main.async {
@@ -112,7 +126,22 @@ extension LibraryViewController: UIDocumentPickerDelegate {
 
                 DispatchQueue.main.async {
                     self.loaderAlert?.dismiss(animated: true)
+                    
+                    // Show error alert
+                    let errorAlert = UIAlertController(
+                        title: "Import Failed",
+                        message: "Could not import the file: \(error.localizedDescription)",
+                        preferredStyle: .alert
+                    )
+                    errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(errorAlert, animated: true)
                 }
+            }
+            
+            // End security-scoped resource access if we started it
+            if didStartAccess {
+                selectedFileURL.stopAccessingSecurityScopedResource()
+                backdoor.Debug.shared.log(message: "Stopped accessing security-scoped resource", type: LogType.info)
             }
         }
     }

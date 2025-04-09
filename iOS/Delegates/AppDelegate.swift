@@ -75,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
             // Use our new phased initialization approach
             initializeComponentsWithCrashProtection()
             
-            // Check if we need to show the consent screen
+            // Always check if we need to show the consent screen
             if shouldRequestUserConsent() {
                 Debug.shared.log(message: "User consent needed, will present consent screen", type: .info)
                 // Present consent screen after a short delay to ensure UI is ready

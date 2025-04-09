@@ -27,6 +27,7 @@
 		33E5A59B2CC858FE00532930 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E5A59A2CC858FE00532930 /* Language.swift */; };
 		33E5A59D2CC859E400532930 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33BF31642C7C05330087F3D2 /* Localizable.strings */; };
 		33E5A5A02CC85C1B00532930 /* Antoine.md in Resources */ = {isa = PBXBuildFile; fileRef = 33E5A59F2CC85C1B00532930 /* Antoine.md */; };
+		33F7B5C42E2A3EBA001A8765 /* model_1.0.0.mlmodel in Resources */ = {isa = PBXBuildFile; fileRef = 33F7B5C32E2A3EBA001A8765 /* model_1.0.0.mlmodel */; };
 		AA280D952C76AB7400CAC838 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA280D942C76AB7400CAC838 /* MobileCoreServices.framework */; };
 		D0AA9D542BFF02AF00A65D45 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = D0AA9D532BFF02AF00A65D45 /* OpenSSL */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,7 @@
 		33DF8D802C08290F00D6C05F /* HttpSwift_RequestSwift_SocketSwift.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = HttpSwift_RequestSwift_SocketSwift.md; sourceTree = "<group>"; };
 		33E5A59A2CC858FE00532930 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		33E5A59F2CC85C1B00532930 /* Antoine.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Antoine.md; sourceTree = "<group>"; };
+		33F7B5C32E2A3EBA001A8765 /* model_1.0.0.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = model_1.0.0.mlmodel; sourceTree = "<group>"; };
 		5AF393042CFAE1B7001FAF86 /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Localizable.strings; sourceTree = "<group>"; };
 		88DE4CC52CA5A13200D68F1E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AA280D942C76AB7400CAC838 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -75,6 +77,7 @@
 			buildPhase = 33BA37892BF8159F00FF530A /* Resources */;
 			membershipExceptions = (
 				ellekit.deb,
+				model_1.0.0.mlmodel,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -84,7 +87,7 @@
 		338231AE2D7A77E700999AD3 /* Data */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Data; sourceTree = "<group>"; };
 		338231C12D7A77E700999AD3 /* Management */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Management; sourceTree = "<group>"; };
 		338231CC2D7A77E700999AD3 /* Design */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Design; sourceTree = "<group>"; };
-		338231D22D7A77E700999AD3 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (338232182D7A77E800999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 338232192D7A77E800999AD3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+		338231D22D7A77E700999AD3 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (338232182D7A77E800999AD3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 338232192D7A77E800999AD3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; membershipIgnorePatterns = ("model_1.0.0.mlmodel"); };
 		338231DB2D7A77E700999AD3 /* Server */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Server; sourceTree = "<group>"; };
 		338232032D7A77E700999AD3 /* Magic */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Magic; sourceTree = "<group>"; };
 		338232162D7A77E700999AD3 /* Logging */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Logging; sourceTree = "<group>"; };
@@ -122,7 +125,8 @@
 				338231DB2D7A77E700999AD3 /* Server */,
 				338232032D7A77E700999AD3 /* Magic */,
 				338231C12D7A77E700999AD3 /* Management */,
-				338231D22D7A77E700999AD3 /* Resources */,
+  		338231D22D7A77E700999AD3 /* Resources */,
+  				33F7B5C32E2A3EBA001A8765 /* model_1.0.0.mlmodel */,
 				33BE87A62C72F5720044D245 /* SWCompression.md */,
 				33DF8D7C2C0828CF00D6C05F /* Zsign.md */,
 				33DF8D7E2C0828FB00D6C05F /* Nuke.md */,

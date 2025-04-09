@@ -616,6 +616,19 @@ final class FloatingButtonManager {
     }
 
     private func presentChatInterfaceSafely(with session: ChatSession, from presenter: UIViewController) {
+        // Validate the presenter is still valid and not in transition
+        guard !presenter.isBeingDismissed, 
+              !presenter.isBeingPresented, 
+              !presenter.isMovingToParent, 
+              !presenter.isMovingFromParent,
+              presenter.view.window != nil else {
+            Debug.shared.log(message: "Cannot present chat - view controller in invalid state", type: .error)
+            // Reset state and show button again
+            isPresentingChat = false
+            show()
+            return
+        }
+        
         // Create chat view controller with the session
         let chatVC = ChatViewController(session: session)
 

@@ -154,7 +154,7 @@ class SettingsViewController: FRSTableViewController {
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Safety check to prevent crashes
-        guard isInitialized, section < tableData.count else {
+        guard isInitialized, section < tableData.count, tableData[section] != nil else {
             return 0
         }
         return tableData[section].count
@@ -162,10 +162,23 @@ class SettingsViewController: FRSTableViewController {
 
     override func numberOfSections(in _: UITableView) -> Int {
         // Safety check to prevent crashes
-        guard isInitialized else {
+        guard isInitialized, tableData != nil else {
             return 0
         }
         return tableData.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Additional defensive check
+        guard isInitialized, 
+              indexPath.section < tableData.count,
+              indexPath.row < tableData[indexPath.section].count else {
+            // Return empty cell if invalid path
+            return UITableViewCell()
+        }
+        
+        // Continue with normal implementation
+        return super.tableView(tableView, cellForRowAt: indexPath)
     }
 }
 

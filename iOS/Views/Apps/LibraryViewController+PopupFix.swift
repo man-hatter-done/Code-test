@@ -19,7 +19,8 @@ extension LibraryViewController {
                 let customDetent = UISheetPresentationController.Detent.custom { _ in
                     // Base height plus extra space for each button
                     let buttonCount = hasUpdate ? 2 : 4
-                    return CGFloat(90 + (buttonCount * 55))
+                    // Add extra padding to ensure no blank space
+                    return CGFloat(120 + (buttonCount * 60))
                 }
                 sheet.detents = [customDetent]
             } else {
@@ -33,10 +34,25 @@ extension LibraryViewController {
             
             // Fix for blank bar - ensure proper contentInsets
             sheet.largestUndimmedDetentIdentifier = nil
+            
+            // Set additional properties to prevent blank area
+            if #available(iOS 15.0, *) {
+                // Improve sheet appearance by setting edge attachments
+                sheet.selectedDetentIdentifier = sheet.detents.first?.identifier
+                sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                sheet.prefersEdgeAttachedInCompactHeight = true
+            }
         }
         
-        // Use the enhanced popup configuration if available
-        popupVC.configureSheetPresentation(hasUpdate: hasUpdate)
+        // Ensure popupVC is properly configured
+        if popupVC.responds(to: #selector(popupVC.configureSheetPresentation)) {
+            popupVC.configureSheetPresentation(hasUpdate: hasUpdate)
+        }
+        
+        // Fix layout issues by setting needs layout
+        popupVC.view.setNeedsLayout()
+        popupVC.view.layoutIfNeeded()
     }
     
     /// Fixed method to handle signing a downloaded app - ensures sign popup works correctly
