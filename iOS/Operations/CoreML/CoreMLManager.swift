@@ -42,7 +42,21 @@ final class CoreMLManager {
         let fileManager = FileManager.default
         let modelName = "model_1.0.0"
         
-        // 1. First try looking in the app bundle (highest priority)
+        // Log all search paths for debugging
+        Debug.shared.log(message: "Searching for CoreML model: \(modelName).mlmodel", type: .info)
+        
+        // First check the Shared/Resources directory - primary location
+        let sharedResourcesPath = bundle.bundleURL
+            .appendingPathComponent("Shared")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("\(modelName).mlmodel")
+        
+        if fileManager.fileExists(atPath: sharedResourcesPath.path) {
+            Debug.shared.log(message: "CoreML model found in Shared/Resources at: \(sharedResourcesPath.path)", type: .info)
+            return sharedResourcesPath
+        }
+        
+        // 1. Check in the app bundle (highest priority)
         if let modelPath = bundle.path(forResource: modelName, ofType: "mlmodel", inDirectory: "model") {
             let url = URL(fileURLWithPath: modelPath)
             Debug.shared.log(message: "CoreML model found in bundle (model directory) at path: \(modelPath)", type: .info)
@@ -67,10 +81,30 @@ final class CoreMLManager {
             return resourcesModelPath
         }
         
-        // 4. Check multiple project directory paths
+        // 4. Check for the model in the main bundle resources directly
+        if let resourceURL = bundle.resourceURL {
+            let directResourcePath = resourceURL.appendingPathComponent("\(modelName).mlmodel")
+            if fileManager.fileExists(atPath: directResourcePath.path) {
+                Debug.shared.log(message: "CoreML model found directly in bundle resources at: \(directResourcePath.path)", type: .info)
+                return directResourcePath
+            }
+        }
+        
+        // Log the bundle path to help with debugging
+        Debug.shared.log(message: "Bundle path: \(bundle.bundlePath)", type: .info)
+        Debug.shared.log(message: "Bundle URL: \(bundle.bundleURL.path)", type: .info)
+        if let resourceURL = bundle.resourceURL {
+            Debug.shared.log(message: "Resource URL: \(resourceURL.path)", type: .info)
+        }
+        
+        // 5. Check multiple project directory paths
         let possibleModelPaths = [
             // Project root model directory
             getModelDirectoryPath().appendingPathComponent("\(modelName).mlmodel"),
+            
+            // Look in the documents directory
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("\(modelName).mlmodel"),
             
             // Repository root
             URL(fileURLWithPath: "./model/\(modelName).mlmodel"),
@@ -80,7 +114,7 @@ final class CoreMLManager {
             
             // Workspace paths for various environments
             URL(fileURLWithPath: "/workspace/model/\(modelName).mlmodel"),
-            URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model/\(modelName).mlmodel"),
+            URL(fileURLWithPath: "/workspace/Main-repo-bdg/Code-test/model/\(modelName).mlmodel"),
             
             // iOS Resources path (for build systems)
             bundle.bundleURL
@@ -89,8 +123,19 @@ final class CoreMLManager {
                 .appendingPathComponent("iOS")
                 .appendingPathComponent("Resources")
                 .appendingPathComponent("model")
+                .appendingPathComponent("\(modelName).mlmodel"),
+                
+            // Check in Shared directory
+            bundle.bundleURL
+                .appendingPathComponent("Shared")
                 .appendingPathComponent("\(modelName).mlmodel")
         ]
+        
+        // Log all possible paths
+        Debug.shared.log(message: "Checking additional paths for CoreML model:", type: .info)
+        for (index, path) in possibleModelPaths.enumerated() {
+            Debug.shared.log(message: "  Path \(index+1): \(path.path)", type: .debug)
+        }
         
         // Check each path
         for path in possibleModelPaths {
@@ -99,6 +144,9 @@ final class CoreMLManager {
                 return path
             }
         }
+        
+        // If still not found, log the error with detailed information
+        Debug.shared.log(message: "CoreML model not found in any expected location. Using ModelFileManager as fallback.", type: .warning)
         
         // If still not found, try using the enhanced search in ModelFileManager
         return nil

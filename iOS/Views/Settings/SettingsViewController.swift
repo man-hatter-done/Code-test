@@ -70,17 +70,13 @@ class SettingsViewController: FRSTableViewController {
         // Set the title immediately for better user experience
         self.title = String.localized("TAB_SETTINGS")
 
-        // Initialize settings without try-catch since these methods don't throw
-        initializeTableData()
-        setupNavigation()
-
-        // Mark as initialized
-        isInitialized = true
-
-        backdoor.Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
-
-        // Error handling moved to specific methods that can throw
-        if !isInitialized {
+        do {
+            // Set up UI with proper error handling
+            try safeInitialize()
+            backdoor.Debug.shared.log(message: "SettingsViewController initialized successfully", type: .info)
+        } catch {
+            backdoor.Debug.shared.log(message: "SettingsViewController initialization failed: \(error)", type: .error)
+            
             // Show an error dialog if initialization fails
             let alert = UIAlertController(
                 title: "Settings Error",
@@ -89,6 +85,20 @@ class SettingsViewController: FRSTableViewController {
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func safeInitialize() throws {
+        // Initialize settings with error handling
+        do {
+            initializeTableData()
+            setupNavigation()
+            
+            // Mark as initialized only if everything succeeds
+            isInitialized = true
+        } catch {
+            isInitialized = false
+            throw error
         }
     }
 
