@@ -102,16 +102,36 @@ extension AppDelegate {
             // Store the safe mode disabled state before restarting
             UserDefaults.standard.synchronize()
             
-            // Use proper app termination technique
+            // Use proper app termination technique with fallback options
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                // Request app termination - will restart when the user opens it again
-                UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+                do {
+                    // Try the primary method using URLSessionTask.suspend selector
+                    UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+                    
+                    // If we're still here after a second, try alternative exit methods
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        // Alternate method 1: exit(0)
+                        exit(0)
+                    }
+                } catch {
+                    Debug.shared.log(message: "Primary app termination failed, using fallback", type: .error)
+                    exit(0)
+                }
             }
         })
         
         alert.addAction(UIAlertAction(title: "Later", style: .cancel))
         
-        window?.rootViewController?.present(alert, animated: true)
+        // Ensure we have a valid root view controller before presenting
+        if let rootVC = window?.rootViewController {
+            rootVC.present(alert, animated: true)
+        } else {
+            Debug.shared.log(message: "Failed to present restart confirmation - no root view controller", type: .error)
+            // Fall back to immediate termination if we can't present the alert
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }
     }
     
     /// Continue in safe mode button handler
@@ -119,7 +139,10 @@ extension AppDelegate {
         // First ensure we have valid UI state
         guard window != nil else {
             Debug.shared.log(message: "Window is nil in continueSafeModePressed", type: .error)
-            return
+            
+            // Create a new window as a fallback
+            window = UIWindow(frame: UIScreen.main.bounds)
+            window?.backgroundColor = .systemBackground
         }
         
         do {
@@ -138,7 +161,34 @@ extension AppDelegate {
             
             // Fallback to a simple UI if setup fails
             let fallbackVC = UIViewController()
+            let titleLabel = UILabel()
+            titleLabel.text = "Backdoor (Safe Mode)"
+            titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+            titleLabel.textAlignment = .center
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            let infoLabel = UILabel()
+            infoLabel.text = "Running in limited functionality mode. Some features are disabled for stability."
+            infoLabel.numberOfLines = 0
+            infoLabel.textAlignment = .center
+            infoLabel.translatesAutoresizingMaskIntoConstraints = false
+            
             fallbackVC.view.backgroundColor = .systemBackground
+            fallbackVC.view.addSubview(titleLabel)
+            fallbackVC.view.addSubview(infoLabel)
+            
+            NSLayoutConstraint.activate([
+                titleLabel.centerXAnchor.constraint(equalTo: fallbackVC.view.centerXAnchor),
+                titleLabel.centerYAnchor.constraint(equalTo: fallbackVC.view.centerYAnchor, constant: -40),
+                titleLabel.leadingAnchor.constraint(equalTo: fallbackVC.view.leadingAnchor, constant: 20),
+                titleLabel.trailingAnchor.constraint(equalTo: fallbackVC.view.trailingAnchor, constant: -20),
+                
+                infoLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                infoLabel.centerXAnchor.constraint(equalTo: fallbackVC.view.centerXAnchor),
+                infoLabel.leadingAnchor.constraint(equalTo: fallbackVC.view.leadingAnchor, constant: 20),
+                infoLabel.trailingAnchor.constraint(equalTo: fallbackVC.view.trailingAnchor, constant: -20)
+            ])
+            
             window?.rootViewController = fallbackVC
             window?.makeKeyAndVisible()
         }

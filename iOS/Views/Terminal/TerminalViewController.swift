@@ -333,6 +333,14 @@ class TerminalViewController: UIViewController {
         // Post notification to restore floating terminal button before dismissing
         NotificationCenter.default.post(name: .showTerminalButton, object: nil)
         
+        // Also post to a more general notification that can be observed by other components
+        NotificationCenter.default.post(name: Notification.Name("TerminalDismissed"), object: nil)
+        
+        // Explicitly tell the FloatingButtonManager to show if available
+        DispatchQueue.main.async {
+            FloatingButtonManager.shared.show()
+        }
+        
         // Log dismissal
         logger.log(message: "Terminal dismissed, floating button restored", type: .info)
         
