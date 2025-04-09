@@ -13,209 +13,191 @@ final class ModelFileManager {
     
     private init() {}
     
-    // Model file name and extension
-    private let modelFileName = "model_1.0.0"
+    // Default model metadata - used only as fallback naming convention
+    private let defaultModelName = "dynamic_model"
     private let modelExtension = "mlmodel"
     
-    /// Copy the model from project directory to Documents directory
-    func prepareMLModel(completion: @escaping (Result<URL, Error>) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            
-            do {
-                // Check if model already exists in Documents
-                if let existingModelURL = self.getModelURLInDocuments() {
-                    DispatchQueue.main.async {
-                        Debug.shared.log(message: "ML model already exists in Documents directory", type: .info)
-                        completion(.success(existingModelURL))
-                    }
-                    return
-                }
-                
-                // Find model in project directory
-                guard let sourceModelURL = self.findModelInProjectDirectory() else {
-                    throw ModelError.modelNotFound
-                }
-                
-                // Create destination URL in Documents directory
-                let docsURL = try FileManager.default.url(
-                    for: .documentDirectory,
-                    in: .userDomainMask,
-                    appropriateFor: nil,
-                    create: true
-                )
-                let modelsDir = docsURL.appendingPathComponent("Models", isDirectory: true)
-                
-                // Create Models directory if it doesn't exist
-                try FileManager.default.createDirectory(
-                    at: modelsDir,
-                    withIntermediateDirectories: true,
-                    attributes: nil
-                )
-                
-                let destinationURL = modelsDir.appendingPathComponent("\(modelFileName).\(modelExtension)")
-                
-                // Copy the file
-                try FileManager.default.copyItem(at: sourceModelURL, to: destinationURL)
-                
-                DispatchQueue.main.async {
-                    Debug.shared.log(message: "ML model successfully copied to Documents directory", type: .info)
-                    completion(.success(destinationURL))
-                }
-                
-            } catch {
-                DispatchQueue.main.async {
-                    Debug.shared.log(message: "Failed to prepare ML model: \(error.localizedDescription)", type: .error)
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-    
-    /// Get URL to model in Documents directory if it exists
-    func getModelURLInDocuments() -> URL? {
+    /// Get or set up the models directory in the Documents folder
+    private func getModelDirectory() -> URL? {
         do {
             let docsURL = try FileManager.default.url(
                 for: .documentDirectory,
                 in: .userDomainMask,
                 appropriateFor: nil,
-                create: false
+                create: true
             )
-            let modelsDir = docsURL.appendingPathComponent("Models", isDirectory: true)
-            let modelURL = modelsDir.appendingPathComponent("\(modelFileName).\(modelExtension)")
             
-            if FileManager.default.fileExists(atPath: modelURL.path) {
-                return modelURL
+            // We'll use two model directories:
+            // 1. AIModels - for models created by AILearningManager
+            // 2. Models - as a fallback for backward compatibility
+            let modelsDir = docsURL.appendingPathComponent("AIModels", isDirectory: true)
+            
+            // Create directory if it doesn't exist
+            if !FileManager.default.fileExists(atPath: modelsDir.path) {
+                try FileManager.default.createDirectory(
+                    at: modelsDir,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
             }
-            return nil
+            
+            return modelsDir
+            
         } catch {
-            Debug.shared.log(message: "Error checking Documents directory for model: \(error.localizedDescription)", type: .error)
+            Debug.shared.log(message: "Error getting/creating AI models directory: \(error.localizedDescription)", type: .error)
             return nil
         }
     }
     
-    /// Find the model file in various possible locations in the project
-    private func findModelInProjectDirectory() -> URL? {
-        // Get current bundle and file manager
-        let bundle = Bundle.main
-        let fileManager = FileManager.default
+    /// Check for user-generated models in the documents directory
+    func findUserGeneratedModel() -> URL? {
+        Debug.shared.log(message: "Looking for user-generated models", type: .info)
         
-        // Define a comprehensive set of possible locations to check
-        var possibleLocations: [URL] = []
-        
-        // 0. Check the Shared/Resources directory first (highest priority)
-        possibleLocations.append(bundle.bundleURL
-            .appendingPathComponent("Shared")
-            .appendingPathComponent("Resources")
-            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
-        
-        // 1. Check app bundle resources (high priority)
-        if let bundlePath = bundle.path(forResource: modelFileName, ofType: modelExtension, inDirectory: "model") {
-            possibleLocations.append(URL(fileURLWithPath: bundlePath))
+        guard let modelsDir = getModelDirectory() else {
+            return nil
         }
-        
-        // 2. Check app bundle resources without directory
-        if let bundlePath = bundle.path(forResource: modelFileName, ofType: modelExtension) {
-            possibleLocations.append(URL(fileURLWithPath: bundlePath))
-        }
-        
-        // 3. Check iOS/Resources/model directory
-        possibleLocations.append(bundle.bundleURL
-            .appendingPathComponent("model")
-            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
-        
-        // 4. Check root model directory
-        possibleLocations.append(URL(fileURLWithPath: "./model/\(modelFileName).\(modelExtension)"))
-        
-        // 5. Try the repository root model folder
-        possibleLocations.append(URL(fileURLWithPath: "/model/\(modelFileName).\(modelExtension)"))
-        
-        // 6. Look for the model relative to the bundle in various ways
-        let bundleURL = bundle.bundleURL
-        
-        // 6.1 One level up
-        possibleLocations.append(bundleURL
-            .deletingLastPathComponent()
-            .appendingPathComponent("model")
-            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
-        
-        // 6.2 Two levels up (often project root)
-        possibleLocations.append(bundleURL
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("model")
-            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
-        
-        // 6.3 Check in iOS/Resources/model
-        possibleLocations.append(bundleURL
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("iOS")
-            .appendingPathComponent("Resources")
-            .appendingPathComponent("model")
-            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
-        
-        // 7. Common workspace paths
-        possibleLocations.append(URL(fileURLWithPath: "/workspace/model/\(modelFileName).\(modelExtension)"))
-        possibleLocations.append(URL(fileURLWithPath: "/workspace/Main-final-test-v6_Code-test/model/\(modelFileName).\(modelExtension)"))
-        possibleLocations.append(URL(fileURLWithPath: "/workspace/im-a-test-bdg_Backdoor-v1/model/\(modelFileName).\(modelExtension)"))
-        
-        // Check each location
-        for url in possibleLocations {
-            if fileManager.fileExists(atPath: url.path) {
-                Debug.shared.log(message: "Found ML model at: \(url.path)", type: .info)
-                return url
-            }
-        }
-        
-        // Last resort: recursive search from app bundle parent directory (limited depth)
-        if let url = searchRecursivelyForModel(startingFrom: bundleURL.deletingLastPathComponent(), maxDepth: 4) {
-            return url
-        }
-        
-        Debug.shared.log(message: "ML model not found in any expected location", type: .error)
-        return nil
-    }
-    
-    /// Search recursively for the model file (with depth limit)
-    private func searchRecursivelyForModel(startingFrom directory: URL, maxDepth: Int) -> URL? {
-        guard maxDepth > 0 else { return nil }
-        
-        let fileManager = FileManager.default
-        let targetFileName = "\(modelFileName).\(modelExtension)"
         
         do {
-            // Get contents of the directory
-            let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            // Check the directory for model files
+            let fileManager = FileManager.default
+            let contents = try fileManager.contentsOfDirectory(at: modelsDir, includingPropertiesForKeys: nil)
             
-            // Check for the model file
-            for url in contents {
-                if url.lastPathComponent == targetFileName {
-                    Debug.shared.log(message: "Found ML model through recursive search: \(url.path)", type: .info)
-                    return url
+            // First look for mlmodel files
+            let modelFiles = contents.filter { 
+                $0.pathExtension == modelExtension
+            }.sorted { (url1, url2) -> Bool in
+                // Sort by modification date (newest first)
+                guard let date1 = try? url1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate,
+                      let date2 = try? url2.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate else {
+                    return false
+                }
+                return date1 > date2
+            }
+            
+            if let latestModel = modelFiles.first {
+                Debug.shared.log(message: "Found user-generated model: \(latestModel.lastPathComponent)", type: .info)
+                return latestModel
+            }
+            
+            // If no .mlmodel files, check for compiled .mlmodelc directories as fallback
+            let compiledModelDirs = contents.filter {
+                $0.pathExtension == "mlmodelc" && $0.hasDirectoryPath
+            }.sorted { (url1, url2) -> Bool in
+                // Sort by modification date (newest first)
+                guard let date1 = try? url1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate,
+                      let date2 = try? url2.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate else {
+                    return false
+                }
+                return date1 > date2
+            }
+            
+            if let latestCompiledModel = compiledModelDirs.first {
+                Debug.shared.log(message: "Found compiled user-generated model: \(latestCompiledModel.lastPathComponent)", type: .info)
+                return latestCompiledModel
+            }
+            
+            // Check the legacy Models directory as fallback
+            let legacyModelsDir = modelsDir.deletingLastPathComponent().appendingPathComponent("Models", isDirectory: true)
+            
+            if fileManager.fileExists(atPath: legacyModelsDir.path) {
+                let legacyContents = try fileManager.contentsOfDirectory(at: legacyModelsDir, includingPropertiesForKeys: nil)
+                let legacyModels = legacyContents.filter { $0.pathExtension == modelExtension }
+                
+                if let legacyModel = legacyModels.first {
+                    Debug.shared.log(message: "Found legacy model: \(legacyModel.lastPathComponent)", type: .info)
+                    return legacyModel
                 }
             }
             
-            // Look for a "model" directory
-            if let modelDir = contents.first(where: { $0.lastPathComponent == "model" && $0.hasDirectoryPath }) {
-                let modelFileURL = modelDir.appendingPathComponent(targetFileName)
-                if fileManager.fileExists(atPath: modelFileURL.path) {
-                    Debug.shared.log(message: "Found ML model in model directory: \(modelFileURL.path)", type: .info)
-                    return modelFileURL
-                }
-            }
-            
-            // Recursively search subdirectories (with limited depth)
-            for url in contents where url.hasDirectoryPath {
-                if let found = searchRecursivelyForModel(startingFrom: url, maxDepth: maxDepth - 1) {
-                    return found
-                }
-            }
         } catch {
-            // Silently ignore directory access errors during recursive search
+            Debug.shared.log(message: "Error searching for user-generated models: \(error.localizedDescription)", type: .error)
         }
         
+        Debug.shared.log(message: "No user-generated models found", type: .info)
         return nil
+    }
+    
+    /// Create a URL for a new model file with timestamp
+    func createModelURL(versionSuffix: String? = nil) -> URL? {
+        guard let modelsDir = getModelDirectory() else {
+            return nil
+        }
+        
+        // Create a timestamped model name for uniqueness
+        let timestamp = Int(Date().timeIntervalSince1970)
+        let suffix = versionSuffix ?? "\(timestamp)"
+        let modelFileName = "\(defaultModelName)_\(suffix).\(modelExtension)"
+        
+        return modelsDir.appendingPathComponent(modelFileName)
+    }
+    
+    /// Setup the initial model directory structure
+    func setupModelDirectories() {
+        // Just ensure the directories exist
+        _ = getModelDirectory()
+        
+        // Create a legacy directory for backward compatibility
+        do {
+            let docsURL = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            
+            let legacyDir = docsURL.appendingPathComponent("Models", isDirectory: true)
+            
+            if !FileManager.default.fileExists(atPath: legacyDir.path) {
+                try FileManager.default.createDirectory(
+                    at: legacyDir,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+            }
+        } catch {
+            Debug.shared.log(message: "Error creating legacy model directory: \(error.localizedDescription)", type: .error)
+        }
+    }
+    
+    /// Copy a model file to the models directory
+    func copyModelToDocuments(from sourceURL: URL, versionSuffix: String? = nil) -> URL? {
+        guard let destinationURL = createModelURL(versionSuffix: versionSuffix) else {
+            return nil
+        }
+        
+        do {
+            try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
+            Debug.shared.log(message: "Successfully copied model to: \(destinationURL.path)", type: .info)
+            return destinationURL
+        } catch {
+            Debug.shared.log(message: "Failed to copy model: \(error.localizedDescription)", type: .error)
+            return nil
+        }
+    }
+    
+    /// Prepare the model system - now focused on user-generated models
+    func prepareMLModel(completion: @escaping (Result<URL?, Error>) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            // Set up the directory structure first
+            self.setupModelDirectories()
+            
+            // Look for existing user-generated models
+            if let userModel = self.findUserGeneratedModel() {
+                DispatchQueue.main.async {
+                    completion(.success(userModel))
+                }
+                return
+            }
+            
+            // No models found, but directories are ready - that's okay now
+            // We'll build a model dynamically later when we have enough data
+            DispatchQueue.main.async {
+                Debug.shared.log(message: "No models available yet. System prepared for dynamic model creation.", type: .info)
+                completion(.success(nil))
+            }
+        }
     }
 }
 
@@ -223,13 +205,19 @@ final class ModelFileManager {
 enum ModelError: Error, LocalizedError {
     case modelNotFound
     case copyFailed
+    case directoryCreationFailed
+    case insufficientTrainingData
     
     var errorDescription: String? {
         switch self {
         case .modelNotFound:
-            return "CoreML model file not found in expected locations"
+            return "No CoreML model available yet - one will be created based on your usage"
         case .copyFailed:
             return "Failed to copy CoreML model to Documents directory"
+        case .directoryCreationFailed:
+            return "Failed to create directory for AI models"
+        case .insufficientTrainingData:
+            return "Not enough data available to create a custom AI model yet"
         }
     }
 }
