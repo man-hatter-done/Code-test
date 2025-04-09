@@ -116,12 +116,12 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         return button
     }()
     
-    /// Open in browser button
-    private let browserButton: UIButton = {
+    /// Theme toggle button (light/dark mode)
+    private let themeButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-        button.setImage(UIImage(systemName: "safari", withConfiguration: imageConfig), for: .normal)
+        button.setImage(UIImage(systemName: "sun.max.fill", withConfiguration: imageConfig), for: .normal)
         button.tintColor = .label
         button.backgroundColor = .clear
         button.layer.cornerRadius = 15
@@ -139,22 +139,53 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         return stackView
     }()
     
-    /// Search bar for URL input and search
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.placeholder = "Search or enter URL"
-        searchBar.searchBarStyle = .minimal
-        searchBar.autocapitalizationType = .none
-        searchBar.autocorrectionType = .no
-        searchBar.returnKeyType = .go
+    /// BDG Hub branded logo view
+    private let logoView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         
-        // Improve appearance
-        searchBar.searchTextField.backgroundColor = UIColor.secondarySystemBackground
-        searchBar.searchTextField.layer.cornerRadius = 10
-        searchBar.searchTextField.font = UIFont.systemFont(ofSize: 15)
+        // Create label for title
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "BDG HUB"
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        titleLabel.textColor = UIColor(hex: "#FF6482") // Pink accent color
         
-        return searchBar
+        // Create sparkle icon
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+        imageView.image = UIImage(systemName: "sparkles", withConfiguration: config)
+        imageView.tintColor = UIColor(hex: "#FF6482")
+        imageView.contentMode = .scaleAspectFit
+        
+        // Add to container
+        view.addSubview(imageView)
+        view.addSubview(titleLabel)
+        
+        // Layout
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 24),
+            imageView.widthAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        return view
+    }()
+    
+    /// Visual enhancement - pulse effect view that appears when page loads
+    private let pulseEffectView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(hex: "#FF6482").withAlphaComponent(0.15)
+        view.layer.cornerRadius = 40
+        view.alpha = 0
+        return view
     }()
     
     // MARK: - Properties
@@ -179,22 +210,34 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         webView.navigationDelegate = self
         webView.scrollView.delegate = self
         refreshControl.addTarget(self, action: #selector(refreshWebView), for: .valueChanged)
-        searchBar.delegate = self
         
         // Set up button actions
         backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(goForward), for: .touchUpInside)
         reloadButton.addTarget(self, action: #selector(reloadPage), for: .touchUpInside)
         shareButton.addTarget(self, action: #selector(sharePage), for: .touchUpInside)
-        browserButton.addTarget(self, action: #selector(openInBrowser), for: .touchUpInside)
+        themeButton.addTarget(self, action: #selector(toggleTheme), for: .touchUpInside)
         
         // Add haptic feedback to buttons
-        [backButton, forwardButton, reloadButton, shareButton, browserButton].forEach { button in
+        [backButton, forwardButton, reloadButton, shareButton, themeButton].forEach { button in
             button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         }
         
         // Update button states initially
         updateButtonStates()
+        
+        // Update theme button icon based on current mode
+        updateThemeButtonIcon()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            // Update UI for dark/light mode changes
+            floatingButtonsContainer.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.9)
+            updateThemeButtonIcon()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -227,37 +270,65 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
     }
     
     private func setupNavigationBar() {
-        navigationItem.titleView = searchBar
+        // Use branded logo view instead of search bar
+        navigationItem.titleView = logoView
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        // Add "Home" button to navigation bar
+        // Make the logo pulse slightly to draw attention
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.animateLogo()
+        }
+        
+        // Add a themed button to the navigation bar for home
         let homeButton = UIBarButtonItem(
             image: UIImage(systemName: "house.fill"),
             style: .plain,
             target: self,
             action: #selector(goHome)
         )
+        homeButton.tintColor = UIColor(hex: "#FF6482")
         navigationItem.rightBarButtonItem = homeButton
+    }
+    
+    private func animateLogo() {
+        UIView.animate(withDuration: 0.7, delay: 0, options: [.autoreverse, .repeat, .curveEaseInOut], animations: {
+            self.logoView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+        }, completion: nil)
+    }
+    
+    private func showSuccessAnimation() {
+        // Reset the pulse view
+        pulseEffectView.alpha = 0.8
+        pulseEffectView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        
+        // Animate it growing and fading out
+        UIView.animate(withDuration: 0.8, delay: 0, options: .curveEaseOut, animations: {
+            self.pulseEffectView.alpha = 0
+            self.pulseEffectView.transform = CGAffineTransform(scaleX: 2.5, y: 2.5)
+        }, completion: { _ in
+            self.pulseEffectView.transform = .identity
+        })
     }
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
-        // Add webView and progressView
+        // Add webView, progressView, and pulse effect view
         view.addSubview(webView)
         view.addSubview(progressView)
+        view.addSubview(pulseEffectView)
         
         // Add floating controls container with blur effect
         view.addSubview(floatingButtonsContainer)
         floatingButtonsContainer.addSubview(blurEffectView)
         floatingButtonsContainer.addSubview(buttonStackView)
         
-        // Add buttons to stack view
+        // Add buttons to stack view - using theme toggle instead of browser button
         buttonStackView.addArrangedSubview(backButton)
         buttonStackView.addArrangedSubview(forwardButton)
         buttonStackView.addArrangedSubview(reloadButton)
         buttonStackView.addArrangedSubview(shareButton)
-        buttonStackView.addArrangedSubview(browserButton)
+        buttonStackView.addArrangedSubview(themeButton)
         
         // Set constraints for webView
         NSLayoutConstraint.activate([
@@ -273,6 +344,14 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
             progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             progressView.heightAnchor.constraint(equalToConstant: 2)
+        ])
+        
+        // Set constraints for pulse effect view
+        NSLayoutConstraint.activate([
+            pulseEffectView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pulseEffectView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pulseEffectView.widthAnchor.constraint(equalToConstant: 80),
+            pulseEffectView.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         // Set constraints for blur effect
@@ -304,6 +383,18 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         
         // Apply initial button states
         updateButtonStates()
+        
+        // Update theme button icon based on current mode
+        updateThemeButtonIcon()
+    }
+    
+    private func updateThemeButtonIcon() {
+        let currentStyle = traitCollection.userInterfaceStyle
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+        
+        // Set the appropriate icon based on current mode
+        let iconName = currentStyle == .dark ? "sun.max.fill" : "moon.fill"
+        themeButton.setImage(UIImage(systemName: iconName, withConfiguration: imageConfig), for: .normal)
     }
     
     private func setupObservers() {
@@ -322,13 +413,8 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(WKWebView.title) {
             if let title = webView.title, !title.isEmpty {
-                self.title = title
-            } else {
-                self.title = "BDG Hub"
-            }
-        } else if keyPath == #keyPath(WKWebView.url) {
-            if let url = webView.url {
-                searchBar.text = url.absoluteString
+                // Don't change navigation title - we're using our custom logo view
+                // But we can use the title for other purposes if needed
             }
         }
     }
@@ -336,17 +422,16 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
     // MARK: - Web Loading Methods
     
     private func loadWebsite() {
-        if let savedURL = UserDefaults.standard.url(forKey: "BDGLastVisitedURL") {
-            let request = URLRequest(url: savedURL)
-            webView.load(request)
-        } else {
-            let request = URLRequest(url: homeURL)
-            webView.load(request)
-        }
+        // Always load the home URL - don't save last visited URL
+        // This ensures the user always returns to the main page
+        let request = URLRequest(url: homeURL)
+        webView.load(request)
     }
     
     @objc private func refreshWebView() {
-        webView.reload()
+        // Always reload the home URL
+        let request = URLRequest(url: homeURL)
+        webView.load(request)
     }
     
     @objc private func goBack() {
@@ -366,11 +451,18 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
     @objc private func reloadPage() {
         webView.reload()
         animateButton(reloadButton)
+        
+        // Show pulse animation on reload
+        showSuccessAnimation()
     }
     
     @objc private func goHome() {
+        // Always go to homeURL even if already there (forced refresh)
         let request = URLRequest(url: homeURL)
         webView.load(request)
+        
+        // Show pulse animation on home navigation
+        showSuccessAnimation()
     }
     
     @objc private func sharePage() {
@@ -390,11 +482,29 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         present(activityViewController, animated: true)
     }
     
-    @objc private func openInBrowser() {
-        guard let url = webView.url else { return }
+    @objc private func toggleTheme() {
+        // Toggle between light and dark mode
+        let currentStyle = view.window?.overrideUserInterfaceStyle ?? .unspecified
         
-        let safariVC = SFSafariViewController(url: url)
-        present(safariVC, animated: true)
+        switch currentStyle {
+            case .unspecified, .light:
+                view.window?.overrideUserInterfaceStyle = .dark
+            case .dark:
+                view.window?.overrideUserInterfaceStyle = .light
+            @unknown default:
+                view.window?.overrideUserInterfaceStyle = .unspecified
+        }
+        
+        // Update theme button icon
+        updateThemeButtonIcon()
+        
+        // Provide haptic feedback for theme change
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator.prepare()
+        feedbackGenerator.impactOccurred(intensity: 1.0)
+        
+        // Animate button
+        animateButton(themeButton)
     }
     
     // MARK: - UI Update Methods
@@ -407,12 +517,9 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         forwardButton.isEnabled = webView.canGoForward
         forwardButton.alpha = webView.canGoForward ? 1.0 : 0.4
         
-        // Update buttons for current URL
+        // Update share button for current URL
         shareButton.isEnabled = webView.url != nil
         shareButton.alpha = webView.url != nil ? 1.0 : 0.4
-        
-        browserButton.isEnabled = webView.url != nil
-        browserButton.alpha = webView.url != nil ? 1.0 : 0.4
     }
     
     private func updateProgress(_ value: Double) {
@@ -488,12 +595,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         updateButtonStates()
         refreshControl.endRefreshing()
         
-        // Save the current URL
-        if let url = webView.url {
-            UserDefaults.standard.set(url, forKey: "BDGLastVisitedURL")
-        }
-        
-        // Apply custom stylesheet
+        // Apply custom stylesheet for enhanced appearance
         applyCustomStyleToWebContent()
     }
     
@@ -513,7 +615,35 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        // Handle link clicks, form submissions, etc.
+        // IMPORTANT: Restrict navigation to prevent users from leaving the BDG Hub domain
+        if let url = navigationAction.request.url {
+            // Allow main domain navigation
+            if url.host?.contains("backdoor-bdg.store") == true {
+                decisionHandler(.allow)
+                return
+            }
+            
+            // Allow navigation within the app (back/forward, etc.)
+            if navigationAction.navigationType == .backForward || 
+               navigationAction.navigationType == .reload ||
+               url.scheme == "about" {
+                decisionHandler(.allow)
+                return
+            }
+            
+            // Block navigation to external sites, but allow the page to function normally
+            if navigationAction.targetFrame?.isMainFrame == true {
+                // Show a pulse animation to indicate the action was received
+                showSuccessAnimation()
+                
+                // Optionally show a toast message indicating external links aren't allowed
+                
+                decisionHandler(.cancel)
+                return
+            }
+        }
+        
+        // Default to allowing in-page interactions
         decisionHandler(.allow)
     }
     
@@ -566,21 +696,30 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         button, .button, input[type='button'], input[type='submit'] {
             border-radius: 8px !important;
             transition: transform 0.2s ease, background-color 0.2s ease !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
         
         button:active, .button:active, input[type='button']:active, input[type='submit']:active {
             transform: scale(0.95) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
         }
         
-        /* Improve input field styling */
+        /* Enhanced input field styling */
         input[type='text'], input[type='password'], input[type='email'], input[type='search'], textarea {
             border-radius: 8px !important;
             padding: 10px !important;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1) !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        input:focus, textarea:focus {
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px rgba(255,100,130,0.2) !important;
+            outline: none !important;
         }
         
         /* Add tap highlight effect */
         a, button, .button, input[type='button'], input[type='submit'] {
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+            -webkit-tap-highlight-color: rgba(255,100,130,0.2) !important;
         }
         
         /* Improve scrolling */
@@ -590,12 +729,35 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         
         /* Add subtle animations */
         a, button, .button, input[type='button'], input[type='submit'] {
-            transition: transform 0.2s ease, opacity 0.2s ease !important;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        
+        /* Make cards and containers nicer */
+        .card, .container, .panel, section, article {
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            transition: transform 0.2s ease, box-shadow 0.3s ease !important;
         }
         
         /* Make images nicer */
         img {
-            border-radius: 4px !important;
+            border-radius: 8px !important;
+            transition: transform 0.3s ease !important;
+        }
+        
+        img:hover {
+            transform: scale(1.02) !important;
+        }
+        
+        /* Add accent color to interactive elements */
+        a:focus, button:focus, input:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(255,100,130,0.3) !important;
+        }
+        
+        /* Smooth transitions for dark mode if implemented on the site */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
         }
         """
         
@@ -603,43 +765,85 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         var style = document.createElement('style');
         style.textContent = `\(css)`;
         document.head.appendChild(style);
+        
+        // Handle any site-specific enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add touch-friendly interactive elements
+            document.querySelectorAll('a, button, .button').forEach(function(el) {
+                el.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                el.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
         """
         
         webView.evaluateJavaScript(script, completionHandler: nil)
+        
+        // Apply additional enhanced styles
+        enhanceCustomStylesheet()
     }
 }
 
-// MARK: - UISearchBarDelegate Extension
+// MARK: - Enhanced CSS Styling
 
-extension WebViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchText = searchBar.text, !searchText.isEmpty else { return }
+extension WebViewController {
+    /// Applies enhanced styles to web content for better integration with the app
+    private func enhanceCustomStylesheet() {
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
         
-        var urlString = searchText
-        
-        // Check if the input is a URL or a search term
-        if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
-            // If it contains a dot and no spaces, assume it's a website
-            if urlString.contains(".") && !urlString.contains(" ") {
-                urlString = "https://" + urlString
-            } else {
-                // Otherwise, treat as a search term
-                if let encodedSearch = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                    urlString = "https://www.google.com/search?q=\(encodedSearch)"
-                }
-            }
+        // Add additional custom CSS for specific BDG Hub content
+        let additionalCSS = """
+        /* Enhanced card styling */
+        .card, .panel, .content-box {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+            overflow: hidden;
         }
         
-        // Load the URL
-        if let url = URL(string: urlString) {
-            webView.load(URLRequest(url: url))
+        .card:hover, .panel:hover, .content-box:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
         }
         
-        searchBar.resignFirstResponder()
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.becomeFirstResponder()
+        /* Enhanced buttons with accent color */
+        .primary-button, .main-button, .action-button {
+            background-color: \(isDarkMode ? "#FF6482" : "#FF6482") !important;
+            color: white !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        /* Section dividers with subtle gradient */
+        hr, .divider {
+            height: 2px !important;
+            border: none !important;
+            background: linear-gradient(to right, transparent, \(isDarkMode ? "rgba(255,100,130,0.5)" : "rgba(255,100,130,0.5)"), transparent) !important;
+            margin: 20px 0 !important;
+        }
+        
+        /* Improve text readability */
+        p, .text, article {
+            line-height: 1.6 !important;
+            font-size: 16px !important;
+        }
+        
+        /* Enhance focus states */
+        *:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(255,100,130,0.4) !important;
+        }
+        """
+        
+        let script = """
+        var enhancedStyle = document.createElement('style');
+        enhancedStyle.textContent = `\(additionalCSS)`;
+        document.head.appendChild(enhancedStyle);
+        """
+        
+        webView.evaluateJavaScript(script, completionHandler: nil)
     }
 }
 
