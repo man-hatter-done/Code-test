@@ -522,6 +522,14 @@ final class CoreMLManager {
         }
     }
     
+    /// Performs sentiment analysis with the model
+    /// This method is deprecated - use analyzeSentiment(from:completion:) instead
+    @available(*, deprecated, message: "Use analyzeSentiment(from:completion:) instead")
+    func performSentimentAnalysis(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
+        // Forward to the current implementation
+        analyzeSentiment(from: text, completion: completion)
+    }
+    
     /// Performs sentiment analysis with pattern matching fallback
     private func performSentimentAnalysis(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
         // If model isn't loaded, provide a reasonable default based on text analysis

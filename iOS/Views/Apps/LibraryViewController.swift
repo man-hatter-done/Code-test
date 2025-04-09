@@ -752,6 +752,8 @@ extension LibraryViewController {
     
     // MARK: - Legacy method for backward compatibility
     
+    // This method is kept for compatibility with existing code
+    @available(*, deprecated, message: "Use startSigning(app:) instead")
     @objc func startSigning(meow: NSManagedObject) {
         startSigning(app: meow)
     }

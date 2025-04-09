@@ -16,7 +16,7 @@ extension LibraryViewController {
     ///   - uuid: Unique identifier for the file
     ///   - dl: AppDownload instance to use for processing
     /// - Throws: Any error encountered during file processing
-    func fixedHandleIPAFile(destinationURL: URL, uuid: String, dl: AppDownload) throws {
+    func handleIPAFile(destinationURL: URL, uuid: String, dl: AppDownload) throws {
         // Log the operation
         backdoor.Debug.shared.log(message: "Processing IPA file: \(destinationURL.lastPathComponent)", type: .info)
         
@@ -45,7 +45,7 @@ extension LibraryViewController {
             }
             
             // Add the app to the library
-            dl.addToApps(bundlePath: targetBundle, uuid: uuid, sourceLocation: "Imported File") { [weak self] error in
+            dl.addToApps(bundlePath: targetBundle.path, uuid: uuid, sourceLocation: "Imported File") { [weak self] error in
                 guard let self = self else { return }
                 
                 DispatchQueue.main.async {
