@@ -96,3 +96,12 @@ iOSInjectionProject/
 *.temp
 *.orig
 backdoor.xcodeproj/project.pbxproj.before_cleanup
+
+# Object files and binaries
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
