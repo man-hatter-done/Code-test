@@ -103,7 +103,11 @@ final class ModelFileManager {
         // Define a comprehensive set of possible locations to check
         var possibleLocations: [URL] = []
         
-        // 1. Check app bundle resources first (highest priority)
+        // 0. Check the Shared/Resources directory first (highest priority)
+        possibleLocations.append(bundle.bundleURL
+            .appendingPathComponent("\(modelFileName).\(modelExtension)"))
+        
+        // 1. Check app bundle resources (high priority)
         if let bundlePath = bundle.path(forResource: modelFileName, ofType: modelExtension, inDirectory: "model") {
             possibleLocations.append(URL(fileURLWithPath: bundlePath))
         }
