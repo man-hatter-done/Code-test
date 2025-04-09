@@ -264,30 +264,8 @@ class PopupViewControllerButton: UIButton {
     }
 }
 
-// Helper color extensions
+// Helper color extensions - only isLight() is needed here since lighter/darker are already defined
 extension UIColor {
-    func lighter(by percentage: CGFloat) -> UIColor {
-        return self.adjust(by: abs(percentage))
-    }
-    
-    func darker(by percentage: CGFloat) -> UIColor {
-        return self.adjust(by: -abs(percentage))
-    }
-    
-    private func adjust(by percentage: CGFloat) -> UIColor {
-        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
-        let adjustAmount = percentage / 100
-        
-        return UIColor(
-            red: max(min(red + adjustAmount, 1.0), 0.0),
-            green: max(min(green + adjustAmount, 1.0), 0.0),
-            blue: max(min(blue + adjustAmount, 1.0), 0.0),
-            alpha: alpha
-        )
-    }
-    
     func isLight() -> Bool {
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)

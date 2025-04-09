@@ -68,7 +68,7 @@ final class CustomAIService {
             ModelFileManager.shared.prepareMLModel { [weak self] result in
                 switch result {
                 case .success(let modelURL):
-                    Debug.shared.log(message: "ML model prepared at: \(modelURL.path)", type: .info)
+                    Debug.shared.log(message: "ML model prepared at: \(modelURL?.path ?? "unknown path")", type: .info)
                     
                     // Load the model
                     CoreMLManager.shared.loadModel { success in

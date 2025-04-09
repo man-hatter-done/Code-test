@@ -30,7 +30,7 @@ extension AppContextManager {
         ModelFileManager.shared.prepareMLModel { result in
             switch result {
             case .success(let modelURL):
-                Debug.shared.log(message: "CoreML model prepared successfully at: \(modelURL.path)", type: .info)
+                Debug.shared.log(message: "CoreML model prepared successfully at: \(modelURL?.path ?? "unknown path")", type: .info)
                 
                 // Preload the model to avoid delay during first use
                 CoreMLManager.shared.loadModel { success in

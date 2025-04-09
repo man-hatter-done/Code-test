@@ -203,11 +203,8 @@ class CertImportingViewController: UITableViewController {
             encrypt: encrypt
         )
         
-        if encrypt {
-            Debug.shared.log(message: "Successfully created encrypted backdoor file from p12 and mobileprovision", type: .info)
-        } else {
-            Debug.shared.log(message: "Successfully created legacy backdoor file from p12 and mobileprovision", type: .info)
-        }
+        let messageType = encrypt ? "encrypted" : "legacy"
+        Debug.shared.log(message: "Successfully created \(messageType) backdoor file from p12 and mobileprovision", type: .info)
     }
 
     @objc func textFieldDidChange(_ textField: UITextField) {

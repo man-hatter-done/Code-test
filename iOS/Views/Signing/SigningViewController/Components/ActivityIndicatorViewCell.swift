@@ -133,14 +133,14 @@ class ActivityIndicatorButton: UIButton {
     
     // MARK: - Action Methods
     
-    @objc private func buttonPressed() {
+    @objc func buttonPressed() {
         UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
             self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
             self.layer.shadowOpacity = 0.2
         })
     }
     
-    @objc private func buttonReleased() {
+    @objc func buttonReleased() {
         UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
             self.transform = CGAffineTransform.identity
             self.layer.shadowOpacity = 0.4

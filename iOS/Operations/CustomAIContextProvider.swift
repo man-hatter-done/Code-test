@@ -104,9 +104,7 @@ class CustomAIContextProvider {
         }
 
         // Add any additional context data from the AppContextManager
-        if let contextManager = AppContextManager.shared as? AppContextManager {
-            context["additionalContext"] = contextManager.currentContext().toString()
-        }
+        context["additionalContext"] = AppContextManager.shared.currentContext().toString()
 
         // Update the cache
         contextCache = context
