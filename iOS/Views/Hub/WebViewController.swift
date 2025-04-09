@@ -253,14 +253,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDel
         animateShowFloatingButtons()
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            // Update UI for dark/light mode changes
-            floatingButtonsContainer.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.9)
-        }
-    }
+    // This duplicate method has been merged with the previous implementation
     
     // MARK: - Setup Methods
     

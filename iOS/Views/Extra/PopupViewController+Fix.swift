@@ -54,20 +54,11 @@ extension PopupViewController {
     /// Enhanced button configuration with proper layout and spacing
     /// - Parameter buttons: Array of buttons to display in popup
     func configureButtonsWithLayout(_ buttons: [PopupViewControllerButton]) {
-        // First clear existing buttons
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        // Add buttons to stack with proper constraints
-        for button in buttons {
-            // Set fixed height for consistent button sizes
-            button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            
-            // Add to stack view
-            stackView.addArrangedSubview(button)
-        }
+        // Use the public interface to configure buttons
+        configureButtons(buttons)
         
         // Add bottom constraint to ensure proper sizing of the popup
-        if let lastButton = stackView.arrangedSubviews.last {
+        if let lastButton = buttons.last, lastButton.superview != nil {
             NSLayoutConstraint.activate([
                 lastButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
             ])

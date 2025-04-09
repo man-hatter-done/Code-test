@@ -85,34 +85,6 @@ extension LibraryViewController {
         present(alert, animated: true)
     }
     
-    /// Override the document picker delegate method to use the fixed handler
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let selectedFileURL = urls.first else { return }
-        
-        guard let loaderAlert = self.loaderAlert else {
-            backdoor.Debug.shared.log(message: "Loader alert is not initialized.", type: .error)
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.present(loaderAlert, animated: true)
-        }
-        
-        let dl = AppDownload()
-        let uuid = UUID().uuidString
-        
-        DispatchQueue.global(qos: .background).async {
-            do {
-                // Use the fixed implementation
-                try self.fixedHandleIPAFile(destinationURL: selectedFileURL, uuid: uuid, dl: dl)
-            } catch {
-                backdoor.Debug.shared.log(message: "Failed to Import: \(error)", type: .error)
-                
-                DispatchQueue.main.async {
-                    self.loaderAlert?.dismiss(animated: true)
-                    self.showImportErrorAlert(message: error.localizedDescription)
-                }
-            }
-        }
-    }
+    // The delegate method is already implemented in the main class
+    // We'll use the fixedHandleIPAFile method through handleIPAFile instead
 }

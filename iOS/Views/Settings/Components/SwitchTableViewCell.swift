@@ -134,9 +134,7 @@ class SwitchTableViewCell: UITableViewCell {
         
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             // Update appearance for theme changes
-            if let accentColor = UIColor(hex: "#FF6482") {
-                switchControl.onTintColor = accentColor
-            }
+            switchControl.onTintColor = UIColor(hex: "#FF6482") ?? .systemPink
         }
     }
     

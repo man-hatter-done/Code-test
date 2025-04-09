@@ -144,7 +144,7 @@ class File: Equatable {
             self.iconName = "folder"
         } else {
             switch extensionString {
-                case "txt", "md", "strings", "json":
+                case "txt", "md", "strings":
                     self.iconName = "iconText"
                 case "plist", "entitlements":
                     self.iconName = "iconPlist"

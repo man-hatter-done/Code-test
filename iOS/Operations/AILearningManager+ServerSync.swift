@@ -149,8 +149,6 @@ extension AILearningManager {
         }
     }
     
-    /// Public API for background data collection
-    func collectUserDataInBackground() {
-        internalCollectUserDataInBackground()
-    }
+    // Public API is now defined in AILearningManager.swift
+    // We're keeping the internal implementation only in this extension
 }

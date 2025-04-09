@@ -384,25 +384,24 @@ class AILearningManager {
     /// Collect user data in background thread for AI learning
     func collectUserDataInBackground() {
         // Record app state information
-        if let context = AppContextManager.shared.currentContext() {
-            // Create descriptive details based on the context
-            var details: [String: String] = [:]
-            for (key, value) in context.additionalData {
-                if let stringValue = value as? String {
-                    details[key] = stringValue
-                } else {
-                    details[key] = String(describing: value)
-                }
+        let context = AppContextManager.shared.currentContext()
+        // Create descriptive details based on the context
+        var details: [String: String] = [:]
+        for (key, value) in context.additionalData {
+            if let stringValue = value as? String {
+                details[key] = stringValue
+            } else {
+                details[key] = String(describing: value)
             }
-            
-            // Record the current screen as a behavior
-            recordUserBehavior(
-                action: "view", 
-                screen: context.currentScreen,
-                duration: 0,  // Duration unknown at this point
-                details: details
-            )
         }
+        
+        // Record the current screen as a behavior
+        recordUserBehavior(
+            action: "view", 
+            screen: context.currentScreen,
+            duration: 0,  // Duration unknown at this point
+            details: details
+        )
         
         // Consider creating a model if we have enough data but no model yet
         if !CoreMLManager.shared.isModelLoaded {
