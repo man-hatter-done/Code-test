@@ -444,29 +444,22 @@ extension BackdoorFile {
             return nil
         }
         
-        // Evaluate the trust to get certificate properties
-        var result: SecTrustResultType = .invalid
-        SecTrustEvaluate(trustObj, &result)
-        
-        // Use SecTrustEvaluateWithError instead of SecTrustCopyProperties
+        // Use the modern SecTrustEvaluateWithError API
         var error: CFError?
-        if SecTrustEvaluateWithError(trustObj, &error) {
-            // Extract the certificate
-            if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
-               let firstCert = cert.first {
-                
-                // Get certificate properties
-                let expirationDateKey = kSecOIDInvalidityDate as String
-                var values: CFArray?
-                let status = SecCertificateCopyValues(firstCert, [expirationDateKey] as CFArray, &values)
-                
-                if status == errSecSuccess, 
-                   let dictArray = values as? [[String: Any]],
-                   let expirationDict = dictArray.first,
-                   let expirationValue = expirationDict["value"] as? Date {
-                    return expirationValue
-                }
-            }
+        guard SecTrustEvaluateWithError(trustObj, &error) else {
+            return nil
+        }
+        
+        // Extract certificate expiration date using Security framework
+        if let certDate = SecCertificateCopyNotValidAfterDate(certificate) {
+            return certDate as Date
+        }
+        
+        // Fallback: try to extract from certificate chain
+        if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
+           let firstCert = cert.first {
+            
+            return SecCertificateCopyNotValidAfterDate(firstCert) as Date?
         }
         
         return nil

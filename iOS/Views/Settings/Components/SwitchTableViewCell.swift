@@ -141,12 +141,14 @@ class SwitchTableViewCell: UITableViewCell {
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         
+        let alphaValue: CGFloat = highlighted ? 0.9 : 1.0
+        
         if animated {
             UIView.animate(withDuration: 0.1) {
-                self.contentView.alpha = highlighted ? 0.9 : 1.0
+                self.contentView.alpha = alphaValue
             }
         } else {
-            contentView.alpha = highlighted ? 0.9 : 1.0
+            contentView.alpha = alphaValue
         }
     }
 }

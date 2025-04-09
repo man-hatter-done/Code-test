@@ -176,7 +176,7 @@ extension UIView {
     ///   - colors: Gradient colors
     ///   - startPoint: Start point (default top-left)
     ///   - endPoint: End point (default bottom-right)
-    func addGradientBackground(
+    func addViewGradientBackground(
         colors: [UIColor] = [.systemBlue, UIColor(red: 0, green: 0.5, blue: 1, alpha: 1)],
         startPoint: CGPoint = CGPoint(x: 0, y: 0),
         endPoint: CGPoint = CGPoint(x: 1, y: 1)
@@ -197,6 +197,16 @@ extension UIView {
         
         // Make sure gradient updates when view is resized
         layoutIfNeeded()
+    }
+    
+    /// Compatibility method for existing code 
+    @available(*, deprecated, message: "Use addViewGradientBackground instead")
+    func addGradientBackground(
+        colors: [UIColor] = [.systemBlue, UIColor(red: 0, green: 0.5, blue: 1, alpha: 1)],
+        startPoint: CGPoint = CGPoint(x: 0, y: 0),
+        endPoint: CGPoint = CGPoint(x: 1, y: 1)
+    ) {
+        addViewGradientBackground(colors: colors, startPoint: startPoint, endPoint: endPoint)
     }
     
     /// Apply futuristic shadow effect to the view
@@ -225,7 +235,7 @@ extension UIButton {
         // (Currently not used but could be used for contrast calculations)
         
         // Add gradient background
-        addGradientBackground(colors: colors, startPoint: startPoint, endPoint: endPoint)
+        addViewGradientBackground(colors: colors, startPoint: startPoint, endPoint: endPoint)
         
         // Add shadow
         layer.shadowColor = UIColor.black.cgColor
@@ -255,7 +265,7 @@ extension UIButton {
         button.clipsToBounds = true
         
         // Add gradient
-        button.addGradientBackground(colors: colors)
+        button.addViewGradientBackground(colors: colors)
         
         // Add shadow
         button.layer.shadowColor = UIColor.black.cgColor

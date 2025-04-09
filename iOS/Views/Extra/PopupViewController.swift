@@ -8,7 +8,9 @@ import Foundation
 import UIKit
 
 class PopupViewController: UIViewController {
-    private let stackView = UIStackView()
+    // Changed from private to fileprivate to allow access from extensions in same file
+    // Use internal (default) access level to allow access from other files
+    let stackView = UIStackView()
 
     override func viewDidLoad() {
         super.viewDidLoad()

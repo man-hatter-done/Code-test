@@ -312,7 +312,7 @@ extension UIButton {
     /// Add LED effect to button with appropriate settings
     /// - Parameter color: The color of the LED effect (default: tint color)
     func addButtonLEDEffect(color: UIColor? = nil) {
-        let effectColor = color ?? tintColor
+        let effectColor = color ?? tintColor ?? .systemBlue
         addLEDEffect(
             color: effectColor,
             intensity: 0.5,
@@ -325,7 +325,7 @@ extension UIButton {
     /// Add flowing LED border to button
     /// - Parameter color: The color of the LED effect (default: tint color)
     func addButtonFlowingLEDEffect(color: UIColor? = nil) {
-        let effectColor = color ?? tintColor
+        let effectColor = color ?? tintColor ?? .systemBlue
         addFlowingLEDEffect(
             color: effectColor,
             intensity: 0.7,
@@ -340,7 +340,7 @@ extension UITabBar {
     /// Add a flowing LED effect around the tab bar
     /// - Parameter color: The color of the effect (default: tint color)
     func addTabBarLEDEffect(color: UIColor? = nil) {
-        let effectColor = color ?? tintColor
+        let effectColor = color ?? tintColor ?? .systemBlue
         addFlowingLEDEffect(
             color: effectColor,
             intensity: 0.6,

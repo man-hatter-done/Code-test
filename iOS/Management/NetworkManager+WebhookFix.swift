@@ -54,9 +54,19 @@ extension NetworkManager {
                 completion(.failure(error))
             }
         } else {
-            // If not the webhook URL, use standard request method
-            sendRequest(to: url, method: "POST", body: data) { result in
-                completion(result)
+            // If not the webhook URL, use standard performRequest method
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: data)
+                
+                NetworkManager.shared.performRequest(request) { (result: Result<Data, Error>) in
+                    completion(result)
+                }
+            } catch {
+                completion(.failure(error))
             }
         }
     }
