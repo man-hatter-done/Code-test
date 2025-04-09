@@ -105,6 +105,8 @@ final class ModelFileManager {
         
         // 0. Check the Shared/Resources directory first (highest priority)
         possibleLocations.append(bundle.bundleURL
+            .appendingPathComponent("Shared")
+            .appendingPathComponent("Resources")
             .appendingPathComponent("\(modelFileName).\(modelExtension)"))
         
         // 1. Check app bundle resources (high priority)
