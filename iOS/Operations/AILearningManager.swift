@@ -41,7 +41,7 @@ class AILearningManager {
     private let exportsDirectory: URL
     
     // Training configuration
-    private let minInteractionsForTraining = 10
+    private let minInteractionsForTraining = 5  // Reduced for faster initial model creation
     private let minDaysBetweenTraining = 1
     
     // Current model version
@@ -361,6 +361,63 @@ class AILearningManager {
         Debug.shared.log(message: "Cleared all stored AI interactions", type: .info)
     }
     
+    /// Train a model using all interactions - now with a more flexible threshold
+    func trainModelWithAllInteractions(minimumInteractions: Int? = nil) -> Bool {
+        // Get the number of interactions
+        interactionsLock.lock()
+        let interactionCount = storedInteractions.count
+        interactionsLock.unlock()
+        
+        // Use provided threshold or default
+        let threshold = minimumInteractions ?? minInteractionsForTraining
+        
+        guard interactionCount >= threshold else {
+            Debug.shared.log(message: "Not enough interactions for training (need at least \(threshold))", type: .warning)
+            return false
+        }
+        
+        // Train the model
+        let result = trainNewModel()
+        return result.success
+    }
+    
+    /// Collect user data in background thread for AI learning
+    func collectUserDataInBackground() {
+        // Record app state information
+        if let context = AppContextManager.shared.currentContext() {
+            // Create descriptive details based on the context
+            var details: [String: String] = [:]
+            for (key, value) in context.additionalData {
+                if let stringValue = value as? String {
+                    details[key] = stringValue
+                } else {
+                    details[key] = String(describing: value)
+                }
+            }
+            
+            // Record the current screen as a behavior
+            recordUserBehavior(
+                action: "view", 
+                screen: context.currentScreen,
+                duration: 0,  // Duration unknown at this point
+                details: details
+            )
+        }
+        
+        // Consider creating a model if we have enough data but no model yet
+        if !CoreMLManager.shared.isModelLoaded {
+            let stats = getLearningStatistics()
+            if stats.totalDataPoints >= 5 {
+                Debug.shared.log(message: "Collecting background data - we have \(stats.totalDataPoints) data points, enough for an initial model", type: .info)
+                
+                // Try to train an initial model with reduced requirements
+                DispatchQueue.global(qos: .background).async { [weak self] in
+                    self?.trainModelWithAllInteractions(minimumInteractions: 3)
+                }
+            }
+        }
+    }
+    
     // MARK: - Private Methods
     
     /// Schedule periodic evaluation for training
@@ -430,19 +487,30 @@ class AILearningManager {
             let timestamp = Int(Date().timeIntervalSince1970)
             let newVersion = "1.0.\(timestamp)"
             
-            // Prepare training data
-            // Focus on interactions with positive feedback for better quality
-            let trainingData = interactionsToUse.filter { 
-                if let feedback = $0.feedback {
-                    return feedback.rating >= 3  // Only use moderate to positive examples
+            // Prepare training data - now more flexible for initial model creation
+            var trainingData = interactionsToUse
+            
+            // If we have feedback, prioritize interactions with positive feedback for better quality
+            let withFeedback = interactionsToUse.filter { $0.feedback != nil }
+            if withFeedback.count >= 3 {
+                trainingData = interactionsToUse.filter { 
+                    if let feedback = $0.feedback {
+                        return feedback.rating >= 3  // Only use moderate to positive examples
+                    }
+                    return false
                 }
-                return false
             }
             
-            // Handle case where we don't have enough quality examples
-            if trainingData.count < 5 {
-                Debug.shared.log(message: "Not enough quality training examples", type: .warning)
-                return (false, newVersion, "Not enough quality examples (with good feedback)")
+            // Handle case where we don't have enough examples (more flexible now)
+            if trainingData.count < 3 {
+                // If we don't have enough feedback data but have some regular interactions, use those
+                if interactionsToUse.count >= 3 {
+                    Debug.shared.log(message: "Using all available interactions without feedback filtering", type: .info)
+                    trainingData = interactionsToUse
+                } else {
+                    Debug.shared.log(message: "Not enough training examples", type: .warning)
+                    return (false, newVersion, "Not enough training examples (need at least 3)")
+                }
             }
             
             // Create MLDataTable from interactions

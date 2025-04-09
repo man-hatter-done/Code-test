@@ -496,7 +496,19 @@ final class CoreMLManager {
                 if success {
                     self?.performPrediction(text: text, completion: completion)
                 } else {
-                    completion(.failure(.modelNotLoaded))
+                    // No model loaded, but that's expected in the dynamic model approach
+                    // Return a softer error that indicates we're still gathering data
+                    let parameters: [String: Any] = ["text": text]
+                    
+                    // Allow the app to function with pattern matching by providing a friendly error
+                    let result = PredictionResult(
+                        intent: "pattern_matching",
+                        confidence: 0.5,
+                        parameters: parameters,
+                        probabilities: ["pattern_matching": 1.0]
+                    )
+                    
+                    completion(.success(result))
                 }
             }
         } else {
@@ -512,7 +524,15 @@ final class CoreMLManager {
                 if success {
                     self?.performSentimentAnalysis(text: text, completion: completion)
                 } else {
-                    completion(.failure(.modelNotLoaded))
+                    // No model loaded, provide a neutral default sentiment
+                    // This allows the app to keep functioning while we collect data
+                    let result = SentimentResult(
+                        sentiment: .neutral,
+                        confidence: 0.5,
+                        text: text
+                    )
+                    
+                    completion(.success(result))
                 }
             }
         } else {
@@ -520,14 +540,201 @@ final class CoreMLManager {
         }
     }
     
-    // MARK: - Private Methods
-    
-    /// Execute prediction on loaded model
-    private func performPrediction(text: String, completion: @escaping (Result<PredictionResult, PredictionError>) -> Void) {
+    /// Performs sentiment analysis with pattern matching fallback
+    private func performSentimentAnalysis(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
+        // If model isn't loaded, provide a reasonable default based on text analysis
+        guard modelLoaded, let model = mlModel else {
+            // Simple pattern matching for sentiment
+            var sentiment: SentimentType = .neutral
+            var confidence: Double = 0.5
+            
+            // Count positive and negative terms
+            let lowercasedText = text.lowercased()
+            let positiveTerms = ["good", "great", "excellent", "amazing", "love", "thanks", "thank", "awesome", "perfect", "happy"]
+            let negativeTerms = ["bad", "terrible", "horrible", "awful", "hate", "slow", "problem", "issue", "error", "wrong", "not working"]
+            
+            var positiveCount = 0
+            var negativeCount = 0
+            
+            for term in positiveTerms {
+                if lowercasedText.contains(term) {
+                    positiveCount += 1
+                }
+            }
+            
+            for term in negativeTerms {
+                if lowercasedText.contains(term) {
+                    negativeCount += 1
+                }
+            }
+            
+            // Determine sentiment based on counts
+            if positiveCount > negativeCount {
+                sentiment = .positive
+                confidence = min(0.7, 0.5 + Double(positiveCount - negativeCount) * 0.05)
+            } else if negativeCount > positiveCount {
+                sentiment = .negative
+                confidence = min(0.7, 0.5 + Double(negativeCount - positiveCount) * 0.05)
+            }
+            
+            let result = SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+            completion(.success(result))
+            return
+        }
+        
+        // Standard prediction with the model
         predictionQueue.async { [weak self] in
-            guard let self = self, let model = self.mlModel else {
+            guard let self = self else {
                 DispatchQueue.main.async {
                     completion(.failure(.modelNotLoaded))
+                }
+                return
+            }
+            
+            // Attempt to use CoreML model
+            do {
+                // Get model description
+                let modelDescription = model.modelDescription
+                
+                // Check input features
+                guard let inputDescription = modelDescription.inputDescriptionsByName.first else {
+                    throw PredictionError.invalidModelFormat
+                }
+                
+                let featureName = inputDescription.key
+                var inputFeatures: [String: MLFeatureValue] = [:]
+                
+                // Create string input for sentiment analysis
+                inputFeatures[featureName] = MLFeatureValue(string: text)
+                
+                // Create input from features
+                let provider = try MLDictionaryFeatureProvider(dictionary: inputFeatures)
+                
+                // Make prediction
+                let prediction = try model.prediction(from: provider)
+                
+                // Process output to determine sentiment
+                var sentiment: SentimentType = .neutral
+                var confidence: Double = 0.5
+                
+                // Try to extract sentiment from output
+                if let sentimentOutput = prediction.featureValue(for: "sentiment")?.stringValue {
+                    switch sentimentOutput.lowercased() {
+                    case "positive":
+                        sentiment = .positive
+                    case "negative":
+                        sentiment = .negative
+                    default:
+                        sentiment = .neutral
+                    }
+                    
+                    // Try to get confidence
+                    if let confidenceValue = prediction.featureValue(for: "confidence")?.doubleValue {
+                        confidence = confidenceValue
+                    }
+                } else {
+                    // Use pattern matching as fallback
+                    let lowercasedText = text.lowercased()
+                    let positiveTerms = ["good", "great", "excellent", "amazing", "love", "thanks", "thank", "awesome", "perfect", "happy"]
+                    let negativeTerms = ["bad", "terrible", "horrible", "awful", "hate", "slow", "problem", "issue", "error", "wrong", "not working"]
+                    
+                    var positiveCount = 0
+                    var negativeCount = 0
+                    
+                    for term in positiveTerms {
+                        if lowercasedText.contains(term) {
+                            positiveCount += 1
+                        }
+                    }
+                    
+                    for term in negativeTerms {
+                        if lowercasedText.contains(term) {
+                            negativeCount += 1
+                        }
+                    }
+                    
+                    if positiveCount > negativeCount {
+                        sentiment = .positive
+                        confidence = min(0.7, 0.5 + Double(positiveCount - negativeCount) * 0.05)
+                    } else if negativeCount > positiveCount {
+                        sentiment = .negative
+                        confidence = min(0.7, 0.5 + Double(negativeCount - positiveCount) * 0.05)
+                    }
+                }
+                
+                let result = SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+                
+                DispatchQueue.main.async {
+                    completion(.success(result))
+                }
+                
+            } catch {
+                // Fall back to pattern matching
+                let result = self.fallbackSentimentAnalysis(text: text)
+                
+                DispatchQueue.main.async {
+                    completion(.success(result))
+                }
+            }
+        }
+    }
+    
+    /// Fallback sentiment analysis for when ML model is unavailable
+    private func fallbackSentimentAnalysis(text: String) -> SentimentResult {
+        let lowercasedText = text.lowercased()
+        let positiveTerms = ["good", "great", "excellent", "amazing", "love", "thanks", "thank", "awesome", "perfect", "happy"]
+        let negativeTerms = ["bad", "terrible", "horrible", "awful", "hate", "slow", "problem", "issue", "error", "wrong", "not working"]
+        
+        var positiveCount = 0
+        var negativeCount = 0
+        
+        for term in positiveTerms {
+            if lowercasedText.contains(term) {
+                positiveCount += 1
+            }
+        }
+        
+        for term in negativeTerms {
+            if lowercasedText.contains(term) {
+                negativeCount += 1
+            }
+        }
+        
+        var sentiment: SentimentType = .neutral
+        var confidence: Double = 0.5
+        
+        if positiveCount > negativeCount {
+            sentiment = .positive
+            confidence = min(0.7, 0.5 + Double(positiveCount - negativeCount) * 0.05)
+        } else if negativeCount > positiveCount {
+            sentiment = .negative
+            confidence = min(0.7, 0.5 + Double(negativeCount - positiveCount) * 0.05)
+        }
+        
+        return SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+    }
+    
+    // MARK: - Private Methods
+    
+    /// Execute prediction on loaded model with pattern matching fallback
+    private func performPrediction(text: String, completion: @escaping (Result<PredictionResult, PredictionError>) -> Void) {
+        predictionQueue.async { [weak self] in
+            guard let self = self else {
+                DispatchQueue.main.async {
+                    completion(.failure(.modelNotLoaded))
+                }
+                return
+            }
+            
+            // If no model is loaded, use pattern matching
+            guard let model = self.mlModel else {
+                DispatchQueue.main.async {
+                    // Use pattern matching as fallback
+                    let patternResult = self.performPatternMatchingPrediction(text: text)
+                    completion(.success(patternResult))
+                    
+                    // Collect this interaction for future model training
+                    AILearningManager.shared.collectUserDataInBackground()
                 }
                 return
             }
@@ -592,6 +799,97 @@ final class CoreMLManager {
                 }
             }
         }
+    }
+    
+    /// Perform pattern matching based intent prediction when ML model is unavailable
+    private func performPatternMatchingPrediction(text: String) -> PredictionResult {
+        let lowercasedText = text.lowercased()
+        
+        // Default values
+        var intent = "unknown"
+        var confidence: Double = 0.5
+        var parameters: [String: Any] = ["text": text]
+        
+        // Check for greetings
+        if lowercasedText.contains("hello") || lowercasedText.contains("hi ") || lowercasedText == "hi" || lowercasedText.contains("hey") {
+            intent = "greeting"
+            confidence = 0.8
+        }
+        // Check for help requests
+        else if lowercasedText.contains("help") || lowercasedText.contains("how do i") || lowercasedText.contains("how to") {
+            intent = "help"
+            confidence = 0.7
+        }
+        // Check for navigation requests
+        else if let range = lowercasedText.range(of: "(?:go\\s+to|navigate\\s+to|open|show)\\s+(?:the\\s+)?([^?]+?)\\s+(?:tab|screen|page|section)", options: .regularExpression) {
+            intent = "navigate"
+            
+            let destination = String(lowercasedText[range]).replacing(regularExpression: "(?:go\\s+to|navigate\\s+to|open|show)\\s+(?:the\\s+)?|\\s+(?:tab|screen|page|section)", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            parameters["destination"] = destination
+            confidence = 0.65
+        }
+        // Check for app installation or signing
+        else if lowercasedText.contains("sign") && (lowercasedText.contains("app") || lowercasedText.contains("ipa")) {
+            intent = "sign_app"
+            
+            if let range = lowercasedText.range(of: "sign\\s+(the\\s+)?app\\s+(?:called\\s+|named\\s+)?([^?]+)", options: .regularExpression) {
+                let appName = String(lowercasedText[range]).replacing(regularExpression: "sign\\s+(the\\s+)?app\\s+(?:called\\s+|named\\s+)?", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+                parameters["appName"] = appName
+            }
+            
+            confidence = 0.6
+        }
+        else if lowercasedText.contains("install") && (lowercasedText.contains("app") || lowercasedText.contains("ipa")) {
+            intent = "install"
+            
+            if let range = lowercasedText.range(of: "install\\s+(?:the\\s+)?app\\s+(?:called\\s+|named\\s+)?([^?]+)", options: .regularExpression) {
+                let appName = String(lowercasedText[range]).replacing(regularExpression: "install\\s+(?:the\\s+)?app\\s+(?:called\\s+|named\\s+)?", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+                parameters["appName"] = appName
+            }
+            
+            confidence = 0.6
+        }
+        // Check for questions
+        else if lowercasedText.contains("?") {
+            intent = "question"
+            
+            // Extract topic from question
+            let topic = lowercasedText.replacing(regularExpression: "\\?|what|how|when|where|why|who|is|are|can|could|would|will|should", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            parameters["topic"] = topic
+            
+            confidence = 0.55
+        }
+        
+        // Create a dictionary of all possible intents with probabilities
+        var probabilities: [String: Double] = [
+            intent: confidence
+        ]
+        
+        // Add some low-probability alternatives
+        if intent != "greeting" { probabilities["greeting"] = 0.1 }
+        if intent != "help" { probabilities["help"] = 0.1 }
+        if intent != "navigate" { probabilities["navigate"] = 0.1 }
+        if intent != "sign_app" { probabilities["sign_app"] = 0.1 }
+        if intent != "install" { probabilities["install"] = 0.1 }
+        if intent != "question" { probabilities["question"] = 0.1 }
+        
+        // Record this pattern match for learning
+        DispatchQueue.global(qos: .background).async {
+            AILearningManager.shared.recordInteraction(
+                userMessage: text,
+                aiResponse: "Pattern-matched response for \(intent)",
+                intent: intent,
+                confidence: confidence
+            )
+        }
+        
+        return PredictionResult(
+            intent: intent,
+            confidence: confidence,
+            parameters: parameters,
+            probabilities: probabilities
+        )
     }
     
     /// Process model outputs into a structured result
