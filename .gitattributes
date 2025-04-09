@@ -12,7 +12,6 @@
 *.yml text eol=lf
 *.sh text eol=lf
 *.md text eol=lf
-
 # Denote all files that are truly binary and should not be modified
 *.png binary
 *.jpg binary
@@ -27,3 +26,4 @@
 *.a binary
 *.dylib binary
 *.o binary
+model/model_1.0.0.mlmodel filter=lfs diff=lfs merge=lfs -text
