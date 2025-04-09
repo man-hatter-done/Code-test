@@ -71,9 +71,9 @@ class PopupViewControllerButton: UIButton {
     // MARK: - Setup Methods
     
     private func addButtonTargets() {
-        addTarget(self, action: #selector(buttonPressed), for: .touchDown)
-        addTarget(self, action: #selector(buttonReleased), for: .touchUpInside)
-        addTarget(self, action: #selector(buttonReleased), for: .touchUpOutside)
+        addTarget(self, action: #selector(handleButtonPressEvent), for: .touchDown)
+        addTarget(self, action: #selector(handleButtonReleaseEvent), for: .touchUpInside)
+        addTarget(self, action: #selector(handleButtonReleaseEvent), for: .touchUpOutside)
         addTarget(self, action: #selector(buttonCancelled), for: .touchCancel)
         addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
@@ -191,7 +191,7 @@ class PopupViewControllerButton: UIButton {
     
     // MARK: - Action Methods
     
-    @objc private func buttonPressed() {
+    @objc public func handleButtonPressEvent() {
         // Visual feedback
         UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseInOut], animations: {
             self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
@@ -213,7 +213,7 @@ class PopupViewControllerButton: UIButton {
         })
     }
 
-    @objc private func buttonReleased() {
+    @objc public func handleButtonReleaseEvent() {
         // Visual feedback
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [], animations: {
             self.transform = .identity
