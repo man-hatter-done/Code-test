@@ -443,7 +443,7 @@ extension BackdoorFile {
         return summary
     }
     
-    /// Get certificate expiration date
+    /// Get certificate expiration date using modern iOS 15+ APIs
     var expirationDate: Date? {
         var trust: SecTrust?
         let policy = SecPolicyCreateBasicX509()
@@ -453,27 +453,26 @@ extension BackdoorFile {
             return nil
         }
         
-        // Use modern SecTrustEvaluateWithError API (iOS 15 minimum target)
+        // Step 1: Evaluate the trust using iOS 15+ API
         var error: CFError?
-        let certIsValid = SecTrustEvaluateWithError(trustObj, &error)
+        let isTrusted = SecTrustEvaluateWithError(trustObj, &error)
         
-        if certIsValid {
-            // Extract the certificate chain
-            if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
-               let firstCert = cert.first {
-                
-                // Alternative approach using SecTrust properties to determine validity
-                // Get current date to calculate validity period
-                let currentDate = Date()
-                
-                // Using SecTrustEvaluateWithError sets up proper validity information
-                var errorRef: CFError?
-                let trustValid = SecTrustEvaluateWithError(trustObj, &errorRef)
-                
-                // Get certificate expiration directly from trust object (iOS 15+)
-                let expirationDate = SecTrustGetExpirationDate(trustObj)
-                return expirationDate
-            }
+        if !isTrusted {
+            // Trust evaluation failed
+            return nil
+        }
+        
+        // Step 2: Use SecTrustCopyResult to get the trust result dictionary (iOS 15+)
+        guard let trustResult = SecTrustCopyResult(trustObj) as NSDictionary? else {
+            return nil
+        }
+        
+        // Step 3: Extract certificate details from the trust evaluation results
+        if let details = trustResult[kSecTrustResultDetails] as? [NSDictionary],
+           let certDetails = details.first,
+           let notAfter = certDetails["NotAfter"] as? Date {
+            // The "NotAfter" field contains the expiration date
+            return notAfter
         }
         
         return nil
