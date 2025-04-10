@@ -21,7 +21,7 @@ extension LibraryViewController {
         backdoor.Debug.shared.log(message: "Processing IPA file: \(destinationURL.lastPathComponent)", type: .info)
         
         // Extract the IPA file
-        try dl.extractCompressedBundle(packageURL: destinationURL.path) { [weak self] targetBundle, error in
+        dl.extractCompressedBundle(packageURL: destinationURL.path) { [weak self] targetBundle, error in
             guard let self = self else { return }
             
             // Handle extraction errors

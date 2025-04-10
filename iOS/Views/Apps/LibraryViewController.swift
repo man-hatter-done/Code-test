@@ -723,7 +723,6 @@ extension LibraryViewController {
     }
 
     // Implementation moved to LibraryViewController+Types extension
-    }
     
     // MARK: - Legacy method for backward compatibility
     
