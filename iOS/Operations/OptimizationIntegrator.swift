@@ -61,7 +61,7 @@ final class OptimizationIntegrator {
         // The act of accessing these shared instances initializes them
         _ = AppPerformanceOptimizer.shared
         _ = ImageCache.shared
-        _ = iOSNetworkManager.shared
+        _ = NetworkManager.shared
 
         Debug.shared.log(message: "Performance optimizers initialized", type: .debug)
     }
@@ -158,7 +158,7 @@ final class OptimizationIntegrator {
         ImageCache.shared.clearCache()
 
         // Clear network caches
-        iOSNetworkManager.shared.clearCache()
+        NetworkManager.shared.clearCache()
 
         // Clear any NSCache instances
         NotificationCenter.default.post(name: NSNotification.Name("ClearAllCaches"), object: nil)

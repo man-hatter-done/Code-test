@@ -174,7 +174,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
         FloatingButtonManager.shared.hide()
         
         // Cancel any ongoing network operations
-        iOSNetworkManager.shared.cancelAllOperations()
+        NetworkManager.shared.cancelAllOperations()
 
         // End background task when done
         application.endBackgroundTask(bgTask)

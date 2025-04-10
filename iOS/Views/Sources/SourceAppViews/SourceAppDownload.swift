@@ -242,7 +242,7 @@ extension SourceAppViewController {
             )
             
             // Add detailed error diagnostics
-            if nsError.domain == "NetworkManager" || nsError.domain == "iOSNetworkManager" {
+            if nsError.domain == "NetworkManager" {
                 Debug.shared.log(message: "HTTP error status: \(nsError.code)", type: .error)
                 Debug.shared.log(message: "Invalid download URL: \(downloadURL)", type: .error)
             } else {

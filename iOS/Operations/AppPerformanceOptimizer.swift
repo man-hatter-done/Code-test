@@ -129,7 +129,7 @@ final class AppPerformanceOptimizer {
         endAllBackgroundTasks()
 
         // Cancel all network operations
-        iOSNetworkManager.shared.cancelAllOperations()
+        NetworkManager.shared.cancelAllOperations()
     }
 
     // MARK: - Memory Management
@@ -216,7 +216,7 @@ final class AppPerformanceOptimizer {
         performLightMemoryCleanup()
 
         // Clear network response cache
-        iOSNetworkManager.shared.clearCache()
+        NetworkManager.shared.clearCache()
 
         // Reset all tableview optimizers' caches
         purgeTableViewOptimizerCaches()

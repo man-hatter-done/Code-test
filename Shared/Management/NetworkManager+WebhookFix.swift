@@ -6,8 +6,8 @@
 
 import Foundation
 
-// Extension for iOSNetworkManager to ensure proper JSON formatting for webhook requests
-extension iOSNetworkManager {
+// Extension for NetworkManager to ensure proper JSON formatting for webhook requests
+extension NetworkManager {
     
     /// Ensures that data sent to webhook endpoints is properly formatted as JSON
     /// - Parameters:
@@ -30,7 +30,7 @@ extension iOSNetworkManager {
                 // Log the request for debugging
                 backdoor.Debug.shared.log(message: "Sending webhook data as JSON", type: .info)
                 
-                // Send the request
+                // Send the request using the URLSession directly to avoid recursion
                 URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
                         completion(.failure(error))
@@ -54,7 +54,7 @@ extension iOSNetworkManager {
                 completion(.failure(error))
             }
         } else {
-            // If not the webhook URL, use standard performRequest method
+            // If not the webhook URL, use standard performRequest method for non-decodable response
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -62,8 +62,20 @@ extension iOSNetworkManager {
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: data)
                 
-                iOSNetworkManager.shared.sendRequest(request) { (result: Result<Data, Error>) in
-                    completion(result)
+                self.performRequestWithoutDecoding(request) { (result: Result<Any, Error>) in
+                    switch result {
+                    case .success(let responseObject):
+                        // Convert to Data if needed
+                        if let responseData = try? JSONSerialization.data(withJSONObject: responseObject) {
+                            completion(.success(responseData))
+                        } else if let responseData = data as? Data {
+                            completion(.success(responseData))
+                        } else {
+                            completion(.failure(NetworkError.noData))
+                        }
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             } catch {
                 completion(.failure(error))
