@@ -164,16 +164,16 @@ class BackdoorDecoder {
             throw DecodingError.unsupportedAlgorithm("Public key does not support RSA PKCS1v15 SHA256")
         }
         
-        var error: Unmanaged<CFError>?
+        var signatureError: Unmanaged<CFError>?
         let isValid = SecKeyVerifySignature(
             publicKey,
             algorithm,
             data as CFData,
             signature as CFData,
-            &error
+            &signatureError
         )
         
-        if let error = error?.takeRetainedValue() {
+        if let error = signatureError?.takeRetainedValue() {
             throw DecodingError.signatureVerificationFailed("Signature verification failed: \(error)")
         }
         guard isValid else {

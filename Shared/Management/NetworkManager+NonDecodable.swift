@@ -64,9 +64,9 @@ extension NetworkManager {
             guard let self = self else { return }
             
             // Remove from active operations if it was tracked
-            // Use discardable result pattern to silence unused result warning
-            _ = self.operationQueueAccessQueue.sync {
-                self.activeOperations.removeValue(forKey: request)
+            // Explicitly return the removed value to silence the unused result warning
+            _ = self.operationQueueAccessQueue.sync { () -> URLSessionTask? in
+                return self.activeOperations.removeValue(forKey: request)
             }
             
             // Handle network error
