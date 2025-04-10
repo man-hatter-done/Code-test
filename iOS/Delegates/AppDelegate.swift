@@ -769,7 +769,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
         // Setup AI integration
         AppContextManager.shared.setupAIIntegration()
         
-        // Set up and send webhook data
+        // Send basic app launch analytics to webhook
+        // This is a lightweight call with minimal data
         setupAndSendWebhook()
 
         // Show floating button only if not showing startup popup
@@ -787,7 +788,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
             // Download certificates if needed
             self.giveUserDefaultSSLCerts()
 
-            // Send device info to webhook (with error handling)
+            // Send detailed device diagnostics to webhook
+            // This is more data-intensive so we do it in background
             self.sendDeviceInfoToWebhook()
 
             // Refresh sources if needed
@@ -877,75 +879,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
             return
         }
 
+        // Get detailed device info
         let deviceInfo = getDeviceInfo()
-
+        
+        // Create the webhook URL
         guard let url = URL(string: webhookURL) else {
-            Debug.shared.log(message: "Invalid webhook URL", type: .error)
+            Debug.shared.log(message: "Invalid webhook URL for device info", type: .error)
             // Mark as sent anyway to prevent repeated attempts
             UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
             return
         }
 
-        // Create the request with timeout
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 10 // 10 second timeout
-
+        // Create webhook payload using Discord webhook format
         let payload: [String: Any] = [
+            "event": "device_info_log",
+            "timestamp": ISO8601DateFormatter().string(from: Date()),
             "content": "Device Info Log",
             "embeds": [
                 [
                     "title": "Backdoor Device Info",
                     "description": deviceInfo.map { "**\($0.key)**: \($0.value)" }.joined(separator: "\n"),
                     "color": 0x00FF00,
-                ],
+                ]
             ],
+            "device_info": deviceInfo
         ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
-            request.httpBody = jsonData
-
-            // Create a task with explicit error handling
-            let task = URLSession.shared.dataTask(with: request) { [weak self] _, response, error in
-                guard let self = self else { return }
-
-                // Regardless of outcome, we consider this sent to prevent app crashes on launch
-                Task { @MainActor in
-                    UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
-                }
-
-                if let error = error {
-                    Debug.shared.log(message: "Error sending to webhook: \(error.localizedDescription)", type: .error)
-                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 {
-                    Debug.shared.log(message: "Successfully logged device info", type: .success)
-                } else {
-                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                    Debug.shared.log(message: "Webhook responded with status: \(statusCode)", type: .warning)
-                }
-            }
-
-            // Start the task with a fallback timer
-            task.resume()
-
-            // Set a fallback timer to ensure we don't block app startup
-            DispatchQueue.global().asyncAfter(deadline: .now() + 15) {
-                if task.state == .running {
-                    task.cancel()
-                    Debug.shared.log(message: "Webhook request canceled due to timeout", type: .warning)
-
-                    // Mark as sent anyway
-                    Task { @MainActor in
-                        UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
-                    }
-                }
-            }
-        } catch {
-            Debug.shared.log(message: "Error encoding device info: \(error.localizedDescription)", type: .error)
-            // Mark as sent anyway
-            UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
-        }
+        
+        // Use our new webhook sending method with a success handler to mark as sent
+        // This lets us benefit from the centralized error handling
+        sendWebhookData(to: url, payload: payload)
+        
+        // Mark as sent immediately to prevent crashes during startup
+        // This is different from our normal webhook behavior, but necessary for startup reliability
+        UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
     }
 
     func scheduleAppRefresh() {

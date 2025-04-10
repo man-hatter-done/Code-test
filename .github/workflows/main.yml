@@ -24,7 +24,8 @@ jobs:
       - name: Compile
         run: | 
           mkdir upload
-          make package SCHEME="'backdoor (Release)'" CFLAGS="-Onone"
+          # Use optimization level -Onone to enable previews and avoid Swift compilation blocking issues
+          make package SCHEME="'backdoor (Release)'" CFLAGS="-Onone" SWIFT_OPTIMIZATION_LEVEL="-Onone" SWIFT_COMPILATION_MODE="singlefile"
           mv packages/* upload/
 
       - name: Get Version Number
