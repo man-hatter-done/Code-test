@@ -530,6 +530,11 @@ final class CoreMLManager {
         analyzeSentiment(from: text, completion: completion)
     }
     
+    /// Non-overloaded version for internal use
+    private func internalAnalyzeSentiment(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
+        analyzeSentiment(from: text, completion: completion)
+    }
+    
     /// Performs sentiment analysis with pattern matching fallback
     private func performSentimentAnalysisInternal(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
         // If model isn't loaded, provide a reasonable default based on text analysis
@@ -1046,8 +1051,8 @@ final class CoreMLManager {
         }
     }
     
-    /// Performs sentiment analysis on text
-    private func performSentimentAnalysis(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
+    /// Performs sentiment analysis on text (private implementation)
+    private func performSentimentAnalysisLegacy(text: String, completion: @escaping (Result<SentimentResult, PredictionError>) -> Void) {
         predictionQueue.async { [weak self] in
             guard let self = self, let model = self.mlModel else {
                 DispatchQueue.main.async {
