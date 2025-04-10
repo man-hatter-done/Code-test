@@ -390,11 +390,10 @@ final class CoreMLManager {
         }
         
         // Set up memory pressure observer
-        var memoryObserver: NSObjectProtocol?
-        memoryObserver = NotificationCenter.default.addObserver(
+        let memoryObserver = NotificationCenter.default.addObserver(
             forName: UIApplication.didReceiveMemoryWarningNotification,
             object: nil,
-            queue: .main) { [weak self] _ in
+            queue: .main) { [weak self, weak loadingAlert] _ in
                 Debug.shared.log(message: "Memory warning during model loading, canceling", type: .warning)
                 
                 // Clean up - ensure UI operations happen on main thread
@@ -404,9 +403,8 @@ final class CoreMLManager {
                     }
                 }
                 
-                if let observer = memoryObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
+                // Remove the observer itself
+                NotificationCenter.default.removeObserver(memoryObserver)
                 
                 self?.isModelLoading = false
                 completion?(false)
@@ -436,9 +434,7 @@ final class CoreMLManager {
                 let model = try MLModel(contentsOf: compiledModelURL)
                 
                 // Remove observer as loading succeeded
-                if let observer = memoryObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
+                NotificationCenter.default.removeObserver(memoryObserver)
                 
                 // Dismiss loading alert
                 DispatchQueue.main.async {

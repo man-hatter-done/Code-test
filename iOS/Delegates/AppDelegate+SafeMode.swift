@@ -162,11 +162,12 @@ extension AppDelegate {
         Debug.shared.log(message: "Setting up limited functionality for safe mode", type: .info)
         
         // Initialize only essential services - access through AppDelegate instance
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            appDelegate.setupNetworkMonitoring()
-        } else {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             Debug.shared.log(message: "Failed to access AppDelegate instance for network monitoring", type: .error)
+            return
         }
+        
+        appDelegate.setupNetworkMonitoring()
         
         // Initialize a limited version of secondary components
         initializeSecondaryComponentsInSafeMode()
