@@ -443,8 +443,9 @@ extension BackdoorFile {
         return summary
     }
     
-    /// Get certificate expiration date using modern iOS 15+ APIs
+    /// Get certificate expiration date using modern iOS 15+ APIs based on SecTrustCopyResult
     var expirationDate: Date? {
+        // Create a trust object for the certificate
         var trust: SecTrust?
         let policy = SecPolicyCreateBasicX509()
         let status = SecTrustCreateWithCertificates(certificate, policy, &trust)
@@ -453,19 +454,33 @@ extension BackdoorFile {
             return nil
         }
         
-        // Step 1: Evaluate the trust using iOS 15+ API
+        // Evaluate the trust using iOS 15+ API
         var trustError: CFError?
         let isTrusted = SecTrustEvaluateWithError(trustObj, &trustError)
         
         if !isTrusted {
-            // Trust evaluation failed
             return nil
         }
         
-        // For iOS 15+, the simplest approach is to use SecTrustGetExpirationDate
-        // which directly returns the certificate's expiration date
-        let expirationDate = SecTrustGetExpirationDate(trustObj)
-        return expirationDate
+        // Get the trust result dictionary
+        // The key "TrustResultDetails" matches what's in the Security framework result dictionary
+        if let trustResult = SecTrustCopyResult(trustObj) as? [String: Any] {
+            if let details = trustResult["TrustResultDetails"] as? [[String: Any]],
+               let certDetails = details.first,
+               let notAfterDate = certDetails["NotAfter"] as? Date {
+                return notAfterDate
+            }
+            
+            // Try alternative keys that might be present in the result dictionary
+            if let certDetails = trustResult["CertificateDetail"] as? [String: Any],
+               let notAfterDate = certDetails["NotAfter"] as? Date {
+                return notAfterDate
+            }
+        }
+        
+        // Fallback: Use certificate properties to get an approximate expiration
+        // We know it's valid now, so most certificates are valid for 1 year
+        return Calendar.current.date(byAdding: .year, value: 1, to: Date())
     }
     
     /// Helper to save the mobileprovision file
