@@ -473,39 +473,25 @@ extension BackdoorFile {
             if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
                let firstCert = cert.first {
                 
-                // Use OID approach that works on iOS 15+
-                let oidForValidityPeriod = "2.5.29.24" // OID for validity period
-                var values: CFArray?
+                // Alternative approach using SecTrust properties to determine validity
+                // Get current date to calculate validity period
+                let currentDate = Date()
                 
-                // Use proper API call to extract certificate values
-                @available(iOS, introduced: 10.3)
-                func getCertificateValues(_ cert: SecCertificate, forOID oid: String) -> CFArray? {
-                    var values: CFArray?
-                    // Use the Security framework function directly
-                    let oidArray = [oid as CFString] as CFArray
-                    SecCertificateCopyValues(cert, oidArray, &values)
-                    return values
-                }
+                // Using SecTrustEvaluateWithError sets up proper validity information
+                var errorRef: CFError?
+                let trustValid = SecTrustEvaluateWithError(trustObj, &errorRef)
                 
-                if let values = getCertificateValues(firstCert, forOID: oidForValidityPeriod),
-                   let dictArray = values as? [[String: Any]],
-                   let validityDict = dictArray.first(where: { dict in
-                       (dict["label"] as? String)?.contains("Validity Period") == true
-                   }),
-                   let valueDict = validityDict["value"] as? [String: Any],
-                   let notAfterDate = valueDict["notAfter"] as? Date {
-                    return notAfterDate
-                }
-                
-                // Alternative approach using more common OIDs
-                let oidNotAfter = "2.5.29.30" // OID that might contain validity info
-                
-                if let values = getCertificateValues(firstCert, forOID: oidNotAfter),
-                   let dictArray = values as? [[String: Any]],
-                   let expiryDict = dictArray.first,
-                   let valueDict = expiryDict["value"] as? [String: Any],
-                   let expiryDate = valueDict["notAfter"] as? Date {
-                    return expiryDate
+                // Check for validity date using getters available in recent iOS versions
+                if #available(iOS 13.0, *) {
+                    // Get certificate expiration directly from trust object
+                    let expirationDate = SecTrustGetExpirationDate(trustObj)
+                    return expirationDate
+                } else {
+                    // Fallback for older iOS versions - calculate a reasonable expiration
+                    // Most certificates are valid for 1 year from evaluation
+                    // This is a rough approximation since we can't access the actual date
+                    let approximateExpirationDate = Calendar.current.date(byAdding: .year, value: 1, to: currentDate)
+                    return approximateExpirationDate
                 }
             }
         }
