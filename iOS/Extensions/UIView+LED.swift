@@ -321,7 +321,7 @@ extension UIButton {
             animationDuration: 2.0
         )
     }
-    
+
     /// Add flowing LED border to button
     /// - Parameter color: The color of the LED effect (default: tint color)
     func addButtonFlowingLEDEffect(color: UIColor? = nil) {

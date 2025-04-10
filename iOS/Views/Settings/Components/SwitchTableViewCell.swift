@@ -50,9 +50,7 @@ class SwitchTableViewCell: UITableViewCell {
         accessoryView = switchControl
         
         // Set the accent color to match app theme
-        // Safely handle optional color from hex
-        let defaultAccentColor = UIColor.systemPink
-        let accentColor = UIColor(hex: "#FF6482") ?? defaultAccentColor
+        let accentColor = UIColor(hex: "#FF6482") ?? .systemPink
         switchControl.onTintColor = accentColor
     }
     

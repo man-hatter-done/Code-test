@@ -722,32 +722,7 @@ extension LibraryViewController {
         }
     }
 
-    @objc func startSigning(app: NSManagedObject) {
-        guard let downloadedApp = app as? DownloadedApps else {
-            backdoor.Debug.shared.log(message: "Invalid app object for signing", type: LogType.error)
-            return
-        }
-        
-        do {
-            let filePath = try CoreDataManager.shared.getFilesForDownloadedApps(for: downloadedApp, getuuidonly: false)
-            if FileManager.default.fileExists(atPath: filePath.path) {
-                let signingDataWrapper = SigningDataWrapper(signingOptions: UserDefaults.standard.signingOptions)
-                let signingVC = SigningsViewController(
-                    signingDataWrapper: signingDataWrapper,
-                    application: app,
-                    appsViewController: self
-                )
-                
-                let navigationController = UINavigationController(rootViewController: signingVC)
-                navigationController.shouldPresentFullScreen()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.present(navigationController, animated: true)
-                }
-            }
-        } catch {
-            backdoor.Debug.shared.log(message: "Error getting file path for signing: \(error)", type: LogType.error)
-        }
+    // Implementation moved to LibraryViewController+Types extension
     }
     
     // MARK: - Legacy method for backward compatibility

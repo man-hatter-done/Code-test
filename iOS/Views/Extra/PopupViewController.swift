@@ -201,11 +201,11 @@ class PopupViewControllerButton: UIButton {
             
             if self.gradientLayer.superlayer != nil {
                 // For gradient buttons, adjust colors
-                let adjustedColors = self.gradientLayer.colors?.map { color in
+                let adjustedColors = self.gradientLayer.colors?.compactMap { color -> CGColor? in
                     if let cgColor = color as? CGColor {
                         return UIColor(cgColor: cgColor).withAlphaComponent(0.8).cgColor
                     }
-                    return color
+                    return nil
                 }
                 self.gradientLayer.colors = adjustedColors
             } else {

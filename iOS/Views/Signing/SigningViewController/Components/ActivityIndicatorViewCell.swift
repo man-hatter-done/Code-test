@@ -59,13 +59,13 @@ class ActivityIndicatorButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
-        addPressAnimation()
+        setupPressAnimation()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupButton()
-        addPressAnimation()
+        setupPressAnimation()
     }
 
     // MARK: - Setup Methods
@@ -125,7 +125,7 @@ class ActivityIndicatorButton: UIButton {
         layer.insertSublayer(gradientLayer, at: 0)
     }
     
-    private func addPressAnimation() {
+    func setupPressAnimation() {
         // Add touch animations for better feedback
         addTarget(self, action: #selector(handleButtonTouchDown), for: [.touchDown, .touchDragEnter])
         addTarget(self, action: #selector(handleButtonTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel, .touchDragExit])

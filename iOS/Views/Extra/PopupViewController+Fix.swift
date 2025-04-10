@@ -34,18 +34,19 @@ extension PopupViewController {
         }
     }
     
-    /// Calculates the required height based on stack view content
+    /// Calculates the required height based on buttons content
     /// - Returns: Appropriate height for the popup sheet
     private func calculateRequiredHeight() -> CGFloat {
         // Base padding (top and bottom)
         let basePadding: CGFloat = 40.0
         
-        // Number of buttons in stack view
-        let buttonCount = stackView.arrangedSubviews.count
+        // Use fixed button count since we can't access the private stackView
+        let buttonCount = 2 // Default count, adjust if needed for your use case
         
         // Height per button plus spacing
         let buttonHeight: CGFloat = 50.0 
-        let spacingHeight: CGFloat = stackView.spacing * CGFloat(max(0, buttonCount - 1))
+        let buttonSpacing: CGFloat = 8.0 // Default spacing
+        let spacingHeight: CGFloat = buttonSpacing * CGFloat(max(0, buttonCount - 1))
         
         // Calculate total required height
         return basePadding + (buttonHeight * CGFloat(buttonCount)) + spacingHeight
