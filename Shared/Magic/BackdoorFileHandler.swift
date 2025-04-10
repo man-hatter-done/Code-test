@@ -145,7 +145,7 @@ class BackdoorDecoder {
         let policy = SecPolicyCreateBasicX509()
         var trust: SecTrust?
         let status = SecTrustCreateWithCertificates(certificate, policy, &trust)
-        guard status == errSecSuccess, let trustObject = trust else {
+        guard status == errSecSuccess, let _ = trust else {
             throw DecodingError.invalidCertificate("Failed to create trust object")
         }
         
@@ -473,10 +473,9 @@ extension BackdoorFile {
                 @available(iOS, introduced: 10.3)
                 func getCertificateValues(_ cert: SecCertificate, forOID oid: String) -> CFArray? {
                     var values: CFArray?
-                    // Directly use Security framework function
-                    withUnsafeMutablePointer(to: &values) { valuesPtr in
-                        Security.SecCertificateCopyValues(cert, [oid as CFString] as CFArray, valuesPtr)
-                    }
+                    // Use the Security framework function directly
+                    let oidArray = [oid as CFString] as CFArray
+                    SecCertificateCopyValues(cert, oidArray, &values)
                     return values
                 }
                 
