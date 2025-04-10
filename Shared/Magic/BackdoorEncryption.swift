@@ -13,7 +13,7 @@ import CryptoKit
 class BackdoorEncryption {
     
     // Hardcoded secret key for encryption and decryption
-    private static let SECRET = "bdg_was_making_this_signer".data(using: .utf8)!
+    private static let SECRET = "bdg_was_here_2025_backdoor_245".data(using: .utf8)!
     
     // Derive key using SHA256
     private static var KEY: Data {
