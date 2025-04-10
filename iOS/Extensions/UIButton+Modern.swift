@@ -182,7 +182,7 @@ extension UIButton {
     func applyPillStyle(color: UIColor) {
         backgroundColor = color
         // Use our private isLight() method
-        let isLightColor = (color as? UIColor)?.isLight() ?? false 
+        let isLightColor = color.isLight()
         setTitleColor(isLightColor ? .black : .white, for: .normal)
         
         // Make fully rounded

@@ -178,7 +178,7 @@ class PopupViewControllerButton: UIButton {
     
     private func colorIsCloseToAccent(_ color: UIColor) -> Bool {
         // Check if the color is similar to our accent color
-        let accentColor = UIColor(hex: "#FF6482") ?? .systemPink
+        let accentColor = UIColor(hex: "#FF6482")
         
         var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
         var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0

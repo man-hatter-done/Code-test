@@ -44,8 +44,8 @@ extension LibraryViewController {
                 return
             }
             
-            // Add the app to the library - ensure we pass a String path not URL
-            dl.addToApps(bundlePath: targetBundle.path, uuid: uuid, sourceLocation: "Imported File") { [weak self] error in
+            // Add the app to the library - targetBundle is already a string path
+            dl.addToApps(bundlePath: targetBundle, uuid: uuid, sourceLocation: "Imported File") { [weak self] error in
                 guard let self = self else { return }
                 
                 DispatchQueue.main.async {

@@ -858,7 +858,7 @@ extension LibraryViewController {
     }
 }
 
-extension LibraryViewController {
+@objc extension LibraryViewController {
     @objc func afetch() { self.fetchSources() }
 }
 

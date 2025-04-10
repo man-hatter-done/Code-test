@@ -145,53 +145,17 @@ extension AppDelegate {
             window?.backgroundColor = .systemBackground
         }
         
-        do {
-            // Set up minimal UI with error handling
-            setupWindow()
-            
-            // Set up only essential components
-            setupLimitedFunctionality()
-            
-            // Make window visible
-            window?.makeKeyAndVisible()
-            
-            Debug.shared.log(message: "Successfully continued in safe mode", type: .info)
-        } catch {
-            Debug.shared.log(message: "Failed to continue in safe mode: \(error)", type: .error)
-            
-            // Fallback to a simple UI if setup fails
-            let fallbackVC = UIViewController()
-            let titleLabel = UILabel()
-            titleLabel.text = "Backdoor (Safe Mode)"
-            titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-            titleLabel.textAlignment = .center
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            let infoLabel = UILabel()
-            infoLabel.text = "Running in limited functionality mode. Some features are disabled for stability."
-            infoLabel.numberOfLines = 0
-            infoLabel.textAlignment = .center
-            infoLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            fallbackVC.view.backgroundColor = .systemBackground
-            fallbackVC.view.addSubview(titleLabel)
-            fallbackVC.view.addSubview(infoLabel)
-            
-            NSLayoutConstraint.activate([
-                titleLabel.centerXAnchor.constraint(equalTo: fallbackVC.view.centerXAnchor),
-                titleLabel.centerYAnchor.constraint(equalTo: fallbackVC.view.centerYAnchor, constant: -40),
-                titleLabel.leadingAnchor.constraint(equalTo: fallbackVC.view.leadingAnchor, constant: 20),
-                titleLabel.trailingAnchor.constraint(equalTo: fallbackVC.view.trailingAnchor, constant: -20),
-                
-                infoLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-                infoLabel.centerXAnchor.constraint(equalTo: fallbackVC.view.centerXAnchor),
-                infoLabel.leadingAnchor.constraint(equalTo: fallbackVC.view.leadingAnchor, constant: 20),
-                infoLabel.trailingAnchor.constraint(equalTo: fallbackVC.view.trailingAnchor, constant: -20)
-            ])
-            
-            window?.rootViewController = fallbackVC
-            window?.makeKeyAndVisible()
-        }
+        // Set up minimal UI for safe mode
+        setupWindow()
+        
+        // Set up only essential components
+        setupLimitedFunctionality()
+        
+        // Make window visible
+        window?.makeKeyAndVisible()
+        
+        Debug.shared.log(message: "Successfully continued in safe mode", type: .info)
+    }
     }
     
     /// Set up limited functionality for safe mode
