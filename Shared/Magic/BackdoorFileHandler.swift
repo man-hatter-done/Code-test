@@ -149,12 +149,13 @@ class BackdoorDecoder {
             throw DecodingError.invalidCertificate("Failed to create trust object")
         }
         
-        // Evaluate trust to verify certificate validity
-        var trustResult: SecTrustResultType = .invalid
-        let evalStatus = SecTrustEvaluate(trustObject, &trustResult)
-        guard evalStatus == errSecSuccess, 
-              (trustResult == .proceed || trustResult == .unspecified) else {
-            throw DecodingError.invalidCertificate("Certificate failed trust evaluation")
+        // Evaluate trust to verify certificate validity using modern API (iOS 12+)
+        var error: CFError?
+        guard SecTrustEvaluateWithError(trustObject, &error) else {
+            let errorMessage = error != nil ? 
+                CFErrorCopyDescription(error!) as String : 
+                "Certificate failed trust evaluation"
+            throw DecodingError.invalidCertificate(errorMessage)
         }
         
         // Verify the signature (PKCS1v15 with SHA256)
@@ -442,7 +443,7 @@ extension BackdoorFile {
         return summary
     }
     
-    /// Get certificate expiration date
+    /// Get certificate expiration date using modern iOS 15+ APIs
     var expirationDate: Date? {
         var trust: SecTrust?
         let policy = SecPolicyCreateBasicX509()
@@ -452,62 +453,26 @@ extension BackdoorFile {
             return nil
         }
         
-        // Use the modern SecTrustEvaluateWithError API when available (iOS 12+)
-        // or fall back to the deprecated SecTrustEvaluate for compatibility
-        var certIsValid = false
+        // Step 1: Evaluate the trust using iOS 15+ API
         var error: CFError?
+        let isTrusted = SecTrustEvaluateWithError(trustObj, &error)
         
-        if #available(iOS 12.0, *) {
-            // Modern API available in iOS 12+
-            certIsValid = SecTrustEvaluateWithError(trustObj, &error)
-        } else {
-            // Fallback for older iOS versions
-            var result: SecTrustResultType = .invalid
-            let status = SecTrustEvaluate(trustObj, &result)
-            certIsValid = (status == errSecSuccess) && 
-                         (result == .proceed || result == .unspecified)
+        if !isTrusted {
+            // Trust evaluation failed
+            return nil
         }
         
-        if certIsValid {
-            // Extract the certificate chain
-            if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
-               let firstCert = cert.first {
-                
-                // Use OID approach that works on iOS 15+
-                let oidForValidityPeriod = "2.5.29.24" // OID for validity period
-                var values: CFArray?
-                
-                // Use proper API call to extract certificate values
-                @available(iOS, introduced: 10.3)
-                func getCertificateValues(_ cert: SecCertificate, forOID oid: String) -> CFArray? {
-                    var values: CFArray?
-                    // Use the Security framework function directly
-                    let oidArray = [oid as CFString] as CFArray
-                    SecCertificateCopyValues(cert, oidArray, &values)
-                    return values
-                }
-                
-                if let values = getCertificateValues(firstCert, forOID: oidForValidityPeriod),
-                   let dictArray = values as? [[String: Any]],
-                   let validityDict = dictArray.first(where: { dict in
-                       (dict["label"] as? String)?.contains("Validity Period") == true
-                   }),
-                   let valueDict = validityDict["value"] as? [String: Any],
-                   let notAfterDate = valueDict["notAfter"] as? Date {
-                    return notAfterDate
-                }
-                
-                // Alternative approach using more common OIDs
-                let oidNotAfter = "2.5.29.30" // OID that might contain validity info
-                
-                if let values = getCertificateValues(firstCert, forOID: oidNotAfter),
-                   let dictArray = values as? [[String: Any]],
-                   let expiryDict = dictArray.first,
-                   let valueDict = expiryDict["value"] as? [String: Any],
-                   let expiryDate = valueDict["notAfter"] as? Date {
-                    return expiryDate
-                }
-            }
+        // Step 2: Use SecTrustCopyResult to get the trust result dictionary (iOS 15+)
+        guard let trustResult = SecTrustCopyResult(trustObj) as NSDictionary? else {
+            return nil
+        }
+        
+        // Step 3: Extract certificate details from the trust evaluation results
+        if let details = trustResult[kSecTrustResultDetails] as? [NSDictionary],
+           let certDetails = details.first,
+           let notAfter = certDetails["NotAfter"] as? Date {
+            // The "NotAfter" field contains the expiration date
+            return notAfter
         }
         
         return nil
