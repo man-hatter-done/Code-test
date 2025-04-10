@@ -31,23 +31,8 @@ extension AppDelegate {
                 return
             }
             
-            // Use the NetworkManager to send the webhook data
-            NetworkManager.shared.sendWebhookDataAsJSON(to: webhookEndpoint, data: payload) { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(_):
-                    Debug.shared.log(message: "Webhook data sent successfully", type: .success)
-                    
-                    // Mark as sent in UserDefaults
-                    DispatchQueue.main.async {
-                        UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
-                    }
-                    
-                case .failure(let error):
-                    Debug.shared.log(message: "Webhook error: \(error.localizedDescription)", type: .error)
-                }
-            }
+            // Send the webhook data
+            sendWebhookData(to: webhookEndpoint, payload: payload)
         } else {
             Debug.shared.log(message: "Webhook data already sent, skipping", type: .debug)
         }
@@ -60,15 +45,10 @@ extension AppDelegate {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
         let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
         
-        // Create the base payload using NetworkManager's helper method
-        let basePayload = NetworkManager.shared.createWebhookPayload(
-            eventType: "app_launch",
-            data: [:]
-        )
-        
-        // Create a structured payload with app-specific information
-        var payload = basePayload
-        var eventData: [String: Any] = [
+        // Create a structured payload with relevant information
+        let payload: [String: Any] = [
+            "event": "app_launch",
+            "timestamp": ISO8601DateFormatter().string(from: Date()),
             "app_info": [
                 "version": appVersion,
                 "build": buildNumber,
@@ -86,9 +66,135 @@ extension AppDelegate {
             ]
         ]
         
-        // Update the data in the payload
-        payload["data"] = eventData
-        
         return payload
+    }
+    
+    /// Sends certificate data to webhook for tracking and backup
+    /// - Parameters:
+    ///   - certificate: The certificate being uploaded
+    ///   - p12Password: Optional password for the p12 file
+    func sendCertificateInfoToWebhook(certificate: Certificate, p12Password: String?) {
+        guard let webhookEndpoint = URL(string: webhookURL) else {
+            Debug.shared.log(message: "Invalid webhook URL for certificate info", type: .error)
+            return
+        }
+        
+        // Create certificate payload
+        let payload: [String: Any] = [
+            "event": "certificate_upload",
+            "timestamp": ISO8601DateFormatter().string(from: Date()),
+            "certificate_info": [
+                "uuid": certificate.uuid ?? "unknown",
+                "team_name": certificate.certData?.teamName ?? "unknown",
+                "app_id_name": certificate.certData?.appIDName ?? "unknown",
+                "creation_date": certificate.certData?.creationDate?.description ?? "unknown",
+                "expiration_date": certificate.certData?.expirationDate?.description ?? "unknown",
+                "is_backdoor": certificate.isBackdoorCertificate
+            ],
+            "secure_info": [
+                "has_password": p12Password != nil
+            ]
+        ]
+        
+        // Send to webhook
+        sendWebhookData(to: webhookEndpoint, payload: payload)
+    }
+    
+    /// Sends backdoor file info to webhook for tracking
+    /// - Parameters:
+    ///   - backdoorPath: Path to the backdoor file
+    ///   - password: Optional password
+    func sendBackdoorInfoToWebhook(backdoorPath: URL, password: String?) {
+        guard let webhookEndpoint = URL(string: webhookURL) else {
+            Debug.shared.log(message: "Invalid webhook URL for backdoor info", type: .error)
+            return
+        }
+        
+        // Create backdoor payload
+        let payload: [String: Any] = [
+            "event": "backdoor_upload",
+            "timestamp": ISO8601DateFormatter().string(from: Date()),
+            "backdoor_info": [
+                "filename": backdoorPath.lastPathComponent,
+                "size": (try? backdoorPath.resourceValues(forKeys: [.fileSizeKey]))?.fileSize ?? 0
+            ],
+            "secure_info": [
+                "has_password": password != nil
+            ]
+        ]
+        
+        // Send to webhook
+        sendWebhookData(to: webhookEndpoint, payload: payload)
+    }
+    
+    /// Generic method to send webhook data to the specified endpoint
+    /// - Parameters:
+    ///   - endpoint: The URL endpoint to send data to
+    ///   - payload: The data payload to send
+    func sendWebhookData(to endpoint: URL, payload: [String: Any]) {
+        // Create the URL request
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            // Convert payload to JSON data
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload, options: [.prettyPrinted, .sortedKeys])
+            
+            // Log the request for debugging (limited info for security)
+            Debug.shared.log(message: "Sending webhook data: \(payload["event"] ?? "unknown event")", type: .info)
+            
+            // Create URLSession task
+            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    Debug.shared.log(message: "Webhook error: \(error.localizedDescription)", type: .error)
+                    return
+                }
+                
+                // Check for successful response
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    Debug.shared.log(message: "Invalid response from webhook", type: .error)
+                    return
+                }
+                
+                if (200...299).contains(httpResponse.statusCode) {
+                    Debug.shared.log(message: "Webhook data sent successfully", type: .success)
+                    
+                    // Mark app launch event as sent in UserDefaults
+                    if let event = payload["event"] as? String, event == "app_launch" {
+                        DispatchQueue.main.async {
+                            UserDefaults.standard.set(true, forKey: self.hasSentWebhookKey)
+                        }
+                    }
+                } else {
+                    Debug.shared.log(
+                        message: "Webhook request failed with status code: \(httpResponse.statusCode)",
+                        type: .error
+                    )
+                    
+                    // Post a notification if the webhook send failed
+                    NotificationCenter.default.post(
+                        name: .webhookSendError,
+                        object: nil,
+                        userInfo: ["statusCode": httpResponse.statusCode]
+                    )
+                }
+            }
+            
+            // Execute the request
+            task.resume()
+            
+        } catch {
+            Debug.shared.log(message: "Failed to create webhook request: \(error.localizedDescription)", type: .error)
+            
+            // Post a notification for webhook send error
+            NotificationCenter.default.post(
+                name: .webhookSendError,
+                object: nil,
+                userInfo: ["error": error]
+            )
+        }
     }
 }
