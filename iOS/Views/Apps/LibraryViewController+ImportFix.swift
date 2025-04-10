@@ -44,7 +44,7 @@ extension LibraryViewController {
                 return
             }
             
-            // Add the app to the library
+            // Add the app to the library - ensure we pass a String path not URL
             dl.addToApps(bundlePath: targetBundle.path, uuid: uuid, sourceLocation: "Imported File") { [weak self] error in
                 guard let self = self else { return }
                 

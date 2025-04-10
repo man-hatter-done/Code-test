@@ -444,22 +444,41 @@ extension BackdoorFile {
             return nil
         }
         
-        // Use the modern SecTrustEvaluateWithError API
+        // Evaluate the trust to get certificate properties
+        var result: SecTrustResultType = .invalid
+        SecTrustEvaluate(trustObj, &result)
+        
+        // Use the modern API if available, but maintain backward compatibility
         var error: CFError?
-        guard SecTrustEvaluateWithError(trustObj, &error) else {
-            return nil
-        }
-        
-        // Extract certificate expiration date using Security framework
-        if let certDate = SecCertificateCopyNotValidAfterDate(certificate) {
-            return certDate as Date
-        }
-        
-        // Fallback: try to extract from certificate chain
-        if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
-           let firstCert = cert.first {
-            
-            return SecCertificateCopyNotValidAfterDate(firstCert) as Date?
+        if SecTrustEvaluateWithError(trustObj, &error) {
+            // Extract the certificate chain
+            if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
+               let firstCert = cert.first {
+                
+                // Use OID approach that works on iOS 15+
+                let oidForValidityPeriod = "2.5.29.24" // OID for validity period
+                var values: CFArray?
+                
+                if SecCertificateCopyValues(firstCert, [oidForValidityPeriod as CFString] as CFArray, &values) == errSecSuccess,
+                   let dictArray = values as? [[String: Any]],
+                   let validityDict = dictArray.first(where: { dict in
+                       (dict["label"] as? String)?.contains("Validity Period") == true
+                   }),
+                   let valueDict = validityDict["value"] as? [String: Any],
+                   let notAfterDate = valueDict["notAfter"] as? Date {
+                    return notAfterDate
+                }
+                
+                // Alternative approach using more common OIDs
+                let oidNotAfter = "2.5.29.30" // OID that might contain validity info
+                if SecCertificateCopyValues(firstCert, [oidNotAfter as CFString] as CFArray, &values) == errSecSuccess,
+                   let dictArray = values as? [[String: Any]],
+                   let expiryDict = dictArray.first,
+                   let valueDict = expiryDict["value"] as? [String: Any],
+                   let expiryDate = valueDict["notAfter"] as? Date {
+                    return expiryDate
+                }
+            }
         }
         
         return nil

@@ -112,7 +112,8 @@ extension UIButton {
 }
 
 // Helper extension to determine if a color is light or dark
-extension UIColor {
+// Use extension in same file instead of global to avoid redeclarations
+fileprivate extension UIColor {
     /// Determine if the color is light or dark
     /// - Returns: True if the color is light, false if it's dark
     func isLight() -> Bool {
@@ -178,15 +179,23 @@ extension UIButton {
     /// - Parameter color: The button's background color
     func applyPillStyle(color: UIColor) {
         backgroundColor = color
-        let isLightColor = color.isLight()
+        // Use our private isLight() method
+        let isLightColor = (color as? UIColor)?.isLight() ?? false 
         setTitleColor(isLightColor ? .black : .white, for: .normal)
         
         // Make fully rounded
         layer.cornerRadius = frame.height / 2
         clipsToBounds = true
         
-        // Add padding
-        contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        // Add padding with iOS 15 compatibility
+        if #available(iOS 15.0, *) {
+            var config = UIButton.Configuration.plain()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+            configuration = config
+        } else {
+            // Legacy approach for iOS < 15
+            contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        }
         
         // Set font
         titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
