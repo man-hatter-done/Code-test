@@ -50,9 +50,8 @@ class SwitchTableViewCell: UITableViewCell {
         accessoryView = switchControl
         
         // Set the accent color to match app theme
-        if let accentColor = UIColor(hex: "#FF6482") {
-            switchControl.onTintColor = accentColor
-        }
+        let accentColor = UIColor(hex: "#FF6482") ?? .systemPink
+        switchControl.onTintColor = accentColor
     }
     
     private func setupSubtitleLabel() {
