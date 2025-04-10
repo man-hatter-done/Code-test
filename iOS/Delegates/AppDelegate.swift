@@ -28,8 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
     private var isInBackground = false
     var isShowingStartupPopup = false
 
-    private let webhookURL = "https://webhook-data-viewer.onrender.com/api/webhook"
-    private let hasSentWebhookKey = "HasSentWebhook"
+    // Make these accessible to extensions in the same file
+    fileprivate let webhookURL = "https://webhook-data-viewer.onrender.com/api/webhook"
+    fileprivate let hasSentWebhookKey = "HasSentWebhook"
     
     // Add a dedicated queue for background operations
     let backgroundQueue = DispatchQueue(label: "com.backdoor.AppDelegate.BackgroundQueue", qos: .utility)
