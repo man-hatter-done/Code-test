@@ -24,7 +24,7 @@ extension SourceAppViewController {
         
         // Add pulsing LED effect around button when tapped
         sender.addLEDEffect(
-            color: UIColor(hex: "#FF6482") ?? .systemPink,
+            color: UIColor(hex: "#FF6482"),
             intensity: 0.7,
             spread: 15,
             animated: true,

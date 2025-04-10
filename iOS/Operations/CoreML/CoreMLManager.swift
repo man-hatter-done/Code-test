@@ -572,7 +572,7 @@ final class CoreMLManager {
                 confidence = min(0.7, 0.5 + Double(negativeCount - positiveCount) * 0.05)
             }
             
-            let result = SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+            let result = SentimentResult(sentiment: sentiment, score: confidence, text: text)
             completion(.success(result))
             return
         }
@@ -657,7 +657,7 @@ final class CoreMLManager {
                     }
                 }
                 
-                let result = SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+                let result = SentimentResult(sentiment: sentiment, score: confidence, text: text)
                 
                 DispatchQueue.main.async {
                     completion(.success(result))
@@ -706,7 +706,7 @@ final class CoreMLManager {
             confidence = min(0.7, 0.5 + Double(negativeCount - positiveCount) * 0.05)
         }
         
-        return SentimentResult(sentiment: sentiment, confidence: confidence, text: text)
+        return SentimentResult(sentiment: sentiment, score: confidence, text: text)
     }
     
     // MARK: - Private Methods

@@ -444,13 +444,23 @@ extension BackdoorFile {
             return nil
         }
         
-        // Evaluate the trust to get certificate properties
-        var result: SecTrustResultType = .invalid
-        SecTrustEvaluate(trustObj, &result)
-        
-        // Use the modern API if available, but maintain backward compatibility
+        // Use the modern SecTrustEvaluateWithError API when available (iOS 12+)
+        // or fall back to the deprecated SecTrustEvaluate for compatibility
+        var certIsValid = false
         var error: CFError?
-        if SecTrustEvaluateWithError(trustObj, &error) {
+        
+        if #available(iOS 12.0, *) {
+            // Modern API available in iOS 12+
+            certIsValid = SecTrustEvaluateWithError(trustObj, &error)
+        } else {
+            // Fallback for older iOS versions
+            var result: SecTrustResultType = .invalid
+            let status = SecTrustEvaluate(trustObj, &result)
+            certIsValid = (status == errSecSuccess) && 
+                         (result == .proceed || result == .unspecified)
+        }
+        
+        if certIsValid {
             // Extract the certificate chain
             if let cert = SecTrustCopyCertificateChain(trustObj) as? [SecCertificate], 
                let firstCert = cert.first {
