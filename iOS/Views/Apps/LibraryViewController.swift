@@ -733,7 +733,7 @@ extension LibraryViewController {
         startSigning(meow: meow)
     }
 
-    func tableView(
+    override func tableView(
         _: UITableView,
         trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
@@ -785,7 +785,7 @@ extension LibraryViewController {
         return configuration
     }
 
-    func tableView(
+    override func tableView(
         _: UITableView,
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point _: CGPoint
