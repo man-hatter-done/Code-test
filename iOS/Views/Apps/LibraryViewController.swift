@@ -391,8 +391,8 @@ extension LibraryViewController {
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = .clear
         
-        guard let source = getApplication(row: indexPath.row, section: indexPath.section),
-              let filePath = getApplicationFilePath(
+        guard let source = self.getApplication(row: indexPath.row, section: indexPath.section),
+              let filePath = self.getApplicationFilePath(
                 with: source, 
                 row: indexPath.row, 
                 section: indexPath.section
@@ -421,8 +421,8 @@ extension LibraryViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let app = getApplication(row: indexPath.row, section: indexPath.section),
-              let fullPath = getApplicationFilePath(
+        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section),
+              let fullPath = self.getApplicationFilePath(
                 with: app, 
                 row: indexPath.row, 
                 section: indexPath.section, 
@@ -432,7 +432,7 @@ extension LibraryViewController {
             return
         }
         
-        let uuidOnlyPath = getApplicationFilePath(
+        let uuidOnlyPath = self.getApplicationFilePath(
             with: app, 
             row: indexPath.row, 
             section: indexPath.section, 
@@ -734,11 +734,11 @@ extension LibraryViewController {
         startSigning(meow: meow)
     }
 
-    override func tableView(
+    func tableView(
         _: UITableView,
         trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard let app = getApplication(row: indexPath.row, section: indexPath.section) else {
+        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section) else {
             return nil
         }
 
@@ -785,13 +785,13 @@ extension LibraryViewController {
         return configuration
     }
 
-    override func tableView(
+    func tableView(
         _: UITableView,
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point _: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let app = getApplication(row: indexPath.row, section: indexPath.section),
-              let filePath = getApplicationFilePath(
+        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section),
+              let filePath = self.getApplicationFilePath(
                 with: app, 
                 row: indexPath.row, 
                 section: indexPath.section

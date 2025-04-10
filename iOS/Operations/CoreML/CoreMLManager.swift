@@ -511,7 +511,7 @@ final class CoreMLManager {
                     // This allows the app to keep functioning while we collect data
                     let result = SentimentResult(
                         sentiment: .neutral,
-                        confidence: 0.5,
+                        score: 0.5,  // Changed from confidence to score to match struct parameter name
                         text: text
                     )
                     

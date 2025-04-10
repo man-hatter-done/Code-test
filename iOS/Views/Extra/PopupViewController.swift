@@ -105,7 +105,7 @@ class PopupViewControllerButton: UIButton {
            colorIsCloseToAccent(color) ||
            color == .tintColor {
             // For primary actions, use custom gradient
-            setupGradient(withBaseColor: UIColor(hex: "#FF6482") ?? color)
+            setupGradient(withBaseColor: UIColor(hex: "#FF6482"))
             layer.borderWidth = 0
         } else if isColorLight(color) {
             // For light colored buttons (secondary actions)

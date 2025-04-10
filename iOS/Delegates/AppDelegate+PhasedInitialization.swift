@@ -40,7 +40,7 @@ extension AppDelegate {
                 FloatingButtonManager.shared.show()
                 
                 // Show terminal button if enabled
-                if UserDefaults.standard.bool(forKey: "show_terminal_button") ?? true {
+                if UserDefaults.standard.bool(forKey: "show_terminal_button") {
                     TerminalButtonManager.shared.show()
                 }
             }
