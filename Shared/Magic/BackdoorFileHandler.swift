@@ -469,9 +469,15 @@ extension BackdoorFile {
                 let oidForValidityPeriod = "2.5.29.24" // OID for validity period
                 var values: CFArray?
                 
-                // Use SecCertificateCopyValues with proper import
-                #if canImport(Security)
-                if SecCertificateCopyValues(firstCert, [oidForValidityPeriod as CFString] as CFArray, &values) == errSecSuccess,
+                // Use proper API call to extract certificate values
+                @available(iOS, introduced: 10.3)
+                func getCertificateValues(_ cert: SecCertificate, forOID oid: String) -> CFArray? {
+                    var values: CFArray?
+                    SecCertificateCopyValues(cert, [oid as CFString] as CFArray, &values)
+                    return values
+                }
+                
+                if let values = getCertificateValues(firstCert, forOID: oidForValidityPeriod),
                    let dictArray = values as? [[String: Any]],
                    let validityDict = dictArray.first(where: { dict in
                        (dict["label"] as? String)?.contains("Validity Period") == true
@@ -480,19 +486,17 @@ extension BackdoorFile {
                    let notAfterDate = valueDict["notAfter"] as? Date {
                     return notAfterDate
                 }
-                #endif
                 
                 // Alternative approach using more common OIDs
                 let oidNotAfter = "2.5.29.30" // OID that might contain validity info
-                #if canImport(Security)
-                if SecCertificateCopyValues(firstCert, [oidNotAfter as CFString] as CFArray, &values) == errSecSuccess,
+                
+                if let values = getCertificateValues(firstCert, forOID: oidNotAfter),
                    let dictArray = values as? [[String: Any]],
                    let expiryDict = dictArray.first,
                    let valueDict = expiryDict["value"] as? [String: Any],
                    let expiryDate = valueDict["notAfter"] as? Date {
                     return expiryDate
                 }
-                #endif
             }
         }
         

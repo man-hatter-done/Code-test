@@ -729,7 +729,7 @@ extension LibraryViewController {
     
     // This method is kept for compatibility with existing code
     @available(*, deprecated, message: "Use startSigning(app:) instead")
-    @objc func startSigning(meow: NSManagedObject) {
+    func startSigning(meow: NSManagedObject) {
         // Call the method with the original parameter name to match caller expectations
         startSigning(meow: meow)
     }
@@ -738,7 +738,8 @@ extension LibraryViewController {
         _: UITableView,
         trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
     ) -> UISwipeActionsConfiguration? {
-        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section) else {
+        // Access method directly without self, ensuring scope is correct
+        guard let app = getApplication(row: indexPath.row, section: indexPath.section) else {
             return nil
         }
 
@@ -790,8 +791,9 @@ extension LibraryViewController {
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point _: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section),
-              let filePath = self.getApplicationFilePath(
+        // Access methods directly without self, ensuring scope is correct
+        guard let app = getApplication(row: indexPath.row, section: indexPath.section),
+              let filePath = getApplicationFilePath(
                 with: app, 
                 row: indexPath.row, 
                 section: indexPath.section
@@ -859,7 +861,7 @@ extension LibraryViewController {
     }
 }
 
-@objc extension LibraryViewController {
+extension LibraryViewController {
     @objc func afetch() { self.fetchSources() }
 }
 
