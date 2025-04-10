@@ -107,7 +107,7 @@ class PopupViewControllerButton: UIButton {
             // For primary actions, use custom gradient
             setupGradient(withBaseColor: UIColor(hex: "#FF6482") ?? color)
             layer.borderWidth = 0
-        } else if color.isLight() {
+        } else if isColorLight(color) {
             // For light colored buttons (secondary actions)
             backgroundColor = color
             layer.borderWidth = 0.5
@@ -267,7 +267,8 @@ class PopupViewControllerButton: UIButton {
 }
 
 // Helper color extensions - only isLight() is needed here since lighter/darker are already defined
-extension UIColor {
+// Use fileprivate to avoid conflicts with other extensions
+fileprivate extension UIColor {
     func isLight() -> Bool {
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
@@ -276,4 +277,14 @@ extension UIColor {
         let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
         return luminance > 0.5
     }
+}
+
+// Helper method to keep original functionality but avoid extension conflicts
+fileprivate func isColorLight(_ color: UIColor) -> Bool {
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+    color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    
+    // Calculate relative luminance
+    let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    return luminance > 0.5
 }

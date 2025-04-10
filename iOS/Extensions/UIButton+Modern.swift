@@ -25,10 +25,10 @@ extension UIButton {
         // Set up background color
         backgroundColor = color
         
-        // Set up text color based on background color brightness
-        let isLightColor = color.isLight()
-        setTitleColor(isLightColor ? .black : .white, for: .normal)
-        setTitleColor(isLightColor ? .darkGray : .lightGray, for: .highlighted)
+        // Set up text color based on background color brightness - use fileprivate extension method
+        let isLightBg = (color as UIColor).isLight()
+        setTitleColor(isLightBg ? .black : .white, for: .normal)
+        setTitleColor(isLightBg ? .darkGray : .lightGray, for: .highlighted)
         
         // Set up font
         titleLabel?.font = font
@@ -93,7 +93,9 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: size, height: size)
         button.backgroundColor = color
-        button.tintColor = color.isLight() ? .black : .white
+        // Use our fileprivate method to avoid conflicts
+        let isLight = color.isLight()
+        button.tintColor = isLight ? .black : .white
         button.setImage(image, for: .normal)
         button.layer.cornerRadius = size / 2
         button.clipsToBounds = false
