@@ -454,28 +454,18 @@ extension BackdoorFile {
         }
         
         // Step 1: Evaluate the trust using iOS 15+ API
-        var error: CFError?
-        let isTrusted = SecTrustEvaluateWithError(trustObj, &error)
+        var trustError: CFError?
+        let isTrusted = SecTrustEvaluateWithError(trustObj, &trustError)
         
         if !isTrusted {
             // Trust evaluation failed
             return nil
         }
         
-        // Step 2: Use SecTrustCopyResult to get the trust result dictionary (iOS 15+)
-        guard let trustResult = SecTrustCopyResult(trustObj) as NSDictionary? else {
-            return nil
-        }
-        
-        // Step 3: Extract certificate details from the trust evaluation results
-        if let details = trustResult[kSecTrustResultDetails] as? [NSDictionary],
-           let certDetails = details.first,
-           let notAfter = certDetails["NotAfter"] as? Date {
-            // The "NotAfter" field contains the expiration date
-            return notAfter
-        }
-        
-        return nil
+        // For iOS 15+, the simplest approach is to use SecTrustGetExpirationDate
+        // which directly returns the certificate's expiration date
+        let expirationDate = SecTrustGetExpirationDate(trustObj)
+        return expirationDate
     }
     
     /// Helper to save the mobileprovision file
