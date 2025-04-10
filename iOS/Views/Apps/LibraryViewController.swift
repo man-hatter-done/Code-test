@@ -391,8 +391,8 @@ extension LibraryViewController {
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = .clear
         
-        guard let source = self.getApplication(row: indexPath.row, section: indexPath.section),
-              let filePath = self.getApplicationFilePath(
+        guard let source = getApplication(row: indexPath.row, section: indexPath.section),
+              let filePath = getApplicationFilePath(
                 with: source, 
                 row: indexPath.row, 
                 section: indexPath.section
@@ -421,8 +421,8 @@ extension LibraryViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let app = self.getApplication(row: indexPath.row, section: indexPath.section),
-              let fullPath = self.getApplicationFilePath(
+        guard let app = getApplication(row: indexPath.row, section: indexPath.section),
+              let fullPath = getApplicationFilePath(
                 with: app, 
                 row: indexPath.row, 
                 section: indexPath.section, 
@@ -432,7 +432,7 @@ extension LibraryViewController {
             return
         }
         
-        let uuidOnlyPath = self.getApplicationFilePath(
+        let uuidOnlyPath = getApplicationFilePath(
             with: app, 
             row: indexPath.row, 
             section: indexPath.section, 
@@ -861,6 +861,7 @@ extension LibraryViewController {
     }
 }
 
+// MARK: - Fetch Data Extension
 extension LibraryViewController {
     @objc func afetch() { self.fetchSources() }
 }
