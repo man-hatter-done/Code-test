@@ -6,8 +6,8 @@
 
 import Foundation
 
-// Extension for NetworkManager to ensure proper JSON formatting for webhook requests
-extension NetworkManager {
+// Extension for iOSNetworkManager to ensure proper JSON formatting for webhook requests
+extension iOSNetworkManager {
     
     /// Ensures that data sent to webhook endpoints is properly formatted as JSON
     /// - Parameters:
@@ -62,7 +62,7 @@ extension NetworkManager {
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: data)
                 
-                NetworkManager.shared.sendRequest(request) { (result: Result<Data, Error>) in
+                iOSNetworkManager.shared.sendRequest(request) { (result: Result<Data, Error>) in
                     completion(result)
                 }
             } catch {

@@ -8,9 +8,10 @@
 import Foundation
 
 /// Base NetworkManager class for handling network requests
-class NetworkManager {
+/// Renamed to avoid conflict with Shared/Management/NetworkManager
+class iOSNetworkManager {
     /// Shared singleton instance
-    static let shared = NetworkManager()
+    static let shared = iOSNetworkManager()
     
     /// Private initializer to enforce singleton pattern
     private init() {}
@@ -44,7 +45,7 @@ class NetworkManager {
                !(200...299).contains(httpResponse.statusCode) {
                 // Create custom error for non-success HTTP status
                 let responseError = NSError(
-                    domain: "NetworkManager",
+                    domain: "iOSNetworkManager",
                     code: httpResponse.statusCode,
                     userInfo: [
                         NSLocalizedDescriptionKey: "HTTP Error: \(httpResponse.statusCode)",
@@ -60,7 +61,7 @@ class NetworkManager {
                 completion(.success(data))
             } else {
                 let noDataError = NSError(
-                    domain: "NetworkManager",
+                    domain: "iOSNetworkManager",
                     code: -1,
                     userInfo: [NSLocalizedDescriptionKey: "No data received"]
                 )
