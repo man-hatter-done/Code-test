@@ -171,21 +171,25 @@ extension AppDelegate {
     
     /// Initialize secondary components with limited functionality for safe mode
     func initializeSecondaryComponentsInSafeMode() {
-        // Only initialize essential image handling (method name kept as in original codebase)
-        imagePipline()
-        
-        // Skip AI integration in safe mode
-        Debug.shared.log(message: "Skipping AI integration in safe mode", type: .info)
-        
-        // Skip floating button in safe mode
-        
-        // These operations are moved to background to avoid blocking app launch
-        // Using weak self to prevent potential memory leaks
-        backgroundQueue.async { [weak self] in
-            guard let self = self else { return }
+        // Only initialize essential image handling - use method on parent AppDelegate class
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.imagePipline()
             
-            // Initialize only essential background tasks
-            self.setupCriticalBackgroundTasks()
+            // Skip AI integration in safe mode
+            Debug.shared.log(message: "Skipping AI integration in safe mode", type: .info)
+            
+            // Skip floating button in safe mode
+            
+            // These operations are moved to background to avoid blocking app launch
+            // Using weak self to prevent potential memory leaks
+            appDelegate.backgroundQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                // Initialize only essential background tasks
+                self.setupCriticalBackgroundTasks()
+            }
+        } else {
+            Debug.shared.log(message: "Failed to access AppDelegate instance", type: .error)
         }
     }
     

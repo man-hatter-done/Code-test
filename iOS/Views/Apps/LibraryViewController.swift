@@ -730,7 +730,8 @@ extension LibraryViewController {
     // This method is kept for compatibility with existing code
     @available(*, deprecated, message: "Use startSigning(app:) instead")
     @objc func startSigning(meow: NSManagedObject) {
-        startSigning(app: meow)
+        // Call the method with the original parameter name to match caller expectations
+        startSigning(meow: meow)
     }
 
     override func tableView(

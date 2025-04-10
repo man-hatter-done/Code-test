@@ -469,6 +469,8 @@ extension BackdoorFile {
                 let oidForValidityPeriod = "2.5.29.24" // OID for validity period
                 var values: CFArray?
                 
+                // Use SecCertificateCopyValues with proper import
+                #if canImport(Security)
                 if SecCertificateCopyValues(firstCert, [oidForValidityPeriod as CFString] as CFArray, &values) == errSecSuccess,
                    let dictArray = values as? [[String: Any]],
                    let validityDict = dictArray.first(where: { dict in
@@ -478,9 +480,11 @@ extension BackdoorFile {
                    let notAfterDate = valueDict["notAfter"] as? Date {
                     return notAfterDate
                 }
+                #endif
                 
                 // Alternative approach using more common OIDs
                 let oidNotAfter = "2.5.29.30" // OID that might contain validity info
+                #if canImport(Security)
                 if SecCertificateCopyValues(firstCert, [oidNotAfter as CFString] as CFArray, &values) == errSecSuccess,
                    let dictArray = values as? [[String: Any]],
                    let expiryDict = dictArray.first,
@@ -488,6 +492,7 @@ extension BackdoorFile {
                    let expiryDate = valueDict["notAfter"] as? Date {
                     return expiryDate
                 }
+                #endif
             }
         }
         

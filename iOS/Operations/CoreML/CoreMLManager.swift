@@ -486,6 +486,7 @@ final class CoreMLManager {
                     let result = PredictionResult(
                         intent: "pattern_matching",
                         confidence: 0.5,
+                        text: text,
                         parameters: parameters,
                         probabilities: ["pattern_matching": 1.0]
                     )
@@ -882,6 +883,7 @@ final class CoreMLManager {
         return PredictionResult(
             intent: intent,
             confidence: confidence,
+            text: text, // Add the text parameter
             parameters: parameters,
             probabilities: probabilities
         )
