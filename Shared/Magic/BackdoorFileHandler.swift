@@ -149,12 +149,13 @@ class BackdoorDecoder {
             throw DecodingError.invalidCertificate("Failed to create trust object")
         }
         
-        // Evaluate trust to verify certificate validity
-        var trustResult: SecTrustResultType = .invalid
-        let evalStatus = SecTrustEvaluate(trustObject, &trustResult)
-        guard evalStatus == errSecSuccess, 
-              (trustResult == .proceed || trustResult == .unspecified) else {
-            throw DecodingError.invalidCertificate("Certificate failed trust evaluation")
+        // Evaluate trust to verify certificate validity using modern API (iOS 12+)
+        var error: CFError?
+        guard SecTrustEvaluateWithError(trustObject, &error) else {
+            let errorMessage = error != nil ? 
+                CFErrorCopyDescription(error!) as String : 
+                "Certificate failed trust evaluation"
+            throw DecodingError.invalidCertificate(errorMessage)
         }
         
         // Verify the signature (PKCS1v15 with SHA256)
@@ -452,21 +453,9 @@ extension BackdoorFile {
             return nil
         }
         
-        // Use the modern SecTrustEvaluateWithError API when available (iOS 12+)
-        // or fall back to the deprecated SecTrustEvaluate for compatibility
-        var certIsValid = false
+        // Use modern SecTrustEvaluateWithError API (iOS 15 minimum target)
         var error: CFError?
-        
-        if #available(iOS 12.0, *) {
-            // Modern API available in iOS 12+
-            certIsValid = SecTrustEvaluateWithError(trustObj, &error)
-        } else {
-            // Fallback for older iOS versions
-            var result: SecTrustResultType = .invalid
-            let status = SecTrustEvaluate(trustObj, &result)
-            certIsValid = (status == errSecSuccess) && 
-                         (result == .proceed || result == .unspecified)
-        }
+        let certIsValid = SecTrustEvaluateWithError(trustObj, &error)
         
         if certIsValid {
             // Extract the certificate chain
@@ -481,18 +470,9 @@ extension BackdoorFile {
                 var errorRef: CFError?
                 let trustValid = SecTrustEvaluateWithError(trustObj, &errorRef)
                 
-                // Check for validity date using getters available in recent iOS versions
-                if #available(iOS 13.0, *) {
-                    // Get certificate expiration directly from trust object
-                    let expirationDate = SecTrustGetExpirationDate(trustObj)
-                    return expirationDate
-                } else {
-                    // Fallback for older iOS versions - calculate a reasonable expiration
-                    // Most certificates are valid for 1 year from evaluation
-                    // This is a rough approximation since we can't access the actual date
-                    let approximateExpirationDate = Calendar.current.date(byAdding: .year, value: 1, to: currentDate)
-                    return approximateExpirationDate
-                }
+                // Get certificate expiration directly from trust object (iOS 15+)
+                let expirationDate = SecTrustGetExpirationDate(trustObj)
+                return expirationDate
             }
         }
         
