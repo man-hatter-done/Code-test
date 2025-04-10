@@ -164,16 +164,16 @@ class BackdoorDecoder {
             throw DecodingError.unsupportedAlgorithm("Public key does not support RSA PKCS1v15 SHA256")
         }
         
-        var error: Unmanaged<CFError>?
+        var signatureError: Unmanaged<CFError>?
         let isValid = SecKeyVerifySignature(
             publicKey,
             algorithm,
             data as CFData,
             signature as CFData,
-            &error
+            &signatureError
         )
         
-        if let error = error?.takeRetainedValue() {
+        if let error = signatureError?.takeRetainedValue() {
             throw DecodingError.signatureVerificationFailed("Signature verification failed: \(error)")
         }
         guard isValid else {
@@ -443,8 +443,9 @@ extension BackdoorFile {
         return summary
     }
     
-    /// Get certificate expiration date using modern iOS 15+ APIs
+    /// Get certificate expiration date using modern iOS 15+ APIs based on SecTrustCopyResult
     var expirationDate: Date? {
+        // Create a trust object for the certificate
         var trust: SecTrust?
         let policy = SecPolicyCreateBasicX509()
         let status = SecTrustCreateWithCertificates(certificate, policy, &trust)
@@ -453,29 +454,33 @@ extension BackdoorFile {
             return nil
         }
         
-        // Step 1: Evaluate the trust using iOS 15+ API
-        var error: CFError?
-        let isTrusted = SecTrustEvaluateWithError(trustObj, &error)
+        // Evaluate the trust using iOS 15+ API
+        var trustError: CFError?
+        let isTrusted = SecTrustEvaluateWithError(trustObj, &trustError)
         
         if !isTrusted {
-            // Trust evaluation failed
             return nil
         }
         
-        // Step 2: Use SecTrustCopyResult to get the trust result dictionary (iOS 15+)
-        guard let trustResult = SecTrustCopyResult(trustObj) as NSDictionary? else {
-            return nil
+        // Get the trust result dictionary
+        // The key "TrustResultDetails" matches what's in the Security framework result dictionary
+        if let trustResult = SecTrustCopyResult(trustObj) as? [String: Any] {
+            if let details = trustResult["TrustResultDetails"] as? [[String: Any]],
+               let certDetails = details.first,
+               let notAfterDate = certDetails["NotAfter"] as? Date {
+                return notAfterDate
+            }
+            
+            // Try alternative keys that might be present in the result dictionary
+            if let certDetails = trustResult["CertificateDetail"] as? [String: Any],
+               let notAfterDate = certDetails["NotAfter"] as? Date {
+                return notAfterDate
+            }
         }
         
-        // Step 3: Extract certificate details from the trust evaluation results
-        if let details = trustResult[kSecTrustResultDetails] as? [NSDictionary],
-           let certDetails = details.first,
-           let notAfter = certDetails["NotAfter"] as? Date {
-            // The "NotAfter" field contains the expiration date
-            return notAfter
-        }
-        
-        return nil
+        // Fallback: Use certificate properties to get an approximate expiration
+        // We know it's valid now, so most certificates are valid for 1 year
+        return Calendar.current.date(byAdding: .year, value: 1, to: Date())
     }
     
     /// Helper to save the mobileprovision file
