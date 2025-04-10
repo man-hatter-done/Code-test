@@ -141,12 +141,20 @@ class BackdoorDecoder {
             throw DecodingError.invalidCertificate("Failed to extract public key")
         }
         
-        // Create a trust object to evaluate the certificate
+        // Verify the certificate is valid using trust evaluation
         let policy = SecPolicyCreateBasicX509()
         var trust: SecTrust?
         let status = SecTrustCreateWithCertificates(certificate, policy, &trust)
-        guard status == errSecSuccess, let _ = trust else {
+        guard status == errSecSuccess, let trustObject = trust else {
             throw DecodingError.invalidCertificate("Failed to create trust object")
+        }
+        
+        // Evaluate trust to verify certificate validity
+        var trustResult: SecTrustResultType = .invalid
+        let evalStatus = SecTrustEvaluate(trustObject, &trustResult)
+        guard evalStatus == errSecSuccess, 
+              (trustResult == .proceed || trustResult == .unspecified) else {
+            throw DecodingError.invalidCertificate("Certificate failed trust evaluation")
         }
         
         // Verify the signature (PKCS1v15 with SHA256)
