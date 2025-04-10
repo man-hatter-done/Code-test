@@ -119,7 +119,7 @@ extension LibraryViewController: UIDocumentPickerDelegate {
                     throw NSError(domain: "com.backdoor.import", code: 404, userInfo: [NSLocalizedDescriptionKey: "File does not exist at path"])
                 }
                 
-                try handleIPAFile(destinationURL: selectedFileURL, uuid: uuid, dl: dl)
+                try self.handleIPAFile(destinationURL: selectedFileURL, uuid: uuid, dl: dl)
 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
