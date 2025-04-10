@@ -202,10 +202,9 @@ class PopupViewControllerButton: UIButton {
             if self.gradientLayer.superlayer != nil {
                 // For gradient buttons, adjust colors
                 let adjustedColors = self.gradientLayer.colors?.compactMap { color -> CGColor? in
-                    if let cgColor = color as? CGColor {
-                        return UIColor(cgColor: cgColor).withAlphaComponent(0.8).cgColor
-                    }
-                    return nil
+                    // CGColor is already the correct type - no need for conditional cast
+                    let cgColor = color as! CGColor
+                    return UIColor(cgColor: cgColor).withAlphaComponent(0.8).cgColor
                 }
                 self.gradientLayer.colors = adjustedColors
             } else {

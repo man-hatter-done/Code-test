@@ -163,7 +163,7 @@ extension UIView {
     func removeLEDEffect() {
         ledGradientLayer?.removeFromSuperlayer()
         ledGradientLayer = nil
-        ledAnimationGroup?.removeAllAnimations()
+        // Simply set the animation group to nil - it doesn't have a removeAllAnimations method
         ledAnimationGroup = nil
     }
     
