@@ -473,7 +473,10 @@ extension BackdoorFile {
                 @available(iOS, introduced: 10.3)
                 func getCertificateValues(_ cert: SecCertificate, forOID oid: String) -> CFArray? {
                     var values: CFArray?
-                    SecCertificateCopyValues(cert, [oid as CFString] as CFArray, &values)
+                    // Directly use Security framework function
+                    withUnsafeMutablePointer(to: &values) { valuesPtr in
+                        Security.SecCertificateCopyValues(cert, [oid as CFString] as CFArray, valuesPtr)
+                    }
                     return values
                 }
                 
