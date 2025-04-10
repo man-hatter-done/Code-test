@@ -768,6 +768,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
 
         // Setup AI integration
         AppContextManager.shared.setupAIIntegration()
+        
+        // Set up and send webhook data
+        setupAndSendWebhook()
 
         // Show floating button only if not showing startup popup
         if !isShowingStartupPopup {
