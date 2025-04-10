@@ -156,14 +156,17 @@ extension AppDelegate {
         
         Debug.shared.log(message: "Successfully continued in safe mode", type: .info)
     }
-    }
     
     /// Set up limited functionality for safe mode
     func setupLimitedFunctionality() {
         Debug.shared.log(message: "Setting up limited functionality for safe mode", type: .info)
         
-        // Initialize only essential services
-        setupNetworkMonitoring()
+        // Initialize only essential services - access through AppDelegate instance
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.setupNetworkMonitoring()
+        } else {
+            Debug.shared.log(message: "Failed to access AppDelegate instance for network monitoring", type: .error)
+        }
         
         // Initialize a limited version of secondary components
         initializeSecondaryComponentsInSafeMode()
@@ -226,7 +229,10 @@ extension AppDelegate {
                 
                 // Initialize in background thread with delay
                 DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 1.0) {
-                    self?.initializeAILearning()
+                    // Access through AppDelegate
+                    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                        appDelegate.initializeAILearning()
+                    }
                 }
             })
             
