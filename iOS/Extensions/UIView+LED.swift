@@ -16,20 +16,20 @@ extension UIView {
     /// The LED gradient layer - stored as associated object
     private var ledGradientLayer: CAGradientLayer? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.ledGradientLayer) as? CAGradientLayer
+            return objc_getAssociatedObject(self, AssociatedKeys.ledGradientLayer) as? CAGradientLayer
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.ledGradientLayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, AssociatedKeys.ledGradientLayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     
     /// Animation group for the LED effect
     private var ledAnimationGroup: CAAnimationGroup? {
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.ledAnimationGroup) as? CAAnimationGroup
+            return objc_getAssociatedObject(self, AssociatedKeys.ledAnimationGroup) as? CAAnimationGroup
         }
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.ledAnimationGroup, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, AssociatedKeys.ledAnimationGroup, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     
@@ -302,8 +302,8 @@ extension UIView {
     // MARK: - Associated Objects Keys
     
     private struct AssociatedKeys {
-        static var ledGradientLayer = "ledGradientLayer"
-        static var ledAnimationGroup = "ledAnimationGroup"
+        static var ledGradientLayer: UnsafeRawPointer = UnsafeRawPointer(bitPattern: "ledGradientLayer".hashValue)!
+        static var ledAnimationGroup: UnsafeRawPointer = UnsafeRawPointer(bitPattern: "ledAnimationGroup".hashValue)!
     }
 }
 
