@@ -22,7 +22,7 @@ extension AILearningManager {
         }
         
         let trainingData = data.training
-        let evaluationData = data.evaluation
+        // We'll use evaluationData in the future for model validation
         
         // If we have enough data, trigger model training
         if trainingData.count >= 10 {

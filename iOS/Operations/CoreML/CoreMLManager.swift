@@ -449,9 +449,7 @@ final class CoreMLManager {
                 }
             } catch {
                 // Remove observer on failure
-                if let observer = memoryObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
+                NotificationCenter.default.removeObserver(memoryObserver)
                 
                 // Dismiss loading alert
                 DispatchQueue.main.async {
