@@ -137,7 +137,7 @@ extension AppDelegate {
     /// Continue in safe mode button handler
     @objc func continueSafeModePressed() {
         // First ensure we have valid UI state
-        guard window != nil else {
+        if window == nil {
             Debug.shared.log(message: "Window is nil in continueSafeModePressed", type: .error)
             
             // Create a new window as a fallback
