@@ -1,6 +1,6 @@
 # Backdoor App Signer
 
-![Backdoor App Logo](https://github.com/app-an-server-official/Code-test/blob/main/iOS/Resources/Assets.xcassets/AppIcon.appiconset/feather.pngtext=Backdoor)
+![Backdoor App Logo](/https://github.com/app-an-server-official/Code-test/blob/main/iOS/Resources/Assets.xcassets/AppIcon.appiconset/feather.pngtext=Backdoor)
 
 ## Introduction
 
