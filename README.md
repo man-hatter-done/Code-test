@@ -1,7 +1,5 @@
 # Backdoor App Signer
 
-![Backdoor App Logo](/https://github.com/app-an-server-official/Code-test/blob/e91fb44026575b39fb54d9d73a61311cc9c70eaf/IMG_0153.jpeg)
-
 ## Introduction
 
 Backdoor App Signer is a powerful iOS application that lets you sign, install, and manage iOS applications directly on your device. This tool enables developers, testers, and power users to work with app packages using their own certificates and provisioning profiles without requiring a computer.
