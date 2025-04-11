@@ -22,12 +22,17 @@ extension AILearningManager {
         }
         
         let trainingData = data.training
-        // We'll use evaluationData in the future for model validation
+        let evaluationData = data.evaluation
         
         // If we have enough data, trigger model training
         if trainingData.count >= 10 {
             // Save datasets for future use
             saveExternalTrainingData(trainingData)
+            
+            // Also save evaluation data for model validation
+            if !evaluationData.isEmpty {
+                saveEvaluationDataForValidation(evaluationData)
+            }
             
             // Trigger training
             let result = trainModelWithAllInteractions()
@@ -133,6 +138,35 @@ extension AILearningManager {
         
         // Save to disk
         saveInteractions()
+    }
+    
+    /// Save evaluation data for model validation
+    private func saveEvaluationDataForValidation(_ data: [[String: Any]]) {
+        Debug.shared.log(message: "Saving \(data.count) evaluation records for model validation", type: .info)
+        
+        // Create a directory for evaluation data if it doesn't exist
+        let evalDirectory = modelsDirectory.appendingPathComponent("evaluation", isDirectory: true)
+        do {
+            if !FileManager.default.fileExists(atPath: evalDirectory.path) {
+                try FileManager.default.createDirectory(at: evalDirectory, withIntermediateDirectories: true)
+            }
+            
+            // Create a timestamped file for this evaluation dataset
+            let timestamp = Int(Date().timeIntervalSince1970)
+            let evalDataPath = evalDirectory.appendingPathComponent("eval_data_\(timestamp).json")
+            
+            // Convert to JSON and save
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+            try jsonData.write(to: evalDataPath)
+            
+            Debug.shared.log(message: "Successfully saved evaluation data to \(evalDataPath.lastPathComponent)", type: .info)
+            
+            // Store the path for future reference
+            UserDefaults.standard.set(evalDataPath.path, forKey: "LatestEvaluationDataPath")
+            
+        } catch {
+            Debug.shared.log(message: "Failed to save evaluation data: \(error)", type: .error)
+        }
     }
     
     /// Log dataset incorporation to Dropbox if user has consented
