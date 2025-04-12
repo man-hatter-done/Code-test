@@ -164,8 +164,8 @@ extension CoreDataManager {
         try fileManager.setAttributes([.posixPermissions: 0o644], ofItemAtPath: serverCrtPath.path)
         try fileManager.setAttributes([.posixPermissions: 0o644], ofItemAtPath: serverPemPath.path)
         
-        // Trigger certificate synchronization to root directory
-        ServerCertificateSynchronizer.shared.synchronizeCertificates()
+        // Validate certificates in the root documents directory
+        ServerCertificateManager.shared.validateCertificates()
         
         // Log success
         Debug.shared.log(message: "Updated server.crt and server.pem files for offline signing", type: .success)
