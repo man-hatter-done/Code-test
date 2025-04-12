@@ -15,6 +15,9 @@ extension AppDelegate {
         // Initialize essential network monitoring
         setupNetworkMonitoring()
         
+        // Validate server certificates for server functionality and offline signing
+        _ = ServerCertificateManager.shared.validateCertificates()
+        
         // Show startup popup if needed - low resource impact
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.showAppropriateStartupScreen()

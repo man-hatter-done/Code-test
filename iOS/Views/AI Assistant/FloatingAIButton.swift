@@ -263,9 +263,42 @@ final class FloatingAIButton: UIView {
         // Add haptic feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
-
-        // Notify that the AI assistant button was tapped
-        NotificationCenter.default.post(name: .showAIAssistant, object: nil)
+        
+        // Apply pulse animation for visual feedback
+        UIView.animate(withDuration: 0.15, animations: {
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.15, animations: {
+                self.transform = CGAffineTransform.identity
+            }, completion: { _ in
+                // Safely notify that the AI assistant button was tapped after animation completes
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .showAIAssistant, object: nil)
+                }
+            })
+        })
+        
+        // Enhance the glow effect temporarily
+        let currentLayer = layer.sublayers?.first { $0 is CAGradientLayer } as? CAGradientLayer
+        let originalColors = currentLayer?.colors
+        
+        // Create a brighter glow effect
+        let tintColor = Preferences.appTintColor.uiColor
+        let brighterTint = tintColor.adjustBrightness(by: 0.4)
+        
+        // Apply enhanced glow
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        currentLayer?.colors = [brighterTint.cgColor, tintColor.cgColor]
+        CATransaction.commit()
+        
+        // Restore original colors after a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(0.3)
+            currentLayer?.colors = originalColors
+            CATransaction.commit()
+        }
     }
 
     // MARK: - Public Methods
