@@ -377,8 +377,27 @@ class SigningsViewController: UIViewController {
         navigationItem.leftBarButtonItem = nil
         largeButton.showLoadingIndicator()
         
+        // Check network status for offline mode detection
+        let isOfflineMode = OfflineSigningManager.shared.isOfflineModeActive
+        
+        // Show offline badge if in offline mode
+        if isOfflineMode {
+            showOfflineModeIndicator()
+        }
+        
+        // Log signing mode
+        backdoor.Debug.shared.log(
+            message: "Starting app signing in \(isOfflineMode ? "offline" : "online") mode",
+            type: .info
+        )
+        
         // Start signing process
         let appPath = getFilesForDownloadedApps(app: app, getuuidonly: false)
+        
+        // Configure signing options for offline/online mode
+        if isOfflineMode {
+            configureOfflineSigning()
+        }
         
         signInitialApp(
             bundle: bundle,
@@ -398,9 +417,106 @@ class SigningsViewController: UIViewController {
                     type: .error
                 )
                 self.signingCompletionHandler?(false)
+                
+                // Handle offline-specific errors
+                if isOfflineMode && error.localizedDescription.contains("certificate") {
+                    self.showOfflineSigningError()
+                }
             }
 
             self.dismiss(animated: true)
+        }
+    }
+    
+    /// Show a visual indicator that we're in offline mode
+    private func showOfflineModeIndicator() {
+        // Create offline mode badge near the top of the view
+        let offlineIndicator = UILabel()
+        offlineIndicator.text = "OFFLINE SIGNING"
+        offlineIndicator.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        offlineIndicator.textColor = .white
+        offlineIndicator.backgroundColor = UIColor.systemRed.withAlphaComponent(0.8)
+        offlineIndicator.textAlignment = .center
+        offlineIndicator.layer.cornerRadius = 10
+        offlineIndicator.clipsToBounds = true
+        offlineIndicator.tag = 9876 // Tag for finding later
+        offlineIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(offlineIndicator)
+        NSLayoutConstraint.activate([
+            offlineIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            offlineIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            offlineIndicator.heightAnchor.constraint(equalToConstant: 20),
+            offlineIndicator.widthAnchor.constraint(greaterThanOrEqualToConstant: 120)
+        ])
+        
+        // Add LED glow effect to make it noticeable
+        offlineIndicator.addLEDEffect(
+            color: .systemRed,
+            intensity: 0.5,
+            spread: 5,
+            animated: true,
+            animationDuration: 1.5
+        )
+    }
+    
+    /// Configure signing options specifically for offline mode
+    private func configureOfflineSigning() {
+        // Get offline certificates
+        let certificates = OfflineSigningManager.shared.getOfflineSigningCertificates()
+        
+        // Log certificate paths
+        if let certPath = certificates.cert, let keyPath = certificates.key {
+            backdoor.Debug.shared.log(
+                message: "Using offline certificates: \(certPath.lastPathComponent) and \(keyPath.lastPathComponent)",
+                type: .info
+            )
+            
+            // Here you would modify signing options for offline mode
+            // For example, setting specific paths or flags in signingDataWrapper
+            
+            // This is a placeholder for actual implementation - the exact changes
+            // needed would depend on the specific signing process
+            signingDataWrapper.signingOptions.useOfflineCertificates = true
+            
+            // Store certificate paths in additional data for the signer to use
+            if signingDataWrapper.signingOptions.additionalData == nil {
+                signingDataWrapper.signingOptions.additionalData = [:]
+            }
+            signingDataWrapper.signingOptions.additionalData?["offlineCertPath"] = certPath.path
+            signingDataWrapper.signingOptions.additionalData?["offlineKeyPath"] = keyPath.path
+        } else {
+            backdoor.Debug.shared.log(
+                message: "Offline certificates not available",
+                type: .warning
+            )
+        }
+    }
+    
+    /// Show error specific to offline signing issues
+    private func showOfflineSigningError() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Offline Signing Error",
+                message: "There was a problem with the offline certificates. Please check your local certificates or try again when online.",
+                preferredStyle: .alert
+            )
+            
+            let settingsAction = UIAlertAction(title: "Certificate Settings", style: .default) { [weak self] _ in
+                // Navigate to certificate settings
+                guard let self = self else { return }
+                
+                let certificatesVC = CertificatesViewController()
+                let navController = UINavigationController(rootViewController: certificatesVC)
+                self.present(navController, animated: true)
+            }
+            
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            
+            alert.addAction(settingsAction)
+            alert.addAction(okAction)
+            
+            self.present(alert, animated: true)
         }
     }
     
