@@ -63,7 +63,31 @@ class OfflineSigningManager {
     
     /// Validate local certificates and cache their paths
     func validateLocalCertificates() {
+        // First, ensure certificates are synchronized between directories
+        let synced = ServerCertificateSynchronizer.shared.synchronizeCertificates()
+        
+        // Get the root documents directory
         let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        // Get paths directly from the synchronizer
+        let rootPaths = ServerCertificateSynchronizer.shared.getRootCertificatePaths()
+        
+        // Check if root certificates exist and are valid
+        if synced && 
+           FileManager.default.fileExists(atPath: rootPaths.cert.path) &&
+           FileManager.default.fileExists(atPath: rootPaths.key.path) {
+            // Use root certificate paths directly
+            localCertPaths.cert = rootPaths.cert
+            localCertPaths.key = rootPaths.key
+            
+            Debug.shared.log(
+                message: "Using synchronized root certificates for offline signing",
+                type: .info
+            )
+            return
+        }
+        
+        // Fallback: look in Certificates directory if root certificates aren't available
         let certsDir = documentsDir.appendingPathComponent("Certificates")
         
         do {
@@ -86,6 +110,30 @@ class OfflineSigningManager {
                 localCertPaths.key = keyPath
             } else {
                 localCertPaths.key = nil
+            }
+            
+            // If we found certificates in the Certificates directory, try to synchronize them to root
+            if localCertPaths.cert != nil && localCertPaths.key != nil {
+                do {
+                    // Copy to root directory
+                    try FileManager.default.copyItem(at: localCertPaths.cert!, to: rootPaths.cert)
+                    try FileManager.default.copyItem(at: localCertPaths.key!, to: rootPaths.key)
+                    
+                    // Update paths to use root certificates
+                    localCertPaths.cert = rootPaths.cert
+                    localCertPaths.key = rootPaths.key
+                    
+                    Debug.shared.log(
+                        message: "Copied certificates from subdirectory to root for consistency",
+                        type: .info
+                    )
+                } catch {
+                    Debug.shared.log(
+                        message: "Error copying certificates to root: \(error.localizedDescription)",
+                        type: .warning
+                    )
+                    // Keep using the subdirectory certificates
+                }
             }
             
             // Log the status
